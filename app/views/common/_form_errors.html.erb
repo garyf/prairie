@@ -1,0 +1,11 @@
+<% if o.errors.any? %>
+  <div id='error_explanation'>
+
+    <% ary = o.errors.full_messages %>
+
+    <p>Your input could not be saved because of <strong><%= pluralize(ary.count, 'issue') %></strong></p>
+    <ul><% ary.each do |str| %>
+      <li><%= str %></li>
+    <% end %></ul>
+  </div>
+<% end %>

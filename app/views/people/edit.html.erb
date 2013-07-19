@@ -1,6 +1,5 @@
-<h1>Editing person</h1>
+<h4>Editing person</h4>
+<%= link_to 'Show', @person %> |
+<%= link_to 'Destroy', @person, method: :delete, data: {confirm: 'Are you sure?'} %>
 
 <%= render 'form' %>
-
-<%= link_to 'Show', @person %> |
-<%= link_to 'Back', people_path %>

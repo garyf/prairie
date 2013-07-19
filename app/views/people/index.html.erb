@@ -1,31 +1,17 @@
-<h1>Listing people</h1>
+<h4>Listing people</h4>
+<%= link_to 'New person', new_person_path %>
 
-<table>
-  <thead>
-    <tr>
+<% if @people.any? %>
+  <%= paginate @people %>
+  <table class='table  table-condensed'>
+    <thead><tr>
+      <th>First name</th>
+      <th>Last name</th>
       <th>Email</th>
-      <th>Name first</th>
-      <th>Name last</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+    </tr></thead>
+    <tbody><%= render @people %></tbody>
+  </table>
 
-  <tbody>
-    <% @people.each do |person| %>
-      <tr>
-        <td><%= person.email %></td>
-        <td><%= person.name_first %></td>
-        <td><%= person.name_last %></td>
-        <td><%= link_to 'Show', person %></td>
-        <td><%= link_to 'Edit', edit_person_path(person) %></td>
-        <td><%= link_to 'Destroy', person, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Person', new_person_path %>
+<% else %>
+  <h5>None</h5>
+<% end %>

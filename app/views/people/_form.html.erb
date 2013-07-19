@@ -1,29 +1,20 @@
-<%= form_for(@person) do |f| %>
-  <% if @person.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@person.errors.count, "error") %> prohibited this person from being saved:</h2>
+<%= form_for(@person, html: {class: 'form-horizontal'}) do |f| %>
+  <%= render 'common/form_errors', o: @person %>
 
-      <ul>
-      <% @person.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= f.label :email %><br>
-    <%= f.text_field :email %>
+  <div class=control-group>
+    <%= f.label :name_first, class: 'control-label' %>
+    <div class=controls><%= f.text_field :name_first %></div>
   </div>
-  <div class="field">
-    <%= f.label :name_first %><br>
-    <%= f.text_field :name_first %>
+  <div class=control-group>
+    <%= f.label :name_last, class: 'control-label' %>
+    <div class=controls><%= f.text_field :name_last %></div>
   </div>
-  <div class="field">
-    <%= f.label :name_last %><br>
-    <%= f.text_field :name_last %>
+  <div class=control-group>
+    <%= f.label :email, class: 'control-label' %>
+    <div class=controls><%= f.text_field :email %></div>
   </div>
-  <div class="actions">
-    <%= f.submit %>
+  <div class=form-actions>
+    <%= f.button 'Done', class: 'btn  btn-primary' %>
+    <%= link_to 'Cancel', people_path, class: 'btn' %>
   </div>
 <% end %>

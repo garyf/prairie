@@ -1,19 +1,15 @@
-<p id="notice"><%= notice %></p>
+<h4>Person</h4>
+<%= link_to 'Edit', edit_person_path(@person) %>
 
-<p>
-  <strong>Email:</strong>
-  <%= @person.email %>
-</p>
-
-<p>
-  <strong>Name first:</strong>
-  <%= @person.name_first %>
-</p>
-
-<p>
-  <strong>Name last:</strong>
-  <%= @person.name_last %>
-</p>
-
-<%= link_to 'Edit', edit_person_path(@person) %> |
-<%= link_to 'Back', people_path %>
+<dl class=dl-horizontal>
+  <dt>First name</dt>
+  <dd><%= @person.name_first %></dd>
+</dl>
+<dl class=dl-horizontal>
+  <dt>Last name</dt>
+  <dd><%= @person.name_last %></dd>
+</dl>
+<dl class=dl-horizontal>
+  <dt>Email</dt>
+  <dd><%= @person.email %></dd>
+</dl>
