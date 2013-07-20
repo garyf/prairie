@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @field_set.type %>
+</p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @field_set.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @field_set.description %>
+</p>
+
+<%= link_to 'Edit', edit_field_set_path(@field_set) %> |
+<%= link_to 'Back', field_sets_path %>

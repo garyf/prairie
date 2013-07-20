@@ -1,0 +1,31 @@
+<h1>Listing field_sets</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @field_sets.each do |field_set| %>
+      <tr>
+        <td><%= field_set.type %></td>
+        <td><%= field_set.name %></td>
+        <td><%= field_set.description %></td>
+        <td><%= link_to 'Show', field_set %></td>
+        <td><%= link_to 'Edit', edit_field_set_path(field_set) %></td>
+        <td><%= link_to 'Destroy', field_set, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Field set', new_field_set_path %>
