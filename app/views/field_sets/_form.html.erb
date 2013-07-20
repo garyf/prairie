@@ -1,29 +1,26 @@
-<%= form_for(@field_set) do |f| %>
-  <% if @field_set.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@field_set.errors.count, "error") %> prohibited this field_set from being saved:</h2>
+<dl class=dl-horizontal>
+  <dt>For</dt>
+  <dd><%= @field_set.type_human %></dd>
+</dl>
 
-      <ul>
-      <% @field_set.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
+<%= form_for(@field_set,
+  as: :field_set,
+  url: field_set_path(@field_set),
+  html: {class: 'form-horizontal'}) do |f| %>
 
-  <div class="field">
-    <%= f.label :type %><br>
-    <%= f.text_field :type %>
+  <%= render 'common/form_errors', o: @field_set %>
+  <%= f.hidden_field :type %>
+
+  <div class=control-group>
+    <%= f.label :name, class: 'control-label' %>
+    <div class=controls><%= f.text_field :name %></div>
   </div>
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
+  <div class=control-group>
+    <%= f.label :description, class: 'control-label' %>
+    <div class=controls><%= f.text_field :description %></div>
   </div>
-  <div class="field">
-    <%= f.label :description %><br>
-    <%= f.text_field :description %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
+  <div class=form-actions>
+    <%= f.button 'Done', class: 'btn  btn-primary' %>
+    <%= link_to 'Cancel', field_sets_path, class: 'btn' %>
   </div>
 <% end %>

@@ -1,31 +1,12 @@
-<h1>Listing field_sets</h1>
+<h4>Listing field sets</h4>
+<%= link_to 'New set for people', new_field_set_path(kind: 'Person') %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Type</th>
-      <th>Name</th>
-      <th>Description</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+<% if @field_sets.any? %>
+  <% @field_sets.each do |o| %><dl>
+    <dt><%= link_to o.name_with_type, field_set_path(o) %></dt>
+    <dd><%= o.description %></dd>
+  </dl><% end %>
 
-  <tbody>
-    <% @field_sets.each do |field_set| %>
-      <tr>
-        <td><%= field_set.type %></td>
-        <td><%= field_set.name %></td>
-        <td><%= field_set.description %></td>
-        <td><%= link_to 'Show', field_set %></td>
-        <td><%= link_to 'Edit', edit_field_set_path(field_set) %></td>
-        <td><%= link_to 'Destroy', field_set, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Field set', new_field_set_path %>
+<% else %>
+  <h5>None</h5>
+<% end %>
