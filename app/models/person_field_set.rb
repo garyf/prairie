@@ -1,0 +1,2 @@
+class PersonFieldSet < FieldSet
+end
