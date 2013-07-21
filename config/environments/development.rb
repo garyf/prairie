@@ -27,3 +27,13 @@ Prairie0::Application.configure do
   # number of complex assets.
   config.assets.debug = true
 end
+
+Redis.current = Redis.new(
+  host: '127.0.0.1',
+  port: 6379)
+begin
+  Redis.current.get('foo')
+  puts '~~ Redis listening on port 6379'
+rescue
+  puts "\n* ALERT *  Redis is not listening on port 6379; stand in root and run: rds-dvlp\n\n"
+end

@@ -1,0 +1,5 @@
+# add to .bash_aliases (or equivalent) for local dev, test
+
+# Redis
+alias rds-dvlp='redis-server ./config/redis/dvlp_6379.conf'
+alias rds-test='redis-server ./config/redis/test_9212.conf'
