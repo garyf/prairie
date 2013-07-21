@@ -1,0 +1,31 @@
+<h1>Listing field_rows</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Custom field</th>
+      <th>Field set</th>
+      <th>Row</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @field_rows.each do |field_row| %>
+      <tr>
+        <td><%= field_row.custom_field %></td>
+        <td><%= field_row.field_set %></td>
+        <td><%= field_row.row %></td>
+        <td><%= link_to 'Show', field_row %></td>
+        <td><%= link_to 'Edit', edit_field_row_path(field_row) %></td>
+        <td><%= link_to 'Destroy', field_row, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Field row', new_field_row_path %>
