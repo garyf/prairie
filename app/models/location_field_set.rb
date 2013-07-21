@@ -1,0 +1,2 @@
+class LocationFieldSet < FieldSet
+end
