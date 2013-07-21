@@ -1,0 +1,17 @@
+<h4>Editing string field</h4>
+
+<%= link_to 'Destroy', setup_string_field_path(@string_field), method: :delete, data: {confirm: 'Are you sure?'} %>
+
+<%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
+
+<%= form_for(@string_field,
+  url: setup_string_field_path(@string_field),
+  html: {class: 'form-horizontal'}) do |f| %>
+
+  <%= render partial: 'form', locals: {f: f} %>
+
+  <div class=form-actions>
+    <%= f.button 'Done', class: 'btn  btn-primary' %>
+    <%= @field_set.btn_to_cancel_field %>
+  </div>
+<% end %>

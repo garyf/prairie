@@ -8,6 +8,7 @@ class FieldSetsController < ApplicationController
   end
 
   def show
+    @custom_fields = @field_set.custom_fields
   end
 
   def new

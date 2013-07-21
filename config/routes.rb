@@ -18,6 +18,7 @@ Prairie0::Application.routes.draw do
   resources :field_sets
   resources :locations
   resources :people
+  resources :setup_string_fields, except: [:index, :show]
 
   # Example resource route with options:
   #   resources :products do

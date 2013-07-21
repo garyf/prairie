@@ -1,0 +1,15 @@
+<h4>New string field</h4>
+
+<%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
+
+<%= form_for(@string_field,
+  url: setup_string_fields_path(@string_field, field_set_id: @field_set.id),
+  html: {class: 'form-horizontal'}) do |f| %>
+
+  <%= render partial: 'form', locals: {f: f} %>
+
+  <div class=form-actions>
+    <%= f.button 'Done', class: 'btn  btn-primary' %>
+    <%= @field_set.btn_to_cancel_field %>
+  </div>
+<% end %>

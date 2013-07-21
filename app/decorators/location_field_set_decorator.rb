@@ -1,12 +1,12 @@
 # coding: utf-8
-module PersonFieldSetDecorator
+module LocationFieldSetDecorator
 
   def name_with_type
-    "#{name}, for people"
+    "#{name}, for locations"
   end
 
   def type_human
-    'People'
+    'Locations'
   end
 
   def btn_to_cancel_field
