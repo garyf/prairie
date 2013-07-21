@@ -1,14 +1,11 @@
-<p id="notice"><%= notice %></p>
+<h4>Location</h4>
+<%= link_to 'Edit', edit_location_path(@location) %>
 
-<p>
-  <strong>Name:</strong>
-  <%= @location.name %>
-</p>
-
-<p>
-  <strong>Description:</strong>
-  <%= @location.description %>
-</p>
-
-<%= link_to 'Edit', edit_location_path(@location) %> |
-<%= link_to 'Back', locations_path %>
+<dl class=dl-horizontal>
+  <dt>First name</dt>
+  <dd><%= @location.name %></dd>
+</dl>
+<dl class=dl-horizontal>
+  <dt>Description</dt>
+  <dd><%= @location.description %></dd>
+</dl>

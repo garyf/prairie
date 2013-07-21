@@ -1,6 +1,5 @@
-<h1>Editing location</h1>
+<h4>Editing location</h4>
+<%= link_to 'Show', @location %> |
+<%= link_to 'Destroy', @location, method: :delete, data: {confirm: 'Are you sure?'} %>
 
 <%= render 'form' %>
-
-<%= link_to 'Show', @location %> |
-<%= link_to 'Back', locations_path %>

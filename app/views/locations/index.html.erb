@@ -1,29 +1,15 @@
-<h1>Listing locations</h1>
+<h4>Listing locations</h4>
+<%= link_to 'New location', new_location_path %>
 
-<table>
-  <thead>
-    <tr>
+<% if @locations.any? %>
+  <%= paginate @locations %>
+  <table class='table  table-condensed'>
+    <thead><tr>
       <th>Name</th>
-      <th>Description</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
+    </tr></thead>
+    <tbody><%= render @locations %></tbody>
+  </table>
 
-  <tbody>
-    <% @locations.each do |location| %>
-      <tr>
-        <td><%= location.name %></td>
-        <td><%= location.description %></td>
-        <td><%= link_to 'Show', location %></td>
-        <td><%= link_to 'Edit', edit_location_path(location) %></td>
-        <td><%= link_to 'Destroy', location, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Location', new_location_path %>
+<% else %>
+  <h5>None</h5>
+<% end %>
