@@ -1,35 +1,30 @@
 require "spec_helper"
 
 describe FieldRowsController do
-  describe "routing" do
-
-    it "routes to #index" do
-      get("/field_rows").should route_to("field_rows#index")
+  describe 'w routing to' do
+    it '#edit' do
+      expect(get: '/field_rows/1/edit').to route_to('field_rows#edit', id: '1')
     end
-
-    it "routes to #new" do
-      get("/field_rows/new").should route_to("field_rows#new")
+    it '#update' do
+      expect(put: '/field_rows/1').to route_to('field_rows#update', id: '1')
     end
+  end
 
-    it "routes to #show" do
-      get("/field_rows/1").should route_to("field_rows#show", :id => "1")
+  describe 'w/o routing to' do
+    it '#index' do
+      expect(get: '/field_rows').not_to be_routable
     end
-
-    it "routes to #edit" do
-      get("/field_rows/1/edit").should route_to("field_rows#edit", :id => "1")
+    it '#show' do
+      expect(get: '/field_rows/1').not_to be_routable
     end
-
-    it "routes to #create" do
-      post("/field_rows").should route_to("field_rows#create")
+    it '#new' do
+      expect(get: '/field_rows/new').not_to be_routable
     end
-
-    it "routes to #update" do
-      put("/field_rows/1").should route_to("field_rows#update", :id => "1")
+    it '#create' do
+      expect(post: '/field_rows').not_to be_routable
     end
-
-    it "routes to #destroy" do
-      delete("/field_rows/1").should route_to("field_rows#destroy", :id => "1")
+    it '#destroy' do
+      expect(delete: '/field_rows/1').not_to be_routable
     end
-
   end
 end

@@ -1,0 +1,22 @@
+<h5>Custom fields</h5>
+<% if field_rows.any? %>
+
+  <%= paginate field_rows %>
+  <table class='table  table-condensed'>
+    <thead><tr>
+      <th>Row</th>
+      <th>Field</th>
+      <th>Type</th>
+      <th></th>
+    </tr></thead>
+    <tbody>
+      <% field_rows.each_with_index do |o, i| %><tr>
+        <td><%= link_to i + row_offset, edit_field_row_path(o) %></td>
+        <%= render partial: 'common/link_to_field_edit', locals: {custom_field: o.custom_field} %>
+      </tr><% end %>
+    </tbody>
+  </table>
+
+<% else %>
+  <h5>None</h5>
+<% end %>

@@ -3,21 +3,6 @@
 <%= link_to 'New string field', new_setup_string_field_path(field_set_id: @field_set.id) %> |
 <%= link_to 'Edit set', edit_field_set_path(@field_set) %>
 
-<h5>Custom fields</h5>
-<% if @custom_fields.any? %>
-  <table class='table  table-condensed'>
-    <thead><tr>
-      <th>Field</th>
-      <th>Type</th>
-      <th></th>
-    </tr></thead>
-    <tbody>
-      <% @custom_fields.each do |o| %><tr>
-        <%= render partial: 'common/link_to_field_edit', locals: {custom_field: o} %>
-      </tr><% end %>
-    </tbody>
-  </table>
-
-<% else %>
-  <h5>None</h5>
-<% end %>
+<%= render partial: 'field_rows/list', locals: {
+  field_rows: @field_rows,
+  row_offset: @row_offset} %>

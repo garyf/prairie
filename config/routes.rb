@@ -1,7 +1,5 @@
 Prairie0::Application.routes.draw do
 
-  resources :field_rows
-
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -17,6 +15,7 @@ Prairie0::Application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
+  resources :field_rows, only: [:edit, :update]
   resources :field_sets
   resources :locations
   resources :people

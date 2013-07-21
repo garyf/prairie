@@ -1,2 +1,0 @@
-module FieldRowsHelper
-end

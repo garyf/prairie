@@ -20,7 +20,7 @@ describe SetupStringFieldsController do
       describe 'w #save' do
         before do
           location_field_set_mk.stub_chain(:string_fields, :new).with(valid_attributes) { string_field_mk(save: true) }
-          string_field_mk.should_receive(:constraints_store).with(valid_attributes)
+          string_field_mk.should_receive(:constraints_store).with(valid_attributes, @location_field_set_mock.id)
           post :create, string_field: valid_attributes.merge('some' => 'attribute'), field_set_id: '55'
         end
         it do
