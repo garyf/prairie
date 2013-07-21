@@ -13,3 +13,10 @@
   <dt>Email</dt>
   <dd><%= @person.email %></dd>
 </dl>
+
+<% if @field_sets.any? %>
+  <h5>Custom field sets</h5>
+  <% @field_sets.each do |o| %>
+    <%= render 'field_set', o: o %>
+  <% end %>
+<% end %>

@@ -17,9 +17,11 @@ Prairie0::Application.routes.draw do
   #   resources :products
   resources :field_rows, only: [:edit, :update]
   resources :field_sets
+  resources :field_values, only: :index
   resources :locations
   resources :people
   resources :setup_string_fields, except: [:index, :show]
+  resources :string_fields, only: [:edit, :update]
 
   # Example resource route with options:
   #   resources :products do

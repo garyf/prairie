@@ -1,5 +1,8 @@
 class Person < ActiveRecord::Base
 
+  include Redis::Objects
+  include RedisFieldValues
+
   paginates_per 8
 
   validates :email, :name_last, presence: true

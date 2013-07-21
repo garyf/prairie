@@ -1,0 +1,21 @@
+<%= render partial: 'common/link_to_parent_name', locals: {o: @parent} %>
+
+<% if @field_rows.any? %>
+  <%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
+
+  <%= paginate @field_rows %>
+  <dl class=dl-horizontal>
+    <% @field_rows.each do |o| %>
+
+      <% custom_field = o.custom_field %>
+
+      <%= render partial: 'value_edit', locals: {
+        custom_field: custom_field,
+        parent_id: @parent.id,
+        value_str: @field_values[custom_field.id]} %>
+    <% end %>
+  </dl>
+
+<% else %>
+  <h5>No custom fields</h5>
+<% end %>
