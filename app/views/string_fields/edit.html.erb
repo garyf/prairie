@@ -1,0 +1,18 @@
+<h4>Editing string value</h4>
+
+<%= render partial: 'common/link_to_parent_name', locals: {o: @parent} %>
+<%= render partial: 'common/link_to_field_set_for_parent', locals: {o: @field_set, parent: @parent} %>
+
+<%= form_for(@string_field, html: {class: 'form-horizontal'}) do |f| %>
+  <%= render 'common/form_errors', o: @string_field %>
+  <%= f.hidden_field :parent_id %>
+
+  <div class=control-group>
+    <%= f.label @string_field.name, class: 'control-label' %>
+    <div class=controls><%= f.text_field :gist %></div>
+  </div>
+  <div class=form-actions>
+    <%= f.button 'Done', class: 'btn  btn-primary' %>
+    <%= @field_set.btn_to_cancel_value_edit(@parent.id) %>
+  </div>
+<% end %>

@@ -6,6 +6,10 @@ class CustomField < ActiveRecord::Base
   belongs_to :field_set
   has_one :field_row, dependent: :destroy
 
+  attr_accessor :gist, :parent_id
+
+  delegate :parent, to: :field_set
+
   def field_row_create(field_set_id)
     o = FieldRow.new(
       custom_field_id: id,
