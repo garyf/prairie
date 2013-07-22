@@ -47,7 +47,13 @@ describe SetupStringFieldsController do
   end
 
   context 'w @string_field' do
-    before { StringField.should_receive(:find).with('21') { string_field_mk(field_set: location_field_set_mk) } }
+    before do
+      StringField.should_receive(:find).with('21') do
+        string_field_mk(
+          field_set: location_field_set_mk,
+          parent?: true)
+      end
+    end
 
     describe 'GET edit' do
       before do
@@ -57,6 +63,7 @@ describe SetupStringFieldsController do
       it do
         expect(assigns :string_field).to be @string_field_mock
         expect(assigns :field_set).to be @location_field_set_mock
+        expect(assigns :parent_p).to be true
         expect(response).to render_template :edit
       end
     end
@@ -83,6 +90,7 @@ describe SetupStringFieldsController do
         end
         it do
           # @string_field_mock.should_receive(:constraints_fetch)
+          expect(assigns :parent_p).to be true
           expect(flash[:alert]).to match /Failed to update string field/i
           expect(response).to render_template :edit
         end

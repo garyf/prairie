@@ -10,6 +10,7 @@ class SetupStringFieldsController < ApplicationController
 
   def edit
     @string_field = @string_field.constraints_fetch
+    @parent_p = @string_field.parent?
   end
 
   def create
@@ -29,6 +30,7 @@ class SetupStringFieldsController < ApplicationController
       redirect_to field_set_path(@field_set), notice: 'String field successfully updated'
     else
       @string_field = @string_field.constraints_fetch
+      @parent_p = @string_field.parent?
       flash[:alert] = 'Failed to update string field'
       render :edit
     end

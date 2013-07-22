@@ -6,9 +6,8 @@ class CustomField < ActiveRecord::Base
   belongs_to :field_set
   has_one :field_row, dependent: :destroy
 
-  validates :field_set, presence: true
+  validates :field_set, :type, presence: true
   validates :name, presence: true, uniqueness: {scope: :field_set}
-  validates :type, presence: true
 
   attr_accessor :gist, :parent_id
 

@@ -4,11 +4,29 @@
   <%= f.label :name, class: 'control-label' %>
   <div class=controls><%= f.text_field :name %></div>
 </div>
-<div class=control-group>
-  <%= f.label :length_min, class: 'control-label' %>
-  <div class=controls><%= f.number_field :length_min %></div>
-</div>
-<div class=control-group>
-  <%= f.label :length_max, class: 'control-label' %>
-  <div class=controls><%= f.number_field :length_max %></div>
+
+<% if @parent_p %>
+  <dl class=dl-horizontal>
+    <dt>Length min</dt>
+    <dd><%= @string_field.length_min %></dd>
+  </dl>
+  <dl class=dl-horizontal>
+    <dt>Length max</dt>
+    <dd><%= @string_field.length_max %></dd>
+  </dl>
+
+<% else %>
+  <div class=control-group>
+    <%= f.label :length_min, class: 'control-label' %>
+    <div class=controls><%= f.number_field :length_min %></div>
+  </div>
+  <div class=control-group>
+    <%= f.label :length_max, class: 'control-label' %>
+    <div class=controls><%= f.number_field :length_max %></div>
+  </div>
+<% end %>
+
+<div class=form-actions>
+  <%= f.button 'Done', class: 'btn  btn-primary' %>
+  <%= @field_set.btn_to_cancel_field %>
 </div>
