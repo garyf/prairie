@@ -51,10 +51,12 @@ describe PeopleController do
 
     describe 'GET show' do
       before do
+        PersonFieldSet.should_receive(:by_name) { ['s1','s2'] }
         get :show, id: '21'
       end
       it do
         expect(assigns :person).to be @person_mock
+        expect(assigns :field_sets).to eql ['s1','s2']
         expect(response).to render_template :show
       end
     end

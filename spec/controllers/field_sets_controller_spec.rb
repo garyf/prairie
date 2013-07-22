@@ -54,10 +54,13 @@ describe FieldSetsController do
 
     describe 'GET show' do
       before do
+        person_field_set_mk.stub_chain(:field_rows, :ranked_page).with('2') { ['r1','r2','r3'] }
         get :show, id: '21', page: '2'
       end
       it do
         expect(assigns :field_set).to be @person_field_set_mock
+        expect(assigns :field_rows).to eql ['r1','r2','r3']
+        expect(assigns :row_offset).to eql 9
         expect(response).to render_template :show
       end
     end

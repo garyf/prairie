@@ -51,10 +51,12 @@ describe LocationsController do
 
     describe 'GET show' do
       before do
+        LocationFieldSet.should_receive(:by_name) { ['s1','s2'] }
         get :show, id: '21'
       end
       it do
         expect(assigns :location).to be @location_mock
+        expect(assigns :field_sets).to eql ['s1','s2']
         expect(response).to render_template :show
       end
     end

@@ -1,4 +1,5 @@
 <h4>Listing field sets</h4>
+<%= link_to 'New set for locations', new_field_set_path(kind: 'Location') %>
 <%= link_to 'New set for people', new_field_set_path(kind: 'Person') %>
 
 <% if @field_sets.any? %>
