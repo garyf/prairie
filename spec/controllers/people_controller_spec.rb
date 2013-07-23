@@ -71,7 +71,7 @@ describe PeopleController do
 
     describe 'DELETE destroy' do
       before do
-        person_mk.should_receive(:destroy)
+        person_mk.should_receive(:custom_fields_garbage_collect_and_self_destroy)
         delete :destroy, id: '21'
       end
       it do
