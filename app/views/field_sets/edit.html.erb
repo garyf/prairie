@@ -1,4 +1,7 @@
 <h4>Editing custom field set</h4>
 <%= link_to 'Show', field_set_path(@field_set) %>
+<% if @field_set.destroyable? %>
+  | <%= link_to 'Destroy', field_set_path(@field_set), method: :delete, data: { confirm: 'Are you sure?' } %>
+<% end %>
 
 <%= render 'form' %>

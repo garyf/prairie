@@ -101,16 +101,27 @@ describe FieldSetsController do
     end
   end
 
-  describe 'DELETE destroy' do
-    before do
-      FieldSet.should_receive(:find).with('21') { person_field_set_mk }
-      person_field_set_mk.should_receive(:destroy)
-      delete :destroy, id: '21'
+  context 'DELETE destroy' do
+    describe 'w #destroyable?' do
+      before do
+        FieldSet.should_receive(:find).with('21') { person_field_set_mk(destroyable?: true) }
+        person_field_set_mk.should_receive(:destroy)
+        delete :destroy, id: '21'
+      end
+      it do
+        expect(assigns :field_set).to be @person_field_set_mock
+        expect(flash[:notice]).to match /Field set successfully destroyed/i
+        expect(response).to redirect_to field_sets_path
+      end
     end
-    it do
-      expect(assigns :field_set).to be @person_field_set_mock
-      expect(flash[:notice]).to match /Field set successfully destroyed/i
-      expect(response).to redirect_to field_sets_path
+
+    describe 'w/o #destroyable?' do
+      before do
+        FieldSet.should_receive(:find).with('21') { person_field_set_mk(destroyable?: false) }
+        person_field_set_mk.should_not_receive(:destroy)
+        delete :destroy, id: '21'
+      end
+      it { expect(response).to redirect_to root_path }
     end
   end
 

@@ -39,6 +39,7 @@ class FieldSetsController < ApplicationController
   end
 
   def destroy
+    redirect_to root_path and return unless @field_set.destroyable?
     @field_set.destroy
     redirect_to field_sets_path, notice: 'Field set successfully destroyed'
   end

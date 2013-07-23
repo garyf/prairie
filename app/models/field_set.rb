@@ -24,4 +24,8 @@ class FieldSet < ActiveRecord::Base
     return PersonFieldSet.new(params_white) if params_white[:type] == 'PersonFieldSet'
     raise SubklassNotRecognized
   end
+
+  def destroyable?
+    custom_fields.count == 0
+  end
 end
