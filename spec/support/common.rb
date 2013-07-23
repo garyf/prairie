@@ -16,3 +16,5 @@ end
 def svf(obj)
   obj.save(validate: false)
 end
+
+STR_35 = '123abcd89_123abcd89_123abcd89_123ab'

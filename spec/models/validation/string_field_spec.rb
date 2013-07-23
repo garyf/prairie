@@ -71,6 +71,25 @@ describe StringField do
     end
   end
 
+  context 'w #constraints_store', :redis do
+    before do
+      cr
+      @o.constraints_store({
+        'length_max' => '34',
+        'length_min' => '3'})
+    end
+
+    it '#gist_lte_length_max w #gist length > length_max' do
+      @o.gist = STR_35
+      expect(@o.error_on :gist).to include 'must be less than 35'
+    end
+
+    it '#gist_gte_length_min w #gist length < length_min' do
+      @o.gist = 'ab'
+      expect(@o.error_on :gist).to include 'must be greater than 2'
+    end
+  end
+
   context 'db constraints w' do
     it '#field_set nil' do
       expect_db_error { svf(bld field_set: nil) }

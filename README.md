@@ -32,4 +32,4 @@ See dvlp_6379.conf or test_9212.conf
 
 ## Why 'Prairie'
 
-A prairie denotes an expanse of meadows, full of diverse fields and wildlife.
+A prairie suggests an expanse of meadows, full of diverse fields and wildlife.
