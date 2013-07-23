@@ -53,5 +53,18 @@ describe StringField do
       expect(@person0.gist_fetch @o.id).to eql 'foo'
       expect(@person1.gist_fetch @o.id).to eql 'bar'
     end
+
+    describe '#parents_garbage_collect_and_self_destroy' do
+      before do
+        @o.should_receive(:destroy)
+        @o.parents_garbage_collect_and_self_destroy
+      end
+      it '#parents_gists_clear' do
+        expect(@person0.gist_fetch @o.id).to be nil
+        expect(@person1.gist_fetch @o.id).to be nil
+      end
+      it { expect(@o.parents.empty?).to be true }
+      it { expect(@o.constraints.empty?).to be true }
+    end
   end
 end

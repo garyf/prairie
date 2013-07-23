@@ -25,8 +25,26 @@ module RedisCustomFields
     self
   end
 
-  def constraint_store(k, v)
+  def parents_garbage_collect_and_self_destroy
+    parents_gists_clear
+    parents.clear
+    constraints.clear
+    self.destroy
+  end
+
+# not publicly used
+
+  def constraint_store(k, v) #constraints_store
     return constraints.delete(k) if v.blank?
     constraints[k] = v
+  end
+
+  def parent_klass_downcase #parents_gists_clear
+    str = field_set.type
+    str.to_s[0...(str.rindex('FieldSet') || 0)].downcase # based on ActiveSupport::Inflector#deconstantize
+  end
+
+  def parents_gists_clear #parents_garbage_collect_and_self_destroy
+    parents.each { |parent_id| redis.hdel("#{parent_klass_downcase}:#{parent_id}:field_values", id) }
   end
 end

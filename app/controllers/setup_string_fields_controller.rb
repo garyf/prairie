@@ -37,7 +37,7 @@ class SetupStringFieldsController < ApplicationController
   end
 
   def destroy
-    @string_field.destroy
+    @string_field.parents_garbage_collect_and_self_destroy
     flash[:notice] = 'String field successfully destroyed'
     redirect_to field_set_path(@field_set)
   end
