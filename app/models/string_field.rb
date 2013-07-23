@@ -33,13 +33,13 @@ private
     return if gist.blank?
     str = constraints['length_max']
     self.length_max = str.blank? ? CHARACTER_VARYING_255 : str.to_i
-    errors.add(:gist, "must be less than #{length_max + 1}") if gist.length > length_max
+    errors.add(:gist, "length must be less than #{length_max + 1}") if gist.length > length_max
   end
 
   def gist_gte_length_min
     return if gist.blank?
     str = constraints['length_min']
     self.length_min = str.blank? ? 1 : str.to_i
-    errors.add(:gist, "must be greater than #{length_min - 1}") if gist.length < length_min
+    errors.add(:gist, "length must be greater than #{length_min - 1}") if gist.length < length_min
   end
 end

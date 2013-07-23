@@ -9,6 +9,7 @@ where a user might want to create dozens, or perhaps hundreds, of custom fields.
 
 - **Redis configuration:** defined locally within config/
 - **Custom field grouping and sequencing:** within groups, custom fields are sequenced using the Ranked-Model gem
+- **Custom field validation** including string length and numerical limits
 - **Test coverage:** full Rspec coverage and reporting with the Simplecov gem
 - **Pagination:** using the Kaminari gem
 - **Decorators:** using the Active Decorator gem

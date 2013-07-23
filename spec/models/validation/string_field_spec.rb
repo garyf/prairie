@@ -81,12 +81,12 @@ describe StringField do
 
     it '#gist_lte_length_max w #gist length > length_max' do
       @o.gist = STR_35
-      expect(@o.error_on :gist).to include 'must be less than 35'
+      expect(@o.error_on :gist).to include 'length must be less than 35'
     end
 
     it '#gist_gte_length_min w #gist length < length_min' do
       @o.gist = 'ab'
-      expect(@o.error_on :gist).to include 'must be greater than 2'
+      expect(@o.error_on :gist).to include 'length must be greater than 2'
     end
   end
 
