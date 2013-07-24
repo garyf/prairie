@@ -1,5 +1,7 @@
 <h4>Editing string field</h4>
-<%= link_to 'Edit row position', edit_field_row_path(@string_field.field_row) %> |
+<% if @field_set.field_row_editable? %>
+  <%= link_to 'Edit row position', edit_field_row_path(@string_field.field_row) %> |
+<% end %>
 <%= link_to 'Destroy', setup_string_field_path(@string_field), method: :delete, data: {confirm: 'Are you sure?'} %>
 
 <%= render partial: 'common/field_set_name', locals: {o: @field_set} %>

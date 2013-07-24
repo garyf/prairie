@@ -9,6 +9,7 @@ class FieldSetsController < ApplicationController
 
   def show
     @field_rows = @field_set.field_rows.ranked_page(params[:page])
+    @field_row_editable_p = @field_set.field_row_editable?
     paginate_row_offset_assign
   end
 

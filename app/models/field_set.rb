@@ -28,4 +28,8 @@ class FieldSet < ActiveRecord::Base
   def destroyable?
     custom_fields.count == 0
   end
+
+  def field_row_editable?
+    custom_fields.count > 1
+  end
 end

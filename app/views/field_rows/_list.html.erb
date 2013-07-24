@@ -11,7 +11,16 @@
     </tr></thead>
     <tbody>
       <% field_rows.each_with_index do |o, i| %><tr>
-        <td><%= link_to i + row_offset, edit_field_row_path(o) %></td>
+
+        <% row = i + row_offset %>
+
+        <td>
+          <% if field_row_editable_p %>
+            <%= link_to row, edit_field_row_path(o) %>
+          <% else %>
+            <%= row %>
+          <% end %>
+        </td>
         <%= render partial: 'common/link_to_field_edit', locals: {custom_field: o.custom_field} %>
       </tr><% end %>
     </tbody>
