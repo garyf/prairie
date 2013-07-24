@@ -1,12 +1,13 @@
 require 'spec_helper'
 
-describe StringField do
+describe NumericField do
   context '#constraints_store, #constraints_fetch', :redis do
     before do
-      c_person_string_field_bs
+      c_location_numeric_field_bs
       @params_white = {
-        'length_max' => '34',
-        'length_min' => '3'}
+        'only_integer_p' => '1',
+        'value_max' => '233',
+        'value_min' => '-144'}
     end
     describe 'passing field_set_id' do
       before do
@@ -16,8 +17,9 @@ describe StringField do
         @o.constraints_fetch
       end
       it do
-        expect(@o.length_max).to eql '34'
-        expect(@o.length_min).to eql '3'
+        expect(@o.only_integer_p).to eql '1'
+        expect(@o.value_max).to eql '233'
+        expect(@o.value_min).to eql '-144'
       end
     end
 
@@ -28,21 +30,22 @@ describe StringField do
         @o.constraints_fetch
       end
       it do
-        expect(@o.length_max).to eql '34'
-        expect(@o.length_min).to eql '3'
+        expect(@o.only_integer_p).to eql '1'
+        expect(@o.value_max).to eql '233'
+        expect(@o.value_min).to eql '-144'
       end
     end
 
     describe '#constraints_store when passing blank values' do
       before do
         @o.constraints_store({
-          'length_max' => '',
-          'length_min' => ''})
+          'value_max' => '',
+          'value_min' => ''})
         @o.constraints_fetch
       end
       it do
-        expect(@o.length_max).to eql 255
-        expect(@o.length_min).to eql 1
+        expect(@o.value_max).to be nil
+        expect(@o.value_min).to be nil
       end
     end
   end
