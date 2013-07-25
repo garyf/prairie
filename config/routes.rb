@@ -19,7 +19,9 @@ Prairie0::Application.routes.draw do
   resources :field_sets
   resources :field_values, only: :index
   resources :locations
+  resources :numeric_fields, only: [:edit, :update]
   resources :people
+  resources :setup_numeric_fields, except: [:index, :show]
   resources :setup_string_fields, except: [:index, :show]
   resources :string_fields, only: [:edit, :update]
 

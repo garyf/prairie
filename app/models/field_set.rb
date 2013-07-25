@@ -2,6 +2,7 @@ class FieldSet < ActiveRecord::Base
 
   has_many :custom_fields
   has_many :field_rows, dependent: :destroy
+  has_many :numeric_fields, dependent: :destroy
   has_many :string_fields, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true

@@ -1,0 +1,11 @@
+<h4>New numeric field</h4>
+
+<%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
+
+<%= form_for(@numeric_field,
+  url: setup_numeric_fields_path(@numeric_field, field_set_id: @field_set.id),
+  html: {class: 'form-horizontal'}) do |f| %>
+
+  <%= render partial: 'form', locals: {f: f} %>
+
+<% end %>

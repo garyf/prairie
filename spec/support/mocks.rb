@@ -15,6 +15,10 @@ def location_mk(stubs = {})
   (@location_mock ||= mock_model(Location).as_null_object).tap { |m| m.stub(stubs) unless stubs.empty? }
 end
 
+def numeric_field_mk(stubs = {})
+  (@numeric_field_mock ||= mock_model(NumericField).as_null_object).tap { |m| m.stub(stubs) unless stubs.empty? }
+end
+
 def person_field_set_mk(stubs = {})
   (@person_field_set_mock ||= mock_model(PersonFieldSet).as_null_object).tap { |m| m.stub(stubs) unless stubs.empty? }
 end

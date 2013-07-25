@@ -1,0 +1,40 @@
+<%= render 'common/form_errors', o: @numeric_field %>
+
+<div class=control-group>
+  <%= f.label :name, class: 'control-label' %>
+  <div class=controls><%= f.text_field :name %></div>
+</div>
+
+<% if @parent_p %>
+  <dl class=dl-horizontal>
+    <dt>Value min</dt>
+    <dd><%= @numeric_field.value_min %></dd>
+  </dl>
+  <dl class=dl-horizontal>
+    <dt>Value max</dt>
+    <dd><%= @numeric_field.value_max %></dd>
+  </dl>
+  <dl class=dl-horizontal>
+    <dt>Only integer?</dt>
+    <dd><%= @numeric_field.only_integer? %></dd>
+  </dl>
+
+<% else %>
+  <div class=control-group>
+    <%= f.label :value_min, class: 'control-label' %>
+    <div class=controls><%= f.number_field :value_min %></div>
+  </div>
+  <div class=control-group>
+    <%= f.label :value_max, class: 'control-label' %>
+    <div class=controls><%= f.number_field :value_max %></div>
+  </div>
+  <div class=control-group>
+    <%= f.label 'Only integer?', class: 'control-label' %>
+    <div class=controls><%= f.check_box :only_integer_p %></div>
+  </div>
+<% end %>
+
+<div class=form-actions>
+  <%= f.button 'Done', class: 'btn  btn-primary' %>
+  <%= @field_set.btn_to_cancel_field %>
+</div>
