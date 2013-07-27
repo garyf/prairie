@@ -6,7 +6,8 @@ describe SetupNumericFieldsController do
 
     describe 'GET new' do
       before do
-        NumericField.should_receive(:new) { numeric_field_mk }
+        # NumericField.should_receive(:new) { numeric_field_mk }
+        person_field_set_mk.stub_chain(:numeric_fields, :new) { numeric_field_mk }
         get :new, field_set_id: '34'
       end
       it do
@@ -58,6 +59,7 @@ describe SetupNumericFieldsController do
     describe 'GET edit' do
       before do
         numeric_field_mk.should_receive(:constraints_fetch)
+        @numeric_field_mock.should_receive(:human_row)
         get :edit, id: '21'
       end
       it do
@@ -71,7 +73,7 @@ describe SetupNumericFieldsController do
     context 'PUT update' do
       describe 'w #update' do
         before do
-          numeric_field_mk.should_receive(:update).with(valid_attributes) { true }
+          numeric_field_mk.should_receive(:update).with(valid_attributes_human) { true }
           @numeric_field_mock.should_receive(:constraints_store).with(valid_attributes)
           put :update, id: '21', numeric_field: valid_attributes.merge('some' => 'attribute')
         end
@@ -84,7 +86,7 @@ describe SetupNumericFieldsController do
 
       describe 'w/o #update' do
         before do
-          numeric_field_mk.should_receive(:update).with(valid_attributes) { false }
+          numeric_field_mk.should_receive(:update).with(valid_attributes_human) { false }
           numeric_field_mk.should_not_receive(:constraints_store)
           put :update, id: '21', numeric_field: valid_attributes.merge('some' => 'attribute')
         end
@@ -113,9 +115,15 @@ describe SetupNumericFieldsController do
 private
 
   def valid_attributes() {
+    'field_set_id' => '3',
     'name' => 'Size',
     'only_integer_p' => '1',
+    'row_position' => '5',
     'value_max' => '377',
     'value_min' => '-89'}
+  end
+
+  def valid_attributes_human
+    valid_attributes.merge('row_position' => '4')
   end
 end

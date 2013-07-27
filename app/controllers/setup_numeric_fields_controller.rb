@@ -5,11 +5,12 @@ class SetupNumericFieldsController < ApplicationController
   respond_to :html
 
   def new
-    @numeric_field = NumericField.new
+    @numeric_field = @field_set.numeric_fields.new
   end
 
   def edit
     @numeric_field = @numeric_field.constraints_fetch
+    @numeric_field.row_position = @numeric_field.human_row
     @parent_p = @numeric_field.parent?
   end
 
@@ -25,7 +26,7 @@ class SetupNumericFieldsController < ApplicationController
   end
 
   def update
-    if @numeric_field.update(params_white)
+    if @numeric_field.update(params_white_w_human_row)
       @numeric_field.constraints_store(params_white)
       redirect_to field_set_path(@field_set), notice: 'Numeric field successfully updated'
     else
@@ -45,7 +46,7 @@ class SetupNumericFieldsController < ApplicationController
 private
 
   def field_set_assign
-    @field_set = FieldSet.find(params[:field_set_id])
+    @field_set = FieldSet.find(params[:field_set_id] || params[:numeric_field][:field_set_id])
   end
 
   def numeric_field_assign
@@ -58,8 +59,10 @@ private
 
   def params_white
     params.require(:numeric_field).permit(
+      :field_set_id,
       :name,
       :only_integer_p,
+      :row_position,
       :value_max,
       :value_min)
   end

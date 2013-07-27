@@ -5,11 +5,12 @@ class SetupStringFieldsController < ApplicationController
   respond_to :html
 
   def new
-    @string_field = StringField.new
+    @string_field = @field_set.string_fields.new
   end
 
   def edit
     @string_field = @string_field.constraints_fetch
+    @string_field.row_position = @string_field.human_row
     @parent_p = @string_field.parent?
   end
 
@@ -25,7 +26,7 @@ class SetupStringFieldsController < ApplicationController
   end
 
   def update
-    if @string_field.update(params_white)
+    if @string_field.update(params_white_w_human_row)
       @string_field.constraints_store(params_white)
       redirect_to field_set_path(@field_set), notice: 'String field successfully updated'
     else
@@ -45,7 +46,7 @@ class SetupStringFieldsController < ApplicationController
 private
 
   def field_set_assign
-    @field_set = FieldSet.find(params[:field_set_id])
+    @field_set = FieldSet.find(params[:field_set_id] || params[:string_field][:field_set_id])
   end
 
   def string_field_assign
@@ -58,8 +59,10 @@ private
 
   def params_white
     params.require(:string_field).permit(
+      :field_set_id,
       :length_max,
       :length_min,
-      :name)
+      :name,
+      :row_position)
   end
 end

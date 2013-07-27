@@ -3,8 +3,10 @@
 <%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
 
 <%= form_for(@string_field,
-  url: setup_string_fields_path(@string_field, field_set_id: @field_set.id),
+  url: setup_string_fields_path(@string_field),
   html: {class: 'form-horizontal'}) do |f| %>
+
+  <%= f.hidden_field :field_set_id %>
 
   <%= render partial: 'form', locals: {f: f} %>
 

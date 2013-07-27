@@ -6,7 +6,8 @@ describe SetupStringFieldsController do
 
     describe 'GET new' do
       before do
-        StringField.should_receive(:new) { string_field_mk }
+        # StringField.should_receive(:new) { string_field_mk }
+        location_field_set_mk.stub_chain(:string_fields, :new) { string_field_mk }
         get :new, field_set_id: '55'
       end
       it do
@@ -58,6 +59,7 @@ describe SetupStringFieldsController do
     describe 'GET edit' do
       before do
         string_field_mk.should_receive(:constraints_fetch)
+        @string_field_mock.should_receive(:human_row)
         get :edit, id: '21'
       end
       it do
@@ -71,7 +73,7 @@ describe SetupStringFieldsController do
     context 'PUT update' do
       describe 'w #update' do
         before do
-          string_field_mk.should_receive(:update).with(valid_attributes) { true }
+          string_field_mk.should_receive(:update).with(valid_attributes_human) { true }
           @string_field_mock.should_receive(:constraints_store).with(valid_attributes)
           put :update, id: '21', string_field: valid_attributes.merge('some' => 'attribute')
         end
@@ -84,7 +86,7 @@ describe SetupStringFieldsController do
 
       describe 'w/o #update' do
         before do
-          string_field_mk.should_receive(:update).with(valid_attributes) { false }
+          string_field_mk.should_receive(:update).with(valid_attributes_human) { false }
           string_field_mk.should_not_receive(:constraints_store)
           put :update, id: '21', string_field: valid_attributes.merge('some' => 'attribute')
         end
@@ -113,8 +115,14 @@ describe SetupStringFieldsController do
 private
 
   def valid_attributes() {
+    'field_set_id' => '3',
     'length_max' => '144',
     'length_min' => '3',
-    'name' => 'Size'}
+    'name' => 'Size',
+    'row_position' => '5'}
+  end
+
+  def valid_attributes_human
+    valid_attributes.merge('row_position' => '4')
   end
 end
