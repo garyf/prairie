@@ -4,6 +4,7 @@ class CreateCustomFields < ActiveRecord::Migration
       t.string :type, null: false
       t.references :field_set, null: false, index: true
       t.string :name, null: false
+      t.integer :row, null: false
 
       t.timestamps
     end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130721154532) do
+ActiveRecord::Schema.define(version: 20130721131058) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,22 +22,12 @@ ActiveRecord::Schema.define(version: 20130721154532) do
     t.string   "type",         null: false
     t.integer  "field_set_id", null: false
     t.string   "name",         null: false
+    t.integer  "row",          null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "custom_fields", ["field_set_id"], name: "index_custom_fields_on_field_set_id", using: :btree
-
-  create_table "field_rows", force: true do |t|
-    t.integer  "custom_field_id", null: false
-    t.integer  "field_set_id",    null: false
-    t.integer  "row",             null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "field_rows", ["custom_field_id"], name: "index_field_rows_on_custom_field_id", using: :btree
-  add_index "field_rows", ["field_set_id"], name: "index_field_rows_on_field_set_id", using: :btree
 
   create_table "field_sets", force: true do |t|
     t.string   "type",        null: false

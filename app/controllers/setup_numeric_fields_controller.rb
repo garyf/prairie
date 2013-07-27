@@ -16,7 +16,7 @@ class SetupNumericFieldsController < ApplicationController
   def create
     @numeric_field = @field_set.numeric_fields.new(params_white)
     if @numeric_field.save
-      @numeric_field.constraints_store(params_white, @field_set.id)
+      @numeric_field.constraints_store(params_white)
       redirect_to field_set_path(@field_set), notice: 'Numeric field successfully created'
     else
       flash[:alert] = 'Failed to create numeric field'

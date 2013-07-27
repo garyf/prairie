@@ -10,8 +10,7 @@ class NumericField < CustomField
   validates :gist, :value_max, :value_min, numericality: true, allow_blank: true
   validate :value_min_lte_value_max, :gist_only_integer, :gist_lte_value_max, :gist_gte_value_min
 
-  def constraints_store(params_white, field_set_id = nil)
-    field_row_create(field_set_id) if field_set_id
+  def constraints_store(params_white)
     CONSTRAINTS.each { |k| constraint_store(k, params_white.delete(k)) } unless parent?
   end
 

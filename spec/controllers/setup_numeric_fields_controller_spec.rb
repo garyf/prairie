@@ -20,7 +20,7 @@ describe SetupNumericFieldsController do
       describe 'w #save' do
         before do
           person_field_set_mk.stub_chain(:numeric_fields, :new).with(valid_attributes) { numeric_field_mk(save: true) }
-          numeric_field_mk.should_receive(:constraints_store).with(valid_attributes, @person_field_set_mock.id)
+          numeric_field_mk.should_receive(:constraints_store).with(valid_attributes)
           post :create, numeric_field: valid_attributes.merge('some' => 'attribute'), field_set_id: '34'
         end
         it do

@@ -16,7 +16,7 @@ class SetupStringFieldsController < ApplicationController
   def create
     @string_field = @field_set.string_fields.new(params_white)
     if @string_field.save
-      @string_field.constraints_store(params_white, @field_set.id)
+      @string_field.constraints_store(params_white)
       redirect_to field_set_path(@field_set), notice: 'String field successfully created'
     else
       flash[:alert] = 'Failed to create string field'

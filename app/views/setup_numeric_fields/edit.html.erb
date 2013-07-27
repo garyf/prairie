@@ -1,7 +1,4 @@
 <h4>Editing numeric field</h4>
-<% if @field_set.field_row_editable? %>
-  <%= link_to 'Edit row position', edit_field_row_path(@numeric_field.field_row) %> |
-<% end %>
 <%= link_to 'Destroy', setup_numeric_field_path(@numeric_field), method: :delete, data: {confirm: 'Are you sure?'} %>
 
 <%= render partial: 'common/field_set_name', locals: {o: @field_set} %>

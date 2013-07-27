@@ -11,8 +11,7 @@ class StringField < CustomField
 
   CHARACTER_VARYING_255 = 255
 
-  def constraints_store(params_white, field_set_id = nil)
-    field_row_create(field_set_id) if field_set_id
+  def constraints_store(params_white)
     CONSTRAINTS.each { |k| constraint_store(k, params_white.delete(k)) } unless parent?
   end
 

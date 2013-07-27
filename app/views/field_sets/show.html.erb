@@ -3,7 +3,6 @@
 <%= link_to 'New string field', new_setup_string_field_path(field_set_id: @field_set.id) %> |
 <%= link_to 'Edit set', edit_field_set_path(@field_set) %>
 
-<%= render partial: 'field_rows/list', locals: {
-  field_rows: @field_rows,
-  field_row_editable_p: @field_row_editable_p,
+<%= render partial: 'custom_fields/list', locals: {
+  custom_fields: @custom_fields,
   row_offset: @row_offset} %>
