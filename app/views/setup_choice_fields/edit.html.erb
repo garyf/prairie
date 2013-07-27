@@ -1,0 +1,13 @@
+<h4>Editing choice field</h4>
+<%= link_to 'Destroy', setup_choice_field_path(@choice_field), method: :delete, data: {confirm: 'Are you sure?'} %>
+
+<%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
+
+<%= form_for(@choice_field,
+  as: :choice_field,
+  url: setup_choice_field_path(@choice_field),
+  html: {class: 'form-horizontal'}) do |f| %>
+
+  <%= render partial: 'form', locals: {f: f} %>
+
+<% end %>

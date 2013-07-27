@@ -1,0 +1,22 @@
+<%= render 'common/form_errors', o: @choice_field %>
+
+<div class=control-group>
+  <%= f.label :name, class: 'control-label' %>
+  <div class=controls><%= f.text_field :name %></div>
+</div>
+
+<% if @choice_field.row %>
+  <dl class=dl-horizontal>
+    <dt>Current row</dt>
+    <dd><%= @choice_field.human_row %></dd>
+  </dl>
+  <div class=control-group>
+    <%= f.label 'Move to row', class: 'control-label' %>
+    <div class=controls><%= f.number_field :row_position, class: 'input-mini' %></div>
+  </div>
+<% end %>
+
+<div class=form-actions>
+  <%= f.button 'Done', class: 'btn  btn-primary' %>
+  <%= @field_set.btn_to_cancel_field %>
+</div>

@@ -6,7 +6,6 @@ describe SetupStringFieldsController do
 
     describe 'GET new' do
       before do
-        # StringField.should_receive(:new) { string_field_mk }
         location_field_set_mk.stub_chain(:string_fields, :new) { string_field_mk }
         get :new, field_set_id: '55'
       end

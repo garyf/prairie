@@ -1,0 +1,15 @@
+<h4>New choice field</h4>
+
+<%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
+
+<%= form_for(@choice_field,
+  as: :choice_field,
+  url: setup_choice_fields_path(@choice_field),
+  html: {class: 'form-horizontal'}) do |f| %>
+
+  <%= f.hidden_field :field_set_id %>
+  <%= f.hidden_field :type %>
+
+  <%= render partial: 'form', locals: {f: f} %>
+
+<% end %>

@@ -6,7 +6,6 @@ describe SetupNumericFieldsController do
 
     describe 'GET new' do
       before do
-        # NumericField.should_receive(:new) { numeric_field_mk }
         person_field_set_mk.stub_chain(:numeric_fields, :new) { numeric_field_mk }
         get :new, field_set_id: '34'
       end
