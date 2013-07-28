@@ -21,7 +21,7 @@ describe SetupStringFieldsController do
         before do
           location_field_set_mk.stub_chain(:string_fields, :new).with(valid_attributes) { string_field_mk(save: true) }
           string_field_mk.should_receive(:constraints_store).with(valid_attributes)
-          post :create, string_field: valid_attributes.merge('some' => 'attribute'), field_set_id: '55'
+          post :create, string_field: valid_attributes.merge('some' => 'attribute')
         end
         it do
           expect(assigns :field_set).to be @location_field_set_mock
@@ -36,7 +36,7 @@ describe SetupStringFieldsController do
           with_errors_double
           location_field_set_mk.stub_chain(:string_fields, :new).with(valid_attributes) { string_field_mk(save: false) }
           string_field_mk.should_not_receive(:constraints_store)
-          post :create, string_field: valid_attributes.merge('some' => 'attribute'), field_set_id: '55'
+          post :create, string_field: valid_attributes.merge('some' => 'attribute')
         end
         it do
           expect(flash[:alert]).to match /Failed to create string field/i
@@ -114,7 +114,7 @@ describe SetupStringFieldsController do
 private
 
   def valid_attributes() {
-    'field_set_id' => '3',
+    'field_set_id' => '55',
     'length_max' => '144',
     'length_min' => '3',
     'name' => 'Size',

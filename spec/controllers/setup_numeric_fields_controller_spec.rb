@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe SetupNumericFieldsController do
   context 'w params[:field_set_id]' do
-    before { FieldSet.should_receive(:find).with('34') { person_field_set_mk } }
+    before { FieldSet.should_receive(:find).with('21') { person_field_set_mk } }
 
     describe 'GET new' do
       before do
         person_field_set_mk.stub_chain(:numeric_fields, :new) { numeric_field_mk }
-        get :new, field_set_id: '34'
+        get :new, field_set_id: '21'
       end
       it do
         expect(assigns :field_set).to be @person_field_set_mock
@@ -21,7 +21,7 @@ describe SetupNumericFieldsController do
         before do
           person_field_set_mk.stub_chain(:numeric_fields, :new).with(valid_attributes) { numeric_field_mk(save: true) }
           numeric_field_mk.should_receive(:constraints_store).with(valid_attributes)
-          post :create, numeric_field: valid_attributes.merge('some' => 'attribute'), field_set_id: '34'
+          post :create, numeric_field: valid_attributes.merge('some' => 'attribute')
         end
         it do
           expect(assigns :field_set).to be @person_field_set_mock
@@ -36,7 +36,7 @@ describe SetupNumericFieldsController do
           with_errors_double
           person_field_set_mk.stub_chain(:numeric_fields, :new).with(valid_attributes) { numeric_field_mk(save: false) }
           numeric_field_mk.should_not_receive(:constraints_store)
-          post :create, numeric_field: valid_attributes.merge('some' => 'attribute'), field_set_id: '34'
+          post :create, numeric_field: valid_attributes.merge('some' => 'attribute')
         end
         it do
           expect(flash[:alert]).to match /Failed to create numeric field/i
@@ -114,7 +114,7 @@ describe SetupNumericFieldsController do
 private
 
   def valid_attributes() {
-    'field_set_id' => '3',
+    'field_set_id' => '21',
     'name' => 'Size',
     'only_integer_p' => '1',
     'row_position' => '5',

@@ -20,7 +20,7 @@ describe SetupChoiceFieldsController do
       describe 'w #save' do
         before do
           SelectField.should_receive(:new).with(valid_attributes) { select_field_mk(save: true) }
-          post :create, choice_field: valid_attributes.merge('some' => 'attribute'), field_set_id: '34'
+          post :create, choice_field: valid_attributes.merge('some' => 'attribute')
         end
         it do
           expect(assigns :field_set).to be @person_field_set_mock
@@ -34,7 +34,7 @@ describe SetupChoiceFieldsController do
         before do
           with_errors_double
           SelectField.should_receive(:new).with(valid_attributes) { select_field_mk(save: false) }
-          post :create, choice_field: valid_attributes.merge('some' => 'attribute'), field_set_id: '34'
+          post :create, choice_field: valid_attributes.merge('some' => 'attribute')
         end
         it do
           expect(flash[:alert]).to match /Failed to create choice field/i
@@ -101,7 +101,7 @@ describe SetupChoiceFieldsController do
 private
 
   def valid_attributes() {
-    'field_set_id' => '3',
+    'field_set_id' => '34',
     'name' => 'Size',
     'row_position' => '8',
     'type' => 'SelectField'}
