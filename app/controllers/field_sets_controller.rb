@@ -1,5 +1,5 @@
 class FieldSetsController < ApplicationController
-  
+
   before_action :field_set_assign, only: [:show, :edit, :update, :destroy]
   respond_to :html
 

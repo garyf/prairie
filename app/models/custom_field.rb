@@ -7,7 +7,7 @@ class CustomField < ActiveRecord::Base
   belongs_to :field_set
   has_many :choices, dependent: :destroy
 
-  ranks :row, class_name: 'CustomField', with_same: 'field_set_id' # https://github.com/mixonic/ranked-model/pull/28
+  ranks :row, class_name: 'CustomField', with_same: :field_set_id # https://github.com/mixonic/ranked-model/pull/28
 
   paginates_per 8
 
@@ -19,7 +19,7 @@ class CustomField < ActiveRecord::Base
   delegate :parent, to: :field_set
 
   def self.ranked_page(page)
-    rank(:row).page page
+    order(:row).page page
   end
 
   def self.position_above_count(row)

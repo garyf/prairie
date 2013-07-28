@@ -1,7 +1,7 @@
 <h4>Editing string field</h4>
 <%= link_to 'Destroy', setup_string_field_path(@string_field), method: :delete, data: {confirm: 'Are you sure?'} %>
 
-<%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
+<%= render partial: 'common/link_to_field_set', locals: {o: @field_set} %>
 
 <%= form_for(@string_field,
   url: setup_string_field_path(@string_field),

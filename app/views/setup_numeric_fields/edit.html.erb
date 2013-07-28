@@ -1,7 +1,7 @@
 <h4>Editing numeric field</h4>
 <%= link_to 'Destroy', setup_numeric_field_path(@numeric_field), method: :delete, data: {confirm: 'Are you sure?'} %>
 
-<%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
+<%= render partial: 'common/link_to_field_set', locals: {o: @field_set} %>
 
 <%= form_for(@numeric_field,
   url: setup_numeric_field_path(@numeric_field),
