@@ -1,35 +1,30 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe ChoicesController do
-  describe "routing" do
-
-    it "routes to #index" do
-      get("/choices").should route_to("choices#index")
+  describe 'w routing to' do
+    it '#new' do
+      expect(get: '/choices/new').to route_to('choices#new')
     end
-
-    it "routes to #new" do
-      get("/choices/new").should route_to("choices#new")
+    it '#edit' do
+      expect(get: '/choices/1/edit').to route_to('choices#edit', id: '1')
     end
-
-    it "routes to #show" do
-      get("/choices/1").should route_to("choices#show", :id => "1")
+    it '#create' do
+      expect(post: '/choices').to route_to('choices#create')
     end
-
-    it "routes to #edit" do
-      get("/choices/1/edit").should route_to("choices#edit", :id => "1")
+    it '#update' do
+      expect(put: '/choices/1').to route_to('choices#update', id: '1')
     end
-
-    it "routes to #create" do
-      post("/choices").should route_to("choices#create")
+    it '#destroy' do
+      expect(delete: '/choices/1').to route_to('choices#destroy', id: '1')
     end
+  end
 
-    it "routes to #update" do
-      put("/choices/1").should route_to("choices#update", :id => "1")
+  describe 'w/o routing to' do
+    it '#index' do
+      expect(get: '/choices').not_to be_routable
     end
-
-    it "routes to #destroy" do
-      delete("/choices/1").should route_to("choices#destroy", :id => "1")
+    it '#show' do
+      expect(get: '/choices/1').not_to be_routable
     end
-
   end
 end

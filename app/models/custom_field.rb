@@ -5,6 +5,7 @@ class CustomField < ActiveRecord::Base
   include RedisCustomFields
 
   belongs_to :field_set
+  has_many :choices, dependent: :destroy
 
   ranks :row, class_name: 'CustomField', with_same: 'field_set_id' # https://github.com/mixonic/ranked-model/pull/28
 

@@ -8,3 +8,26 @@
   <dt><%= @choice_field.type_human %></dt>
   <dd><%= @choice_field.name %></dd>
 </dl>
+
+<h5>Choices</h5>
+<%= link_to 'New choice', new_choice_path(custom_field_id: @choice_field.id) %>
+
+<% if @choices.any? %>
+
+  <%= paginate @choices %>
+  <table class='table  table-condensed'>
+    <thead><tr>
+      <th>Row</th>
+      <th>Value</th>
+    </tr></thead>
+    <tbody>
+      <% @choices.each_with_index do |o, i| %><tr>
+        <td><%= i + @row_offset %></td>
+        <td><%= o.link_to_edit %></td>
+      </tr><% end %>
+    </tbody>
+  </table>
+
+<% else %>
+  <h5>None</h5>
+<% end %>

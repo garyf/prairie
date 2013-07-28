@@ -1,4 +1,9 @@
 FactoryGirl.define do
+  factory :choice do
+    custom_field
+    sequence(:name) { |n| "stormy-antler-#{n}" }
+  end
+
   factory :custom_field do
     # field_set association with child factories
     sequence(:name) { |n| "windy-meadow-#{n}" }

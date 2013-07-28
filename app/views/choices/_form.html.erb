@@ -1,29 +1,30 @@
-<%= form_for(@choice) do |f| %>
-  <% if @choice.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@choice.errors.count, "error") %> prohibited this choice from being saved:</h2>
+<dl class=dl-horizontal>
+  <dt><%= @choice_field.type_human %></dt>
+  <dd><%= @choice_field.name %></dd>
+</dl>
 
-      <ul>
-      <% @choice.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+<%= form_for(@choice, html: {class: 'form-horizontal'}) do |f| %>
+  <%= render 'common/form_errors', o: @choice %>
+  <%= f.hidden_field :custom_field_id %>
+
+  <div class=control-group>
+    <%= f.label :name, class: 'control-label' %>
+    <div class=controls><%= f.text_field :name %></div>
+  </div>
+
+  <% if @choice.row %>
+    <dl class=dl-horizontal>
+      <dt>Current row</dt>
+      <dd><%= @choice.human_row %></dd>
+    </dl>
+    <div class=control-group>
+      <%= f.label 'Move to row', class: 'control-label' %>
+      <div class=controls><%= f.number_field :row_position, class: 'input-mini' %></div>
     </div>
   <% end %>
 
-  <div class="field">
-    <%= f.label :name %><br>
-    <%= f.text_field :name %>
-  </div>
-  <div class="field">
-    <%= f.label :custom_field %><br>
-    <%= f.text_field :custom_field %>
-  </div>
-  <div class="field">
-    <%= f.label :row %><br>
-    <%= f.number_field :row %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
+  <div class=form-actions>
+    <%= f.button 'Done', class: 'btn  btn-primary' %>
+    <%= @choice_field.btn_to_cancel_choice %>
   </div>
 <% end %>

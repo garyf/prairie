@@ -1,74 +1,58 @@
 class ChoicesController < ApplicationController
-  before_action :set_choice, only: [:show, :edit, :update, :destroy]
 
-  # GET /choices
-  # GET /choices.json
-  def index
-    @choices = Choice.all
-  end
+  before_action :choice_field_assign, only: [:new, :create]
+  before_action :choice_assign, :from_assn_choice_field_assign, only: [:edit, :update, :destroy]
 
-  # GET /choices/1
-  # GET /choices/1.json
-  def show
-  end
-
-  # GET /choices/new
   def new
-    @choice = Choice.new
+    @choice = @choice_field.choices.new
   end
 
-  # GET /choices/1/edit
   def edit
+    @choice.row_position = @choice.human_row
   end
 
-  # POST /choices
-  # POST /choices.json
   def create
-    @choice = Choice.new(choice_params)
-
-    respond_to do |format|
-      if @choice.save
-        format.html { redirect_to @choice, notice: 'Choice was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @choice }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @choice.errors, status: :unprocessable_entity }
-      end
+    @choice = @choice_field.choices.new(params_white)
+    if @choice.save
+      redirect_to setup_choice_field_path(@choice_field), notice: 'Choice successfully created'
+    else
+      flash[:alert] = 'Failed to create choice'
+      render :new
     end
   end
 
-  # PATCH/PUT /choices/1
-  # PATCH/PUT /choices/1.json
   def update
-    respond_to do |format|
-      if @choice.update(choice_params)
-        format.html { redirect_to @choice, notice: 'Choice was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: 'edit' }
-        format.json { render json: @choice.errors, status: :unprocessable_entity }
-      end
+    if @choice.update(params_white_w_human_row)
+      redirect_to setup_choice_field_path(@choice_field), notice: 'Choice successfully updated'
+    else
+      flash[:alert] = 'Failed to update choice'
+      render :edit
     end
   end
 
-  # DELETE /choices/1
-  # DELETE /choices/1.json
   def destroy
     @choice.destroy
-    respond_to do |format|
-      format.html { redirect_to choices_url }
-      format.json { head :no_content }
-    end
+    redirect_to setup_choice_field_path(@choice_field), notice: 'Choice successfully destroyed'
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_choice
-      @choice = Choice.find(params[:id])
-    end
+private
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def choice_params
-      params.require(:choice).permit(:name, :custom_field_id, :row)
-    end
+  def choice_field_assign
+    @choice_field = CustomField.find(params[:custom_field_id] || params[:choice][:custom_field_id])
+  end
+
+  def choice_assign
+    @choice = Choice.find(params[:id])
+  end
+
+  def from_assn_choice_field_assign
+    @choice_field = @choice.custom_field
+  end
+
+  def params_white
+    params.require(:choice).permit(
+      :custom_field_id,
+      :name,
+      :row_position)
+  end
 end

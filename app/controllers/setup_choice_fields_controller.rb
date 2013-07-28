@@ -5,6 +5,8 @@ class SetupChoiceFieldsController < ApplicationController
   respond_to :html
 
   def show
+    @choices = @choice_field.choices.ranked_page(params[:page])
+    paginate_row_offset_assign
   end
 
   def new
