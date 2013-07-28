@@ -7,7 +7,7 @@ class Choice < ActiveRecord::Base
   validates :custom_field, presence: true
   validates :name, presence: true, uniqueness: {scope: :custom_field}
 
-  ranks :row, with_same: 'custom_field_id'
+  ranks :row, with_same: :custom_field_id
 
   def self.ranked_page(page)
     rank(:row).page page

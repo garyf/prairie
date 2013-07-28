@@ -36,26 +36,26 @@ describe CustomField do
           expect(@numeric_0_for_locations.row).to eql @max_rank_half
         end
 
-        context 'after add of 1 choice field to ea field set' do
+        context 'after add of 1 select field to ea field set' do
           before do
-            @choice_0_for_people = CustomField.create(type: 'ChoiceField', name: 'choice ppl0', field_set_id: @people_field_set_id)
-            @choice_0_for_locations = CustomField.create(type: 'ChoiceField', name: 'choice lcn0', field_set_id: @locationsfield_set_id)
+            @select_0_for_people = CustomField.create(type: 'SelectField', name: 'select ppl0', field_set_id: @people_field_set_id)
+            @select_0_for_locations = CustomField.create(type: 'SelectField', name: 'select lcn0', field_set_id: @locationsfield_set_id)
             @max_rank_three_fourths = 6291456
           end
           it 'field set ranks segregated' do
-            expect(@choice_0_for_people.row).to eql @max_rank_three_fourths
-            expect(@choice_0_for_locations.row).to eql @max_rank_three_fourths
+            expect(@select_0_for_people.row).to eql @max_rank_three_fourths
+            expect(@select_0_for_locations.row).to eql @max_rank_three_fourths
           end
 
           context 'after row_position update' do
             before do
-              @choice_0_for_people.update_attributes row_position: 0
-              @choice_0_for_locations.update_attributes row_position: 0
+              @select_0_for_people.update_attributes row_position: 0
+              @select_0_for_locations.update_attributes row_position: 0
               @negative_max_rank_half = -4194303
             end
             it 'field set ranks segregated' do
-              expect(@choice_0_for_people.row).to eql @negative_max_rank_half
-              expect(@choice_0_for_locations.row).to eql @negative_max_rank_half
+              expect(@select_0_for_people.row).to eql @negative_max_rank_half
+              expect(@select_0_for_locations.row).to eql @negative_max_rank_half
             end
           end
         end

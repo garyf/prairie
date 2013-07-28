@@ -19,7 +19,7 @@ class CustomField < ActiveRecord::Base
   delegate :parent, to: :field_set
 
   def self.ranked_page(page)
-    order(:row).page page
+    rank(:row).page page
   end
 
   def self.position_above_count(row)
