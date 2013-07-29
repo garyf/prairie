@@ -27,6 +27,10 @@ def person_mk(stubs = {})
   (@person_mock ||= mock_model(Person).as_null_object).tap { |m| m.stub(stubs) unless stubs.empty? }
 end
 
+def radio_button_field_mk(stubs = {})
+  (@radio_button_field_mock ||= mock_model(RadioButtonField).as_null_object).tap { |m| m.stub(stubs) unless stubs.empty? }
+end
+
 def select_field_mk(stubs = {})
   (@select_field_mock ||= mock_model(SelectField).as_null_object).tap { |m| m.stub(stubs) unless stubs.empty? }
 end

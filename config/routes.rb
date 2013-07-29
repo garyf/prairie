@@ -21,6 +21,7 @@ Prairie0::Application.routes.draw do
   resources :locations
   resources :numeric_fields, only: [:edit, :update]
   resources :people
+  resources :radio_button_fields, only: [:edit, :update]
   resources :select_fields, only: [:edit, :update]
   resources :setup_choice_fields, except: :index
   resources :setup_numeric_fields, except: [:index, :show]

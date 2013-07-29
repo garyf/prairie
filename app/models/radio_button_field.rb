@@ -1,0 +1,2 @@
+class RadioButtonField < ChoiceField
+end

@@ -1,0 +1,2 @@
+class RadioButtonFieldsController < ChoiceFieldsController
+end
