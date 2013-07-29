@@ -1,0 +1,2 @@
+class SelectFieldsController < ChoiceFieldsController
+end
