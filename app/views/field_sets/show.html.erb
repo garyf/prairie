@@ -1,5 +1,6 @@
 <%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
 
+<%= link_to 'New checkbox field', new_setup_choice_field_path(field_set_id: @field_set.id, kind: 'Checkbox') %> |
 <%= link_to 'New numeric field', new_setup_numeric_field_path(field_set_id: @field_set.id) %> |
 <%= link_to 'New radio button field', new_setup_choice_field_path(field_set_id: @field_set.id, kind: 'Radio') %> |
 <%= link_to 'New select field', new_setup_choice_field_path(field_set_id: @field_set.id, kind: 'Select') %> |

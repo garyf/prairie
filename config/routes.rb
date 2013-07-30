@@ -15,6 +15,7 @@ Prairie0::Application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
+  resources :checkbox_boolean_fields, only: [:edit, :update]
   resources :choices, except: [:index, :show]
   resources :field_sets
   resources :field_values, only: :index

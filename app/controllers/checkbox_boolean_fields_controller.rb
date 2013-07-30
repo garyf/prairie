@@ -1,0 +1,2 @@
+class CheckboxBooleanFieldsController < ChoiceFieldsController
+end

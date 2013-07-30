@@ -1,0 +1,2 @@
+class CheckboxBooleanField < ChoiceField
+end

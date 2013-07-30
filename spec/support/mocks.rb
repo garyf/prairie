@@ -3,6 +3,10 @@ def with_errors_double
   @errors.stub(:empty?) { false } # activerecord/lib/active_record/relation.rb, line 246
 end
 
+def checkbox_boolean_field_mk(stubs = {})
+  (@checkbox_boolean_field_mock ||= mock_model(CheckboxBooleanField).as_null_object).tap { |m| m.stub(stubs) unless stubs.empty? }
+end
+
 def choice_mk(stubs = {})
   (@choice_mock ||= mock_model(Choice).as_null_object).tap { |m| m.stub(stubs) unless stubs.empty? }
 end
