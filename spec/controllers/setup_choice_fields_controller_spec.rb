@@ -47,6 +47,19 @@ describe SetupChoiceFieldsController do
   context 'w @choice_field' do
     before { CustomField.should_receive(:find).with('21') { select_field_mk(field_set: person_field_set_mk) } }
 
+    describe 'GET show' do
+      before do
+        select_field_mk.stub_chain(:choices, :ranked_page).with('2') { ['c1','c2','c3'] }
+        get :show, id: '21', page: '2'
+      end
+      it do
+        expect(assigns :field_set).to be @person_field_set_mock
+        expect(assigns :choices).to eql ['c1','c2','c3']
+        expect(assigns :row_offset).to eql 9
+        expect(response).to render_template :show
+      end
+    end
+
     describe 'GET edit' do
       before do
         select_field_mk.should_receive(:human_row)
