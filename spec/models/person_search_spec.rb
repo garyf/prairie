@@ -19,6 +19,21 @@ describe PersonSearch do
     end
   end
 
+  context '#people' do
+    before do
+      bld
+      PersonFieldSet.should_receive(:by_name) { ['s1','s2'] }
+      @params = {'field_21_gist' => 'seal brown'}
+    end
+    describe 'w ids' do
+      before do
+        @o.should_receive(:result_ids).with(['s1','s2'], @params) { ['13','55'] }
+        Person.should_receive(:name_last_by_ids).with(['13','55']) { ['p21','p89'] }
+      end
+      it { expect(@o.people @params).to eql ['p21','p89'] }
+    end
+  end
+
 private
 
   def bld

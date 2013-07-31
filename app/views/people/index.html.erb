@@ -1,5 +1,6 @@
 <h4>Listing people</h4>
-<%= link_to 'New person', new_person_path %>
+<%= link_to 'New person', new_person_path %> |
+<%= link_to 'New search', new_person_search_path %>
 
 <% if @people.any? %>
   <%= paginate @people %>

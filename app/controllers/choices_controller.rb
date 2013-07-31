@@ -2,6 +2,7 @@ class ChoicesController < ApplicationController
 
   before_action :choice_field_assign, only: [:new, :create]
   before_action :choice_assign, :from_assn_choice_field_assign, only: [:edit, :update, :destroy]
+  respond_to :html
 
   def new
     @choice = @choice_field.choices.new

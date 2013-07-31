@@ -1,0 +1,18 @@
+<h4>New search for people</h4>
+
+<%= form_tag(person_searches_path, class: 'form-horizontal') do %>
+  <% @field_sets.each do |field_set| %>
+    <%= render partial: 'common/field_set_name', locals: {o: field_set} %>
+    <% field_set.custom_fields.each do |o| %>
+      <div class=control-group>
+        <%= label_tag o.name, nil, class: 'control-label' %>
+        <div class=controls><%= text_field_tag "field_#{o.id}_gist" %></div>
+      </div>
+    <% end %>
+  <% end %>
+
+  <div class=form-actions>
+    <%= button_tag 'Search', class: 'btn  btn-primary' %>
+    <%= link_to 'Cancel', people_path, class: 'btn' %>
+  </div>
+<% end %>
