@@ -16,6 +16,7 @@ module RedisCustomFields
     self.gist = params_white['gist']
     return false unless self.valid?
     parent.gist_store(id, gist)
+    index_on_gist_add(parent.id)
     parents << parent.id
   end
 
@@ -23,6 +24,14 @@ module RedisCustomFields
     self.gist = parent.gist_fetch(id)
     self.parent_id = parent.id
     self
+  end
+
+  def index_on_gist_add(parent_id)
+    redis.sadd("custom_field:#{id}:#{gist}", parent_id)
+  end
+
+  def parents_find_by_gist(str)
+    redis.smembers("custom_field:#{id}:#{str}")
   end
 
   def parents_garbage_collect_and_self_destroy
