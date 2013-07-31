@@ -8,8 +8,9 @@ class Search
         next if str.blank?
         parent_ids = o.parents_find_by_gist(str)
         ids = ids ? parent_ids & ids : parent_ids
-        return if result_ids.empty?
+        return if ids.empty?
       end
     end
+    ids
   end
 end
