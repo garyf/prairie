@@ -100,7 +100,7 @@ describe SetupNumericFieldsController do
 
     describe 'DELETE destroy' do
       before do
-        numeric_field_mk.should_receive(:parents_garbage_collect_and_self_destroy)
+        numeric_field_mk.should_receive(:garbage_collect_and_self_destroy)
         delete :destroy, id: '21'
       end
       it do

@@ -7,6 +7,10 @@ class Person < ActiveRecord::Base
 
   validates :email, :name_last, presence: true
 
+  def self.by_ids(ids)
+    select(:id).where(id: ids)
+  end
+
   def self.by_name_last(page)
     order('name_last').page page
   end

@@ -100,7 +100,7 @@ describe SetupChoiceFieldsController do
 
     describe 'DELETE destroy' do
       before do
-        select_field_mk.should_receive(:parents_garbage_collect_and_self_destroy)
+        select_field_mk.should_receive(:garbage_collect_and_self_destroy)
         delete :destroy, id: '21'
       end
       it do

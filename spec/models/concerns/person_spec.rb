@@ -43,7 +43,7 @@ describe Person do
         expect(@string_field0.parents.empty?).to be true
         expect(@string_field1.parents.empty?).to be true
       end
-      it '#index_on_gist_delete' do
+      it '#index_on_gist_remove' do
         expect(@string_field0.parents_find_by_gist 'foo').to eql []
         expect(@string_field1.parents_find_by_gist 'bar').to eql []
       end

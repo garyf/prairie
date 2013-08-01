@@ -34,7 +34,8 @@ module RedisCustomFields
     redis.smembers("custom_field:#{id}:#{str}")
   end
 
-  def parents_garbage_collect_and_self_destroy
+  def garbage_collect_and_self_destroy
+    field_set.index_on_gist_delete(id, parents.members)
     parents_gists_clear
     parents.clear
     constraints.clear
@@ -53,7 +54,7 @@ module RedisCustomFields
     str.to_s[0...(str.rindex('FieldSet') || 0)].downcase # based on ActiveSupport::Inflector#deconstantize
   end
 
-  def parents_gists_clear #parents_garbage_collect_and_self_destroy
+  def parents_gists_clear #garbage_collect_and_self_destroy
     parents.each { |parent_id| redis.hdel("#{parent_klass_downcase}:#{parent_id}:field_values", id) }
   end
 end

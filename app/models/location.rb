@@ -7,7 +7,15 @@ class Location < ActiveRecord::Base
 
   validates :name, presence: true
 
+  def self.by_ids(ids)
+    select(:id).where(id: ids)
+  end
+
   def self.by_name(page)
     order('name').page page
+  end
+
+  def self.name_by_ids(ids)
+    select(:id, :name).where(id: ids).order(:name)
   end
 end

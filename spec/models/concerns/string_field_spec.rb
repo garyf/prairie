@@ -67,10 +67,10 @@ describe StringField do
         expect(@o.parents_find_by_gist 'bar').to eql ["#{@person1.id}"]
       end
 
-      describe '#parents_garbage_collect_and_self_destroy' do
+      describe '#garbage_collect_and_self_destroy' do
         before do
           @o.should_receive(:destroy)
-          @o.parents_garbage_collect_and_self_destroy
+          @o.garbage_collect_and_self_destroy
         end
         it '#parents_gists_clear' do
           expect(@person0.gist_fetch @o.id).to be nil

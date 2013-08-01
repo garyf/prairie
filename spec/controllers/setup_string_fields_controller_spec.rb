@@ -100,7 +100,7 @@ describe SetupStringFieldsController do
 
     describe 'DELETE destroy' do
       before do
-        string_field_mk.should_receive(:parents_garbage_collect_and_self_destroy)
+        string_field_mk.should_receive(:garbage_collect_and_self_destroy)
         delete :destroy, id: '21'
       end
       it do

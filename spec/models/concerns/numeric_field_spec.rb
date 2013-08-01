@@ -54,10 +54,10 @@ describe StringField do
       expect(@location1.gist_fetch @o.id).to eql '89'
     end
 
-    describe '#parents_garbage_collect_and_self_destroy' do
+    describe '#garbage_collect_and_self_destroy' do
       before do
         @o.should_receive(:destroy)
-        @o.parents_garbage_collect_and_self_destroy
+        @o.garbage_collect_and_self_destroy
       end
       it '#parents_gists_clear' do
         expect(@location0.gist_fetch @o.id).to be nil

@@ -43,7 +43,7 @@ describe Location do
         expect(@numeric_field0.parents.empty?).to be true
         expect(@numeric_field1.parents.empty?).to be true
       end
-      it '#index_on_gist_delete' do
+      it '#index_on_gist_remove' do
         expect(@numeric_field0.parents_find_by_gist '34').to eql []
         expect(@numeric_field1.parents_find_by_gist '89').to eql []
       end
