@@ -7,6 +7,7 @@ module RedisFieldValues
   end
 
   def gist_store(field_id, gist)
+    index_on_gist_remove(field_id)
     return field_values.delete(field_id) if gist.blank?
     field_values[field_id] = gist
   end

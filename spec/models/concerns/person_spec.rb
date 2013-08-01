@@ -16,6 +16,24 @@ describe Person do
     end
   end
 
+  context '#parents_find_by_gist', :redis do
+    before do
+      @string_field = c_person_string_field_bs
+      c_person_bs
+      @field_id = '8'
+      @string_field.gist_store(@o, {'gist' => 'foo'})
+    end
+    it { expect(@string_field.parents_find_by_gist 'foo').to eql ["#{@o.id}"] }
+
+    describe '#gist_store w #index_on_gist_remove' do
+      before { @string_field.gist_store(@o, {'gist' => 'bar'}) }
+      it do
+        expect(@string_field.parents_find_by_gist 'foo').to eql []
+        expect(@string_field.parents_find_by_gist 'bar').to eql ["#{@o.id}"]
+      end
+    end
+  end
+
   context 'w 2 custom fields each w gist', :redis do
     before do
       @string_field0 = c_person_string_field_bs
