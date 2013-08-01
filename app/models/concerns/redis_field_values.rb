@@ -15,15 +15,22 @@ module RedisFieldValues
     field_values[field_id]
   end
 
-  def custom_fields_garbage_collect_and_self_destroy
-    field_values.keys.each { |field_id| remove_self_from_custom_field_parents field_id }
+  def garbage_collect_and_self_destroy
+    field_values.keys.each do |field_id|
+      remove_self_from_custom_field_parents field_id
+      index_on_gist_delete field_id
+    end
     field_values.clear
     self.destroy
   end
 
 # not publicly used
 
-  def remove_self_from_custom_field_parents(field_id) #custom_fields_garbage_collect_and_self_destroy
+  def remove_self_from_custom_field_parents(field_id) #garbage_collect_and_self_destroy
     redis.srem("custom_field:#{field_id}:parents", id)
+  end
+
+  def index_on_gist_delete(field_id)
+    redis.srem("custom_field:#{field_id}:#{gist_fetch(field_id)}", id) #garbage_collect_and_self_destroy
   end
 end

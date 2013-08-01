@@ -30,7 +30,7 @@ class LocationsController < ApplicationController
   end
 
   def destroy
-    @location.custom_fields_garbage_collect_and_self_destroy
+    @location.garbage_collect_and_self_destroy
     redirect_to locations_path, notice: 'Location successfully destroyed'
   end
 

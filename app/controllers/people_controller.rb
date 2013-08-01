@@ -30,7 +30,7 @@ class PeopleController < ApplicationController
   end
 
   def destroy
-    @person.custom_fields_garbage_collect_and_self_destroy
+    @person.garbage_collect_and_self_destroy
     redirect_to people_path, notice: 'Person successfully destroyed'
   end
 
