@@ -18,6 +18,10 @@ class CustomField < ActiveRecord::Base
 
   delegate :parent, to: :field_set
 
+  def self.by_row
+    order('row')
+  end
+
   def self.ranked_page(page)
     rank(:row).page page
   end

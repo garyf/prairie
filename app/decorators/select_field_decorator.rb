@@ -10,6 +10,10 @@ module SelectFieldDecorator
     link_to value_str, edit_select_field_path(self, parent_id: parent_id)
   end
 
+  def search_input
+    text_field_tag "field_#{id}_gist", nil, class: 'input-mini'
+  end
+
   def btn_to_cancel_choice
     link_to 'Cancel', setup_choice_field_path(self), class: 'btn'
   end
