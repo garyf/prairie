@@ -11,7 +11,10 @@ module RadioButtonFieldDecorator
   end
 
   def search_input
-    text_field_tag "field_#{id}_gist", nil, class: 'input-mini'
+    values = choices.order(:row).pluck(:name)
+    str = ''
+    values.each { |v| str << radio_button_tag("field_#{id}_gist", v) << label_tag(v) }
+    str.html_safe
   end
 
   def btn_to_cancel_choice

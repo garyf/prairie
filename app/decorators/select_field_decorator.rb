@@ -11,7 +11,8 @@ module SelectFieldDecorator
   end
 
   def search_input
-    text_field_tag "field_#{id}_gist", nil, class: 'input-mini'
+    values = choices.order(:row).pluck(:name)
+    select_tag "field_#{id}_gist", options_for_select(values), prompt: 'Please select'
   end
 
   def btn_to_cancel_choice
