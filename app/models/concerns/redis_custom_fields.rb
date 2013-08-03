@@ -27,11 +27,11 @@ module RedisCustomFields
   end
 
   def index_on_gist_add(parent_id)
-    redis.sadd("custom_field:#{id}:#{gist}", parent_id)
+    redis.sadd("custom_field:#{id}:#{gist.downcase}", parent_id)
   end
 
   def parents_find_by_gist(str)
-    redis.smembers("custom_field:#{id}:#{str}")
+    redis.smembers("custom_field:#{id}:#{str.downcase}")
   end
 
   def garbage_collect_and_self_destroy

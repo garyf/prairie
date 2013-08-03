@@ -36,11 +36,13 @@ module RedisFieldValues
     redis.srem("custom_field:#{field_id}:parents", id)
   end
 
-  def index_on_gist_key(field_id)
-    "custom_field:#{field_id}:#{gist_fetch(field_id)}"
+  def index_on_gist_key(field_id) #index_on_gist_delete, #index_on_gist_remove
+    str = gist_fetch(field_id)
+    "custom_field:#{field_id}:#{str.downcase}" if str
   end
 
-  def index_on_gist_remove(field_id)
-    redis.srem(index_on_gist_key(field_id), id) #garbage_collect_and_self_destroy
+  def index_on_gist_remove(field_id) #gist_store, #garbage_collect_and_self_destroy
+    key = index_on_gist_key(field_id)
+    redis.srem(key, id) if key
   end
 end

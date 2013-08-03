@@ -21,15 +21,15 @@ describe Person do
       @string_field = c_person_string_field_bs
       c_person_bs
       @field_id = '8'
-      @string_field.gist_store(@o, {'gist' => 'foo'})
+      @string_field.gist_store(@o, {'gist' => 'Foo'})
     end
-    it { expect(@string_field.parents_find_by_gist 'foo').to eql ["#{@o.id}"] }
+    it { expect(@string_field.parents_find_by_gist 'Foo').to eql ["#{@o.id}"] }
 
     describe '#gist_store w #index_on_gist_remove' do
-      before { @string_field.gist_store(@o, {'gist' => 'bar'}) }
+      before { @string_field.gist_store(@o, {'gist' => 'Bar'}) }
       it do
-        expect(@string_field.parents_find_by_gist 'foo').to eql []
-        expect(@string_field.parents_find_by_gist 'bar').to eql ["#{@o.id}"]
+        expect(@string_field.parents_find_by_gist 'Foo').to eql []
+        expect(@string_field.parents_find_by_gist 'Bar').to eql ["#{@o.id}"]
       end
     end
   end
@@ -39,8 +39,8 @@ describe Person do
       @string_field0 = c_person_string_field_bs
       @string_field1 = c_person_string_field_bs
       c_person_bs
-      @string_field0.gist_store(@o, {'gist' => 'foo'})
-      @string_field1.gist_store(@o, {'gist' => 'bar'})
+      @string_field0.gist_store(@o, {'gist' => 'Foo'})
+      @string_field1.gist_store(@o, {'gist' => 'Bar'})
     end
     it { expect(@o.field_values.count).to eql 2 }
     it do
@@ -48,8 +48,8 @@ describe Person do
       expect(@string_field1.parents.count).to eql 1
     end
     it '#index_on_gist_add, #parents_find_by_gist' do
-      expect(@string_field0.parents_find_by_gist 'foo').to eql ["#{@o.id}"]
-      expect(@string_field1.parents_find_by_gist 'bar').to eql ["#{@o.id}"]
+      expect(@string_field0.parents_find_by_gist 'Foo').to eql ["#{@o.id}"]
+      expect(@string_field1.parents_find_by_gist 'Bar').to eql ["#{@o.id}"]
     end
 
     describe '#garbage_collect_and_self_destroy' do
@@ -62,8 +62,8 @@ describe Person do
         expect(@string_field1.parents.empty?).to be true
       end
       it '#index_on_gist_remove' do
-        expect(@string_field0.parents_find_by_gist 'foo').to eql []
-        expect(@string_field1.parents_find_by_gist 'bar').to eql []
+        expect(@string_field0.parents_find_by_gist 'Foo').to eql []
+        expect(@string_field1.parents_find_by_gist 'Bar').to eql []
       end
       it { expect(@o.field_values.empty?).to be true }
     end

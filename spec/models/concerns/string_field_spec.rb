@@ -6,7 +6,7 @@ describe StringField do
       @person = c_person_bs
       c_person_string_field_bs
       @params_white = {
-        'gist' => 'foo',
+        'gist' => 'Foo',
         'parent_id' => "#{@person.id}"}
     end
     describe 'w #valid?', :redis do
@@ -16,12 +16,13 @@ describe StringField do
       end
       subject { @o.gist_fetch(@person) }
       it do
-        expect(subject.gist).to eql 'foo'
+        expect(subject.gist).to eql 'Foo'
         expect(subject.parent_id).to eql @person.id
         expect(subject.parents.member? @person.id).to be true
         expect(subject.parent?).to be true
       end
       it '#index_on_gist_add, #parents_find_by_gist' do
+        expect(subject.parents_find_by_gist 'Foo').to eql ["#{@person.id}"]
         expect(subject.parents_find_by_gist 'foo').to eql ["#{@person.id}"]
         expect(subject.parents_find_by_gist 'bar').to eql []
       end
@@ -54,13 +55,13 @@ describe StringField do
     describe 'w unique gists' do
       before do
         @o.should_receive(:valid?).twice { true }
-        @o.gist_store(@person0, {'gist' => 'foo', 'parent_id' => "#{@person0.id}"})
-        @o.gist_store(@person1, {'gist' => 'bar', 'parent_id' => "#{@person1.id}"})
+        @o.gist_store(@person0, {'gist' => 'Foo', 'parent_id' => "#{@person0.id}"})
+        @o.gist_store(@person1, {'gist' => 'Bar', 'parent_id' => "#{@person1.id}"})
       end
       it { expect(@o.parents.count).to eql 2 }
       it do
-        expect(@person0.gist_fetch @o.id).to eql 'foo'
-        expect(@person1.gist_fetch @o.id).to eql 'bar'
+        expect(@person0.gist_fetch @o.id).to eql 'Foo'
+        expect(@person1.gist_fetch @o.id).to eql 'Bar'
       end
       it '#index_on_gist_add, #parents_find_by_gist' do
         expect(@o.parents_find_by_gist 'foo').to eql ["#{@person0.id}"]
@@ -84,8 +85,8 @@ describe StringField do
     context 'w duplicate gists' do
       before do
         @o.should_receive(:valid?).twice { true }
-        @o.gist_store(@person0, {'gist' => 'baz', 'parent_id' => "#{@person0.id}"})
-        @o.gist_store(@person1, {'gist' => 'baz', 'parent_id' => "#{@person1.id}"})
+        @o.gist_store(@person0, {'gist' => 'Baz', 'parent_id' => "#{@person0.id}"})
+        @o.gist_store(@person1, {'gist' => 'Baz', 'parent_id' => "#{@person1.id}"})
       end
       describe '#index_on_gist_add, #parents_find_by_gist' do
         subject { @o.parents_find_by_gist 'baz' }
