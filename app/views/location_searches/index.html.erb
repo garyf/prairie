@@ -1,0 +1,12 @@
+<h4>Search for locations</h4>
+<%= link_to 'New location', new_location_path %> |
+<%= link_to 'New search', new_location_search_path %>
+
+<h4>Search results</h4>
+<% if @locations.any? %>
+  <h5>By name</h5>
+  <ul class=unstyled><%= render partial: 'location', collection: @locations %></ul>
+
+<% else %>
+  <h5>No results found</h5>
+<% end %>

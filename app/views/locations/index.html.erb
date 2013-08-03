@@ -1,5 +1,6 @@
 <h4>Listing locations</h4>
-<%= link_to 'New location', new_location_path %>
+<%= link_to 'New location', new_location_path %> |
+<%= link_to 'New search', new_location_search_path %>
 
 <% if @locations.any? %>
   <%= paginate @locations %>

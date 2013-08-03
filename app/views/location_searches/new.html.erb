@@ -1,0 +1,20 @@
+<h4>New search for locations</h4>
+
+<%= form_tag(location_searches_path, class: 'form-horizontal') do %>
+
+  <div class=control-group>
+    <%= label_tag 'Name', nil, class: 'control-label' %>
+    <div class=controls><%= text_field_tag 'name' %></div>
+  </div>
+  <div class=control-group>
+    <%= label_tag 'Description', nil, class: 'control-label' %>
+    <div class=controls><%= text_field_tag 'description' %></div>
+  </div>
+
+  <%= render partial: 'common/search_field_sets', locals: {field_sets: @field_sets} %>
+
+  <div class=form-actions>
+    <%= button_tag 'Search', class: 'btn  btn-primary' %>
+    <%= link_to 'Cancel', locations_path, class: 'btn' %>
+  </div>
+<% end %>

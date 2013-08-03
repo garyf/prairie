@@ -15,15 +15,7 @@
     <div class=controls><%= text_field_tag 'email' %></div>
   </div>
 
-  <% @field_sets.each do |field_set| %>
-    <%= render partial: 'common/field_set_name', locals: {o: field_set} %>
-    <% field_set.custom_fields.by_row.each do |o| %>
-      <div class=control-group>
-        <%= label_tag o.name, nil, class: 'control-label' %>
-        <div class=controls><%= render partial: 'common/search_input', locals: {o: o} %></div>
-      </div>
-    <% end %>
-  <% end %>
+  <%= render partial: 'common/search_field_sets', locals: {field_sets: @field_sets} %>
 
   <div class=form-actions>
     <%= button_tag 'Search', class: 'btn  btn-primary' %>

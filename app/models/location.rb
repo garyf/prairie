@@ -15,6 +15,10 @@ class Location < ActiveRecord::Base
     order('name').page page
   end
 
+  def self.ids_by_case_insensitive_value(column, value)
+    select(:id).where(Location.arel_table[column].matches "%#{value}%")
+  end
+
   def self.name_by_ids(ids)
     select(:id, :name).where(id: ids).order(:name)
   end

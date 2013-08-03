@@ -19,6 +19,7 @@ Prairie0::Application.routes.draw do
   resources :choices, except: [:index, :show]
   resources :field_sets
   resources :field_values, only: :index
+  resources :location_searches, only: [:index, :new, :create]
   resources :locations
   resources :numeric_fields, only: [:edit, :update]
   resources :people

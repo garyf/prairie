@@ -10,7 +10,7 @@ describe PersonSearch do
     context 'w 2 people' do
       before do
         @person0 = c_person_cr(name_last: 'Anders', email: 'ndr@example.com')
-        @person1 = c_person_cr(name_last: 'Anders', email: 'geo@example.com')
+        @person1 = c_person_cr(name_last: 'anders', email: 'geo@example.com')
         @person2 = c_person_cr(name_last: 'foo', email: 'foo@example.com')
         bld
       end
@@ -129,7 +129,7 @@ describe PersonSearch do
         @o.should_receive(:column_and_custom_ids).with(['s1','s2'], @params) { [] }
         Person.should_not_receive(:name_last_by_ids)
       end
-      it { expect(@o.people @params).to match_array [] }
+      it { expect(@o.people @params).to eql [] }
     end
   end
 

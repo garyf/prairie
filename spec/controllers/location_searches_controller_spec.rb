@@ -1,16 +1,16 @@
 require 'spec_helper'
 
-describe PersonSearchesController do
+describe LocationSearchesController do
   describe 'GET index' do
     it do
       get :index
-      expect(response).to redirect_to new_person_search_path
+      expect(response).to redirect_to new_location_search_path
     end
   end
 
   describe 'GET new' do
     before do
-      PersonFieldSet.should_receive(:by_name) { ['s1','s2'] }
+      LocationFieldSet.should_receive(:by_name) { ['s1','s2'] }
       get :new
     end
     it do
@@ -21,11 +21,11 @@ describe PersonSearchesController do
 
   describe 'POST create' do
     before do
-      PersonSearch.stub_chain(:new, :people).with({'controller' => 'person_searches', 'action' => 'create'}.merge(valid_params)) { ['p1','p2'] }
+      LocationSearch.stub_chain(:new, :locations).with({'controller' => 'location_searches', 'action' => 'create'}.merge(valid_params)) { ['o1','o2'] }
       post :create, valid_params
     end
     it do
-      expect(assigns :people).to eql ['p1','p2']
+      expect(assigns :locations).to eql ['o1','o2']
       expect(response).to render_template :index
     end
   end
@@ -33,7 +33,7 @@ describe PersonSearchesController do
 private
 
   def valid_params() {
-    'name_last' => 'Dickens',
+    'name' => 'Oxford',
     'field_21_gist' => 'seal brown',
     'field_34_gist' => '144'}
   end
