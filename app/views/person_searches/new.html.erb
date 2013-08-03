@@ -1,6 +1,20 @@
 <h4>New search for people</h4>
 
 <%= form_tag(person_searches_path, class: 'form-horizontal') do %>
+
+  <div class=control-group>
+    <%= label_tag 'First name', nil, class: 'control-label' %>
+    <div class=controls><%= text_field_tag 'name_first' %></div>
+  </div>
+  <div class=control-group>
+    <%= label_tag 'Last name', nil, class: 'control-label' %>
+    <div class=controls><%= text_field_tag 'name_last' %></div>
+  </div>
+  <div class=control-group>
+    <%= label_tag 'Email', nil, class: 'control-label' %>
+    <div class=controls><%= text_field_tag 'email' %></div>
+  </div>
+
   <% @field_sets.each do |field_set| %>
     <%= render partial: 'common/field_set_name', locals: {o: field_set} %>
     <% field_set.custom_fields.by_row.each do |o| %>

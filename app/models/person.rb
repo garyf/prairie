@@ -15,6 +15,10 @@ class Person < ActiveRecord::Base
     order('name_last').page page
   end
 
+  def self.ids_by_case_insensitive_value(column, value)
+    select(:id).where(Person.arel_table[column].matches "%#{value}%")
+  end
+
   def self.name_last_by_ids(ids)
     select(:id, :name_last).where(id: ids).order(:name_last)
   end
