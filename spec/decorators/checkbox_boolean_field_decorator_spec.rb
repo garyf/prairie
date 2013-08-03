@@ -5,7 +5,7 @@ describe CheckboxBooleanFieldDecorator do
   before { bld(id: 8) }
   context '#link_to_value_edit' do
     context 'w value_str' do
-      before { @o.stub_chain(:choices, :name_ranked) { ['True', 'False'] } }
+      before { @o.stub_chain(:choices, :name_ranked) { ['True','False'] } }
       describe '== 1' do
         subject { @o.link_to_value_edit(34, '1') }
         it do

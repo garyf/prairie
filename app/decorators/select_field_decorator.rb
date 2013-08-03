@@ -5,13 +5,13 @@ module SelectFieldDecorator
     link_to name, setup_choice_field_path(self) # /show allows editing of field choices
   end
 
-  def link_to_value_edit(parent_id, value_str)
+  def link_to_value_edit(parent_id, value_str = nil)
     value_str ||= 'select list, undefined'
     link_to value_str, edit_select_field_path(self, parent_id: parent_id)
   end
 
   def search_input
-    values = choices.order(:row).pluck(:name)
+    values = choices.name_ranked
     select_tag "field_#{id}_gist", options_for_select(values), prompt: 'Please select'
   end
 
