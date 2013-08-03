@@ -5,10 +5,10 @@ module CheckboxBooleanFieldDecorator
     link_to name, setup_choice_field_path(self) # /show allows editing of field choices
   end
 
-  def link_to_value_edit(parent_id, value_str)
-    ary = choices.order(:row)
+  def link_to_value_edit(parent_id, value_str = nil)
     if value_str
-      str = value_str == '1' ? ary[0].name : ary[1].name
+      values = choices.name_ranked
+      str = value_str == '1' ? values[0] : values[1]
     else
       str = 'checkbox, undefined'
     end
@@ -16,7 +16,7 @@ module CheckboxBooleanFieldDecorator
   end
 
   def search_input
-    check_box_tag "field_#{id}_gist", '0'
+    check_box_tag "field_#{id}_gist"
   end
 
   def btn_to_cancel_choice

@@ -9,6 +9,10 @@ class Choice < ActiveRecord::Base
 
   ranks :row, with_same: :custom_field_id
 
+  def self.name_ranked
+    order(:row).pluck(:name)
+  end
+
   def self.ranked_page(page)
     rank(:row).page page
   end
