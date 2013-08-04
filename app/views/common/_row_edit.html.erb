@@ -1,0 +1,8 @@
+<dl class=dl-horizontal>
+  <dt>Current row</dt>
+  <dd><%= rankable.human_row %></dd>
+</dl>
+<div class=control-group>
+  <%= f.label 'Move to row', class: 'control-label' %>
+  <div class=controls><%= f.number_field :row_position, class: 'input-mini' %></div>
+</div>
