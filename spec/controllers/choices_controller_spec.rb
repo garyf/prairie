@@ -2,9 +2,8 @@ require 'spec_helper'
 
 describe ChoicesController do
   context 'w params[:custom_field_id]' do
-    context 'w #choice_new_able?' do
+    context 'w #new_allow?' do
       before { CustomField.should_receive(:find).with('89') { select_field_mk(choice_new_able?: true) } }
-
       describe 'GET new' do
         before do
           select_field_mk.stub_chain(:choices, :new) { choice_mk }
@@ -44,26 +43,30 @@ describe ChoicesController do
       end
     end
 
-    context 'w/o #choice_new_able?' do
+    context 'w/o #new_allow?' do
       before { CustomField.should_receive(:find).with('89') { select_field_mk(choice_new_able?: false) } }
-
-      describe 'GET new' do
-        before { get :new, custom_field_id: '89' }
-        it { expect(response).to redirect_to root_path }
+      it 'GET new' do
+        get :new, custom_field_id: '89'
+        expect(response).to redirect_to root_path
       end
 
-      describe 'POST create' do
-        before { post :create, choice: valid_attributes }
-        it { expect(response).to redirect_to root_path }
+      it 'POST create' do
+        post :create, choice: valid_attributes
+        expect(response).to redirect_to root_path
       end
     end
   end
 
-  context 'w @choice' do
-    before { Choice.should_receive(:find).with('21') { choice_mk(custom_field: select_field_mk) } }
+  context 'w @choice w #edit_allow?' do
+    before do
+      Choice.should_receive(:find).with('21') do
+        choice_mk(custom_field: select_field_mk(
+          edit_able?: true,
+          parent?: true))
+      end
+    end
     context 'w #choice_row_edit_able?' do
       before { select_field_mk.stub(:choice_row_edit_able?) { true } }
-
       describe 'GET edit' do
         before do
           choice_mk.should_receive(:human_row)
@@ -73,6 +76,7 @@ describe ChoicesController do
           expect(assigns :choice).to be @choice_mock
           expect(assigns :choice_field).to be @select_field_mock
           expect(assigns :row_edit_able_p).to be true
+          expect(assigns :parent_p).to be true
           expect(response).to render_template :edit
         end
       end
@@ -98,6 +102,7 @@ describe ChoicesController do
           end
           it do
             expect(assigns :row_edit_able_p).to be true
+            expect(assigns :parent_p).to be true
             expect(flash[:alert]).to match /Failed to update choice/i
             expect(response).to render_template :edit
           end
@@ -132,6 +137,24 @@ describe ChoicesController do
         expect(flash[:notice]).to match /Choice successfully destroyed/i
         expect(response).to redirect_to setup_choice_field_path(@select_field_mock)
       end
+    end
+  end
+
+  context 'w @choice w/o #edit_allow?' do
+    before { Choice.should_receive(:find).with('21') { choice_mk(custom_field: select_field_mk(edit_able?: false)) } }
+    it 'GET edit' do
+      get :edit, id: '21'
+      expect(response).to redirect_to root_path
+    end
+
+    it 'PUT update' do
+      put :update, id: '21', choice: valid_attributes
+      expect(response).to redirect_to root_path
+    end
+
+    it 'DELETE destroy' do
+      delete :destroy, id: '21'
+      expect(response).to redirect_to root_path
     end
   end
 

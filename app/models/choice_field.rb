@@ -20,6 +20,10 @@ class ChoiceField < CustomField
     choices.count > 1
   end
 
+  def edit_able?
+    !parent? ? true : choice_row_edit_able?
+  end 
+
   def instructions
     # optional, implemented in decorator
   end

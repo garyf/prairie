@@ -25,7 +25,7 @@
     <tbody>
       <% @choices.each_with_index do |o, i| %><tr>
         <td><%= i + @row_offset %></td>
-        <td><%= o.link_to_edit %></td>
+        <td><%= o.link_to_edit @choice_field %></td>
       </tr><% end %>
     </tbody>
   </table>
