@@ -61,41 +61,64 @@ describe ChoicesController do
 
   context 'w @choice' do
     before { Choice.should_receive(:find).with('21') { choice_mk(custom_field: select_field_mk) } }
+    context 'w #choice_row_edit_able?' do
+      before { select_field_mk.stub(:choice_row_edit_able?) { true } }
 
-    describe 'GET edit' do
-      before do
-        choice_mk.should_receive(:human_row)
-        get :edit, id: '21'
-      end
-      it do
-        expect(assigns :choice).to be @choice_mock
-        expect(assigns :choice_field).to be @select_field_mock
-        expect(response).to render_template :edit
-      end
-    end
-
-    context 'PUT update' do
-      describe 'w #update' do
+      describe 'GET edit' do
         before do
-          choice_mk.should_receive(:update).with(valid_attributes_human) { true }
-          put :update, id: '21', choice: valid_attributes.merge('some' => 'attribute')
+          choice_mk.should_receive(:human_row)
+          get :edit, id: '21'
         end
         it do
           expect(assigns :choice).to be @choice_mock
-          expect(flash[:notice]).to match /Choice successfully updated/i
-          expect(response).to redirect_to setup_choice_field_path(@select_field_mock)
+          expect(assigns :choice_field).to be @select_field_mock
+          expect(assigns :row_edit_able_p).to be true
+          expect(response).to render_template :edit
         end
       end
 
-      describe 'w/o #update' do
+      context 'PUT update' do
+        describe 'w #update' do
+          before do
+            choice_mk.should_receive(:update).with(valid_attributes_human) { true }
+            put :update, id: '21', choice: valid_attributes.merge('some' => 'attribute')
+          end
+          it do
+            expect(assigns :choice).to be @choice_mock
+            expect(flash[:notice]).to match /Choice successfully updated/i
+            expect(response).to redirect_to setup_choice_field_path(@select_field_mock)
+          end
+        end
+
+        describe 'w/o #update' do
+          before do
+            choice_mk.should_receive(:update).with(valid_attributes_human) { false }
+            @choice_mock.should_receive(:human_row)
+            put :update, id: '21', choice: valid_attributes.merge('some' => 'attribute')
+          end
+          it do
+            expect(assigns :row_edit_able_p).to be true
+            expect(flash[:alert]).to match /Failed to update choice/i
+            expect(response).to render_template :edit
+          end
+        end
+      end
+    end
+
+    context 'w/o #choice_row_edit_able?' do
+      before { select_field_mk.stub(:choice_row_edit_able?) { false } }
+      it 'GET edit' do
+        get :edit, id: '21'
+        expect(assigns :row_edit_able_p).to be false
+      end
+
+      describe 'PUT update w/o #update' do
         before do
           choice_mk.should_receive(:update).with(valid_attributes_human) { false }
-          put :update, id: '21', choice: valid_attributes.merge('some' => 'attribute')
+          @choice_mock.should_not_receive(:human_row)
+          put :update, id: '21', choice: valid_attributes
         end
-        it do
-          expect(flash[:alert]).to match /Failed to update choice/i
-          expect(response).to render_template :edit
-        end
+        it { expect(assigns :row_edit_able_p).to be false }
       end
     end
 

@@ -23,7 +23,7 @@ describe FieldSet do
 
 private
 
-  def cr(options = {})
+  def cr
     @o = FactoryGirl.create(:location_field_set)
   end
 

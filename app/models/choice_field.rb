@@ -16,6 +16,10 @@ class ChoiceField < CustomField
     raise SubklassNotRecognized
   end
 
+  def choice_row_edit_able?
+    choices.count > 1
+  end
+
   def instructions
     # optional, implemented in decorator
   end

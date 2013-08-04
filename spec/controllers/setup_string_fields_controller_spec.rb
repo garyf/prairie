@@ -53,7 +53,6 @@ describe SetupStringFieldsController do
           parent?: true)
       end
     end
-
     context 'w #custom_field_row_edit_able?' do
       before { location_field_set_mk.stub(:custom_field_row_edit_able?) { true } }
       describe 'GET edit' do
