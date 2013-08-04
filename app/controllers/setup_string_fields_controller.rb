@@ -9,9 +9,7 @@ class SetupStringFieldsController < ApplicationController
   end
 
   def edit
-    @string_field = @string_field.constraints_fetch
-    @string_field.row_position = @string_field.human_row
-    @parent_p = @string_field.parent?
+    edit_assigns
   end
 
   def create
@@ -30,8 +28,7 @@ class SetupStringFieldsController < ApplicationController
       @string_field.constraints_store(params_white)
       redirect_to field_set_path(@field_set), notice: 'String field successfully updated'
     else
-      @string_field = @string_field.constraints_fetch
-      @parent_p = @string_field.parent?
+      edit_assigns
       flash[:alert] = 'Failed to update string field'
       render :edit
     end
@@ -55,6 +52,13 @@ private
 
   def from_assn_field_set_assign
     @field_set = @string_field.field_set
+  end
+
+  def edit_assigns
+    @string_field = @string_field.constraints_fetch
+    @row_edit_able_p = @field_set.custom_field_row_edit_able?
+    @string_field.row_position = @string_field.human_row if @row_edit_able_p
+    @parent_p = @string_field.parent?
   end
 
   def params_white

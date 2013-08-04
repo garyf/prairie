@@ -33,7 +33,6 @@ describe SetupStringFieldsController do
 
       describe 'w/o #save' do
         before do
-          with_errors_double
           location_field_set_mk.stub_chain(:string_fields, :new).with(valid_attributes) { string_field_mk(save: false) }
           string_field_mk.should_not_receive(:constraints_store)
           post :create, string_field: valid_attributes.merge('some' => 'attribute')
@@ -55,46 +54,69 @@ describe SetupStringFieldsController do
       end
     end
 
-    describe 'GET edit' do
-      before do
-        string_field_mk.should_receive(:constraints_fetch)
-        @string_field_mock.should_receive(:human_row)
-        get :edit, id: '21'
-      end
-      it do
-        expect(assigns :string_field).to be @string_field_mock
-        expect(assigns :field_set).to be @location_field_set_mock
-        expect(assigns :parent_p).to be true
-        expect(response).to render_template :edit
-      end
-    end
-
-    context 'PUT update' do
-      describe 'w #update' do
+    context 'w #custom_field_row_edit_able?' do
+      before { location_field_set_mk.stub(:custom_field_row_edit_able?) { true } }
+      describe 'GET edit' do
         before do
-          string_field_mk.should_receive(:update).with(valid_attributes_human) { true }
-          @string_field_mock.should_receive(:constraints_store).with(valid_attributes)
-          put :update, id: '21', string_field: valid_attributes.merge('some' => 'attribute')
+          string_field_mk.should_receive(:constraints_fetch)
+          @string_field_mock.should_receive(:human_row)
+          get :edit, id: '21'
         end
         it do
           expect(assigns :string_field).to be @string_field_mock
-          expect(flash[:notice]).to match /String field successfully updated/i
-          expect(response).to redirect_to field_set_path(@location_field_set_mock)
+          expect(assigns :field_set).to be @location_field_set_mock
+          expect(assigns :row_edit_able_p).to be true
+          expect(assigns :parent_p).to be true
+          expect(response).to render_template :edit
         end
       end
 
-      describe 'w/o #update' do
+      context 'PUT update' do
+        describe 'w #update' do
+          before do
+            string_field_mk.should_receive(:update).with(valid_attributes_human) { true }
+            @string_field_mock.should_receive(:constraints_store).with(valid_attributes)
+            put :update, id: '21', string_field: valid_attributes.merge('some' => 'attribute')
+          end
+          it do
+            expect(assigns :string_field).to be @string_field_mock
+            expect(flash[:notice]).to match /String field successfully updated/i
+            expect(response).to redirect_to field_set_path(@location_field_set_mock)
+          end
+        end
+
+        describe 'w/o #update' do
+          before do
+            string_field_mk.should_receive(:update).with(valid_attributes_human) { false }
+            @string_field_mock.should_not_receive(:constraints_store)
+            @string_field_mock.should_receive(:constraints_fetch)
+            @string_field_mock.should_receive(:human_row)
+            put :update, id: '21', string_field: valid_attributes.merge('some' => 'attribute')
+          end
+          it do
+            expect(assigns :row_edit_able_p).to be true
+            expect(assigns :parent_p).to be true
+            expect(flash[:alert]).to match /Failed to update string field/i
+            expect(response).to render_template :edit
+          end
+        end
+      end
+    end
+
+    context 'w/o #custom_field_row_edit_able?' do
+      before { location_field_set_mk.stub(:custom_field_row_edit_able?) { false } }
+      it 'GET edit' do
+        get :edit, id: '21'
+        expect(assigns :row_edit_able_p).to be false
+      end
+
+      describe 'PUT update w/o #update' do
         before do
           string_field_mk.should_receive(:update).with(valid_attributes_human) { false }
-          string_field_mk.should_not_receive(:constraints_store)
-          put :update, id: '21', string_field: valid_attributes.merge('some' => 'attribute')
+          @string_field_mock.should_not_receive(:human_row)
+          put :update, id: '21', string_field: valid_attributes
         end
-        it do
-          # @string_field_mock.should_receive(:constraints_fetch)
-          expect(assigns :parent_p).to be true
-          expect(flash[:alert]).to match /Failed to update string field/i
-          expect(response).to render_template :edit
-        end
+        it { expect(assigns :row_edit_able_p).to be false }
       end
     end
 

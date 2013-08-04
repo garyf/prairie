@@ -29,7 +29,7 @@ class FieldSet < ActiveRecord::Base
     custom_fields.count == 0
   end
 
-  def field_row_editable?
+  def custom_field_row_edit_able?
     custom_fields.count > 1
   end
 end

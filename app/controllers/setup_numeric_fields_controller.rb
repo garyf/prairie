@@ -9,9 +9,7 @@ class SetupNumericFieldsController < ApplicationController
   end
 
   def edit
-    @numeric_field = @numeric_field.constraints_fetch
-    @numeric_field.row_position = @numeric_field.human_row
-    @parent_p = @numeric_field.parent?
+    edit_assigns
   end
 
   def create
@@ -30,8 +28,7 @@ class SetupNumericFieldsController < ApplicationController
       @numeric_field.constraints_store(params_white)
       redirect_to field_set_path(@field_set), notice: 'Numeric field successfully updated'
     else
-      @numeric_field = @numeric_field.constraints_fetch
-      @parent_p = @numeric_field.parent?
+      edit_assigns
       flash[:alert] = 'Failed to update numeric field'
       render :edit
     end
@@ -55,6 +52,13 @@ private
 
   def from_assn_field_set_assign
     @field_set = @numeric_field.field_set
+  end
+
+  def edit_assigns
+    @numeric_field = @numeric_field.constraints_fetch
+    @row_edit_able_p = @field_set.custom_field_row_edit_able?
+    @numeric_field.row_position = @numeric_field.human_row if @row_edit_able_p
+    @parent_p = @numeric_field.parent?
   end
 
   def params_white

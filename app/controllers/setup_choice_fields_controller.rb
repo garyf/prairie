@@ -14,7 +14,7 @@ class SetupChoiceFieldsController < ApplicationController
   end
 
   def edit
-    @choice_field.row_position = @choice_field.human_row
+    edit_assigns
   end
 
   def create
@@ -31,6 +31,7 @@ class SetupChoiceFieldsController < ApplicationController
     if @choice_field.update(params_white_w_human_row)
       redirect_to field_set_path(@field_set), notice: 'Choice field successfully updated'
     else
+      edit_assigns
       flash[:alert] = 'Failed to update choice field'
       render :edit
     end
@@ -54,6 +55,11 @@ private
 
   def from_assn_field_set_assign
     @field_set = @choice_field.field_set
+  end
+
+  def edit_assigns
+    @row_edit_able_p = @field_set.custom_field_row_edit_able?
+    @choice_field.row_position = @choice_field.human_row if @row_edit_able_p
   end
 
   def params_white
