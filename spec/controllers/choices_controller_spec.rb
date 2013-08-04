@@ -2,43 +2,59 @@ require 'spec_helper'
 
 describe ChoicesController do
   context 'w params[:custom_field_id]' do
-    before { CustomField.should_receive(:find).with('89') { select_field_mk } }
+    context 'w #choice_new_able?' do
+      before { CustomField.should_receive(:find).with('89') { select_field_mk(choice_new_able?: true) } }
 
-    describe 'GET new' do
-      before do
-        select_field_mk.stub_chain(:choices, :new) { choice_mk }
-        get :new, custom_field_id: '89'
-      end
-      it do
-        expect(assigns :choice_field).to be @select_field_mock
-        expect(assigns :choice).to be @choice_mock
-        expect(response).to render_template :new
-      end
-    end
-
-    context 'POST create' do
-      describe 'w #save' do
+      describe 'GET new' do
         before do
-          select_field_mk.stub_chain(:choices, :new).with(valid_attributes) { choice_mk(save: true) }
-          post :create, choice: valid_attributes.merge('some' => 'attribute')
+          select_field_mk.stub_chain(:choices, :new) { choice_mk }
+          get :new, custom_field_id: '89'
         end
         it do
           expect(assigns :choice_field).to be @select_field_mock
           expect(assigns :choice).to be @choice_mock
-          expect(flash[:notice]).to match /Choice successfully created/i
-          expect(response).to redirect_to setup_choice_field_path(@select_field_mock)
+          expect(response).to render_template :new
         end
       end
 
-      describe 'w/o #save' do
-        before do
-          select_field_mk.stub_chain(:choices, :new).with(valid_attributes) { choice_mk(save: false) }
-          post :create, choice: valid_attributes.merge('some' => 'attribute')
+      context 'POST create' do
+        describe 'w #save' do
+          before do
+            select_field_mk.stub_chain(:choices, :new).with(valid_attributes) { choice_mk(save: true) }
+            post :create, choice: valid_attributes.merge('some' => 'attribute')
+          end
+          it do
+            expect(assigns :choice_field).to be @select_field_mock
+            expect(assigns :choice).to be @choice_mock
+            expect(flash[:notice]).to match /Choice successfully created/i
+            expect(response).to redirect_to setup_choice_field_path(@select_field_mock)
+          end
         end
-        it do
-          expect(flash[:alert]).to match /Failed to create choice/i
-          expect(response).to render_template :new
+
+        describe 'w/o #save' do
+          before do
+            select_field_mk.stub_chain(:choices, :new).with(valid_attributes) { choice_mk(save: false) }
+            post :create, choice: valid_attributes.merge('some' => 'attribute')
+          end
+          it do
+            expect(flash[:alert]).to match /Failed to create choice/i
+            expect(response).to render_template :new
+          end
         end
+      end
+    end
+
+    context 'w/o #choice_new_able?' do
+      before { CustomField.should_receive(:find).with('89') { select_field_mk(choice_new_able?: false) } }
+
+      describe 'GET new' do
+        before { get :new, custom_field_id: '89' }
+        it { expect(response).to redirect_to root_path }
+      end
+
+      describe 'POST create' do
+        before { post :create, choice: valid_attributes }
+        it { expect(response).to redirect_to root_path }
       end
     end
   end

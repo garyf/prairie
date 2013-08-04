@@ -10,7 +10,9 @@
 </dl>
 
 <h5>Choices</h5>
-<%= link_to 'New choice', new_choice_path(custom_field_id: @choice_field.id) %>
+<% if @choice_field.choice_new_able? %>
+  <%= link_to 'New choice', new_choice_path(custom_field_id: @choice_field.id) %>
+<% end %>
 
 <% if @choices.any? %>
 

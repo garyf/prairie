@@ -5,6 +5,7 @@ class ChoicesController < ApplicationController
   respond_to :html
 
   def new
+    redirect_to root_path and return unless @choice_field.choice_new_able?
     @choice = @choice_field.choices.new
   end
 
@@ -13,6 +14,7 @@ class ChoicesController < ApplicationController
   end
 
   def create
+    redirect_to root_path and return unless @choice_field.choice_new_able?
     @choice = @choice_field.choices.new(params_white)
     if @choice.save
       redirect_to setup_choice_field_path(@choice_field), notice: 'Choice successfully created'
