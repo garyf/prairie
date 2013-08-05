@@ -128,18 +128,6 @@ describe ChoicesController do
         it { expect(assigns :row_edit_able_p).to be false }
       end
     end
-
-    describe 'DELETE destroy' do
-      before do
-        choice_mk.should_receive(:destroy)
-        delete :destroy, id: '21'
-      end
-      it do
-        expect(assigns :choice).to be @choice_mock
-        expect(flash[:notice]).to match /Choice successfully destroyed/i
-        expect(response).to redirect_to setup_choice_field_path(@select_field_mock)
-      end
-    end
   end
 
   context 'w @choice w/o choice_field#edit_able?' do
@@ -163,11 +151,6 @@ describe ChoicesController do
         end
         it { expect(response).to redirect_to setup_choice_field_path(@select_field_mock) }
       end
-
-      it 'DELETE destroy' do
-        delete :destroy, id: '21'
-        expect(response).to redirect_to setup_choice_field_path(@select_field_mock)
-      end
     end
 
     describe 'w/o choice.name_edit_able?' do
@@ -187,9 +170,40 @@ describe ChoicesController do
         put :update, id: '21', choice: valid_attributes
         expect(response).to redirect_to root_path
       end
+    end
+  end
 
-      it 'DELETE destroy' do
+  context 'DELETE destroy' do
+    describe 'w choice.name_edit_able?' do
+      before do
+        Choice.should_receive(:find).with('21') do
+          choice_mk(
+            custom_field: select_field_mk,
+            name_edit_able?: true)
+        end
+        choice_mk.should_receive(:destroy)
         delete :destroy, id: '21'
+      end
+      it do
+        expect(assigns :choice).to be @choice_mock
+        expect(assigns :choice_field).to be @select_field_mock
+        expect(flash[:notice]).to match /Choice successfully destroyed/i
+        expect(response).to redirect_to setup_choice_field_path(@select_field_mock)
+      end
+    end
+
+    describe 'w/o choice.name_edit_able?' do
+      before do
+        Choice.should_receive(:find).with('21') do
+          choice_mk(
+            custom_field: select_field_mk,
+            name_edit_able?: false)
+        end
+        choice_mk.should_not_receive(:destroy)
+        delete :destroy, id: '21'
+      end
+      it do
+        expect(assigns :choice_field).to be @select_field_mock
         expect(response).to redirect_to root_path
       end
     end

@@ -1,7 +1,8 @@
 class ChoicesController < ApplicationController
 
   before_action :choice_field_assign, :new_allow?, only: [:new, :create]
-  before_action :choice_assign, :from_assn_choice_field_assign, :edit_allow?, only: [:edit, :update, :destroy]
+  before_action :choice_assign, :from_assn_choice_field_assign, only: [:edit, :update, :destroy]
+  before_action :edit_allow?, only: [:edit, :update]
   respond_to :html
 
   def new
@@ -35,6 +36,7 @@ class ChoicesController < ApplicationController
   end
 
   def destroy
+    redirect_to root_path and return unless @choice.name_edit_able?
     @choice.destroy
     redirect_to setup_choice_field_path(@choice_field), notice: 'Choice successfully destroyed'
   end
