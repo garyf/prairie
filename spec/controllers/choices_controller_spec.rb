@@ -12,6 +12,7 @@ describe ChoicesController do
         it do
           expect(assigns :choice_field).to be @select_field_mock
           expect(assigns :choice).to be @choice_mock
+          expect(assigns :name_edit_able_p).to be true
           expect(response).to render_template :new
         end
       end
@@ -36,6 +37,7 @@ describe ChoicesController do
             post :create, choice: valid_attributes.merge('some' => 'attribute')
           end
           it do
+            expect(assigns :name_edit_able_p).to be true
             expect(flash[:alert]).to match /Failed to create choice/i
             expect(response).to render_template :new
           end
@@ -57,12 +59,12 @@ describe ChoicesController do
     end
   end
 
-  context 'w @choice w #edit_allow?' do
+  context 'w @choice w choice_field#edit_able?' do
     before do
       Choice.should_receive(:find).with('21') do
-        choice_mk(custom_field: select_field_mk(
-          edit_able?: true,
-          parent?: true))
+        choice_mk(
+          custom_field: select_field_mk(edit_able?: true),
+          name_edit_able?: true)
       end
     end
     context 'w #choice_row_edit_able?' do
@@ -76,7 +78,7 @@ describe ChoicesController do
           expect(assigns :choice).to be @choice_mock
           expect(assigns :choice_field).to be @select_field_mock
           expect(assigns :row_edit_able_p).to be true
-          expect(assigns :parent_p).to be true
+          expect(assigns :name_edit_able_p).to be true
           expect(response).to render_template :edit
         end
       end
@@ -102,7 +104,7 @@ describe ChoicesController do
           end
           it do
             expect(assigns :row_edit_able_p).to be true
-            expect(assigns :parent_p).to be true
+            expect(assigns :name_edit_able_p).to be true
             expect(flash[:alert]).to match /Failed to update choice/i
             expect(response).to render_template :edit
           end
@@ -140,21 +142,56 @@ describe ChoicesController do
     end
   end
 
-  context 'w @choice w/o #edit_allow?' do
-    before { Choice.should_receive(:find).with('21') { choice_mk(custom_field: select_field_mk(edit_able?: false)) } }
-    it 'GET edit' do
-      get :edit, id: '21'
-      expect(response).to redirect_to root_path
+  context 'w @choice w/o choice_field#edit_able?' do
+    context 'w choice.name_edit_able?' do
+      before do
+        Choice.should_receive(:find).with('21') do
+          choice_mk(
+            custom_field: select_field_mk(edit_able?: false),
+            name_edit_able?: true)
+        end
+      end
+      it 'GET edit' do
+        get :edit, id: '21'
+        expect(response).to render_template :edit
+      end
+
+      describe 'PUT update' do
+        before do
+          choice_mk.should_receive(:update).with(valid_attributes_human) { true }
+          put :update, id: '21', choice: valid_attributes
+        end
+        it { expect(response).to redirect_to setup_choice_field_path(@select_field_mock) }
+      end
+
+      it 'DELETE destroy' do
+        delete :destroy, id: '21'
+        expect(response).to redirect_to setup_choice_field_path(@select_field_mock)
+      end
     end
 
-    it 'PUT update' do
-      put :update, id: '21', choice: valid_attributes
-      expect(response).to redirect_to root_path
-    end
+    describe 'w/o choice.name_edit_able?' do
+      before do
+        Choice.should_receive(:find).with('21') do
+          choice_mk(
+            custom_field: select_field_mk(edit_able?: false),
+            name_edit_able?: false)
+        end
+      end
+      it 'GET edit' do
+        get :edit, id: '21'
+        expect(response).to redirect_to root_path
+      end
 
-    it 'DELETE destroy' do
-      delete :destroy, id: '21'
-      expect(response).to redirect_to root_path
+      it 'PUT update' do
+        put :update, id: '21', choice: valid_attributes
+        expect(response).to redirect_to root_path
+      end
+
+      it 'DELETE destroy' do
+        delete :destroy, id: '21'
+        expect(response).to redirect_to root_path
+      end
     end
   end
 

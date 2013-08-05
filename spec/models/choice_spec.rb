@@ -62,4 +62,41 @@ describe Choice do
       end
     end
   end
+
+  context '#parents, #parents?, #name_edit_able?' do
+    context 'w name' do
+      before { bld(name: 'Magenta') }
+      describe 'w #parents_find_by_gist' do
+        before { @custom_field.stub(:parents_find_by_gist).with('Magenta') { ['5','13'] } }
+        it { expect(@o.parents).to match_array ['5','13'] }
+        it { expect(@o.parents?).to be true }
+        it { expect(@o.name_edit_able?).to be false }
+      end
+
+      describe 'w/o #parents_find_by_gist' do
+        before { @custom_field.stub(:parents_find_by_gist).with('Magenta') { nil } }
+        it { expect(@o.parents).to be nil }
+        it { expect(@o.parents?).to be nil }
+        it { expect(@o.name_edit_able?).to be true }
+      end
+    end
+    
+    describe 'w name blank?' do
+      before do
+        bld(name: '')
+        @custom_field.should_not_receive(:parents_find_by_gist)
+      end
+      it { expect(@o.parents).to be nil }
+      it { expect(@o.parents?).to be nil }
+      it { expect(@o.name_edit_able?).to be true }
+    end
+  end
+
+private
+
+  def bld(options = {})
+    @custom_field ||= FactoryGirl.build_stubbed(:custom_field)
+    @o = FactoryGirl.build(:choice, {
+      custom_field: @custom_field}.merge(options))
+  end
 end

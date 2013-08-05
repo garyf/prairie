@@ -24,4 +24,16 @@ class Choice < ActiveRecord::Base
   def human_row
     custom_field.choices.position_above_count(row) + 1
   end
+
+  def parents
+    custom_field.parents_find_by_gist(name) unless name.blank?
+  end
+
+  def parents?
+    parents.count > 0 if parents
+  end
+
+  def name_edit_able?
+    !parents?
+  end
 end

@@ -21,7 +21,7 @@ class ChoiceField < CustomField
   end
 
   def edit_able?
-    !parent? ? true : choice_row_edit_able?
+    !parent? || choice_row_edit_able?
   end 
 
   def instructions

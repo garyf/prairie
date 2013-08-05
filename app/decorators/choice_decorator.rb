@@ -2,7 +2,7 @@
 module ChoiceDecorator
 
   def link_to_edit(choice_field)
-    return name unless choice_field.edit_able?
+    return name unless choice_field.edit_able? || name_edit_able?
     link_to name, edit_choice_path(self)
   end
 end

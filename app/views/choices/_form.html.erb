@@ -3,8 +3,8 @@
 <%= form_for(@choice, html: {class: 'form-horizontal'}) do |f| %>
   <%= render 'common/form_errors', o: @choice %>
   <%= f.hidden_field :custom_field_id %>
-  
-  <% unless @parent_p %>
+
+  <% if @name_edit_able_p %>
     <div class=control-group>
       <%= f.label :name, class: 'control-label' %>
       <div class=controls><%= f.text_field :name %></div>
