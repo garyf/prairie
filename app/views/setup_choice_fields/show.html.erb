@@ -1,5 +1,4 @@
-<h4>Choice field</h4>
-
+<h4><%= @choice_field.type_human %></h4>
 <%= link_to 'Edit', edit_setup_choice_field_path(@choice_field) %>
 
 <%= render partial: 'common/field_set_name', locals: {o: @field_set} %>

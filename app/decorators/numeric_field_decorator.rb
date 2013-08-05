@@ -18,7 +18,8 @@ module NumericFieldDecorator
     only_integer_p == '1' ? 'yes' : 'no'
   end
 
-  def type_abrv
-    'Numeric'
+  def type_human(downcase_p = false)
+    str = 'Numeric field'
+    downcase_p ? str.downcase : str
   end
 end

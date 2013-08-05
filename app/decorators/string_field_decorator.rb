@@ -14,7 +14,8 @@ module StringFieldDecorator
     text_field_tag "field_#{id}_gist", nil, class: 'input-mini'
   end
 
-  def type_abrv
-    'String'
+  def type_human(downcase_p = false)
+    str = 'String field'
+    downcase_p ? str.downcase : str
   end
 end
