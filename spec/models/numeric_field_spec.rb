@@ -18,16 +18,16 @@ describe NumericField do
       end
     end
 
-    describe '#constraints_store when passing blank values' do
+    describe '#constraints_store when passing an un_checked box or blank values' do
       before do
         @o.constraints_store({
-          'only_integer_p' => '',
+          'only_integer_p' => '0',
           'value_max' => '',
           'value_min' => ''})
         @o.constraints_fetch
       end
       it do
-        expect(@o.only_integer_p).to be nil
+        expect(@o.only_integer_p).to eql '0'
         expect(@o.value_max).to be nil
         expect(@o.value_min).to be nil
       end

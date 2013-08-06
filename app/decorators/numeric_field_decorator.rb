@@ -5,7 +5,7 @@ module NumericFieldDecorator
     link_to name, edit_setup_numeric_field_path(self)
   end
 
-  def link_to_value_edit(parent_id, value_str)
+  def link_to_value_edit(parent_id, value_str = nil)
     value_str ||= 'numeric, undefined'
     link_to value_str, edit_numeric_field_path(self, parent_id: parent_id)
   end
