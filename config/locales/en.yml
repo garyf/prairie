@@ -24,3 +24,13 @@ en:
     attributes:
       custom_field:
         gist: 'The'
+  controllers:
+    flash:
+      create:
+        failure: "Failed to create %{entity}"
+        success: "%{entity} successfully created"
+      destroy:
+        success: "%{entity} successfully destroyed"
+      update:
+        failure: "Failed to update %{entity}"
+        success: "%{entity} successfully updated"

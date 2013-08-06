@@ -20,12 +20,13 @@ describe SetupChoiceFieldsController do
       describe 'w #save' do
         before do
           SelectField.should_receive(:new).with(valid_attributes) { select_field_mk(save: true) }
+          select_field_mk.should_receive(:type_human) { 'Select list field' }
           post :create, choice_field: valid_attributes.merge('some' => 'attribute')
         end
         it do
           expect(assigns :field_set).to be @person_field_set_mock
           expect(assigns :choice_field).to be @select_field_mock
-          expect(flash[:notice]).to match /Choice field successfully created/i
+          expect(flash[:notice]).to match /Select list field successfully created/
           expect(response).to redirect_to setup_choice_field_path(@select_field_mock)
         end
       end
@@ -34,10 +35,11 @@ describe SetupChoiceFieldsController do
         before do
           with_errors_double
           SelectField.should_receive(:new).with(valid_attributes) { select_field_mk(save: false) }
+          select_field_mk.should_receive(:type_human).with(true) { 'select list field' }
           post :create, choice_field: valid_attributes.merge('some' => 'attribute')
         end
         it do
-          expect(flash[:alert]).to match /Failed to create choice field/i
+          expect(flash[:alert]).to match /Failed to create select list field/
           expect(response).to render_template :new
         end
       end
@@ -79,11 +81,12 @@ describe SetupChoiceFieldsController do
         describe 'w #update' do
           before do
             select_field_mk.should_receive(:update).with(valid_attributes_human) { true }
+            @select_field_mock.should_receive(:type_human) { 'Select list field' }
             put :update, id: '21', choice_field: valid_attributes.merge('some' => 'attribute')
           end
           it do
             expect(assigns :choice_field).to be @select_field_mock
-            expect(flash[:notice]).to match /Choice field successfully updated/i
+            expect(flash[:notice]).to match /Select list field successfully updated/
             expect(response).to redirect_to field_set_path(@person_field_set_mock)
           end
         end
@@ -92,10 +95,11 @@ describe SetupChoiceFieldsController do
           before do
             select_field_mk.should_receive(:update).with(valid_attributes_human) { false }
             @select_field_mock.should_receive(:human_row)
+            @select_field_mock.should_receive(:type_human).with(true) { 'select list field' }
             put :update, id: '21', choice_field: valid_attributes.merge('some' => 'attribute')
           end
           it do
-            expect(flash[:alert]).to match /Failed to update choice field/i
+            expect(flash[:alert]).to match /Failed to update select list field/
             expect(response).to render_template :edit
           end
         end
@@ -122,11 +126,12 @@ describe SetupChoiceFieldsController do
     describe 'DELETE destroy' do
       before do
         select_field_mk.should_receive(:garbage_collect_and_self_destroy)
+        select_field_mk.should_receive(:type_human) { 'Select list field' }
         delete :destroy, id: '21'
       end
       it do
         expect(assigns :choice_field).to be @select_field_mock
-        expect(flash[:notice]).to match /Choice field successfully destroyed/i
+        expect(flash[:notice]).to match /Select list field successfully destroyed/
         expect(response).to redirect_to field_set_path(@person_field_set_mock)
       end
     end

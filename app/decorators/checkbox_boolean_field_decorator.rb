@@ -23,11 +23,6 @@ module CheckboxBooleanFieldDecorator
     link_to 'Cancel', setup_choice_field_path(self), class: 'btn'
   end
 
-  def type_human(downcase_p = false)
-    str = 'Checkbox field'
-    downcase_p ? str.downcase : str
-  end
-
   def instructions
     render 'checkbox_boolean'
   end

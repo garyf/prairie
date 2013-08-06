@@ -20,26 +20,26 @@ class SetupChoiceFieldsController < ApplicationController
   def create
     @choice_field = ChoiceField.subklass_with(params_white)
     if @choice_field.save
-      redirect_to setup_choice_field_path(@choice_field), notice: 'Choice field successfully created'
+      redirect_to setup_choice_field_path(@choice_field), notice: t('controllers.flash.create.success', entity: @choice_field.type_human)
     else
-      flash[:alert] = 'Failed to create choice field'
+      flash[:alert] = t('controllers.flash.create.failure', entity: @choice_field.type_human(true))
       render :new
     end
   end
 
   def update
     if @choice_field.update(params_white_w_human_row)
-      redirect_to field_set_path(@field_set), notice: 'Choice field successfully updated'
+      redirect_to field_set_path(@field_set), notice: t('controllers.flash.update.success', entity: @choice_field.type_human)
     else
       edit_assigns
-      flash[:alert] = 'Failed to update choice field'
+      flash[:alert] = t('controllers.flash.update.failure', entity: @choice_field.type_human(true))
       render :edit
     end
   end
 
   def destroy
     @choice_field.garbage_collect_and_self_destroy
-    flash[:notice] = 'Choice field successfully destroyed'
+    flash[:notice] = t('controllers.flash.destroy.success', entity: @choice_field.type_human)
     redirect_to field_set_path(@field_set)
   end
 
