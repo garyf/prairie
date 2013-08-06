@@ -1,7 +1,6 @@
 <h4><%= @choice_field.type_human %></h4>
 <%= link_to 'Edit', edit_setup_choice_field_path(@choice_field) %>
-
-<%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
+<%= render partial: 'common/link_to_field_set', locals: {o: @field_set} %>
 
 <dl class=dl-horizontal>
   <dt><%= @choice_field.type_human %></dt>
