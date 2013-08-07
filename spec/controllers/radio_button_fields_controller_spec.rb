@@ -10,6 +10,7 @@ describe RadioButtonFieldsController do
           parent_id: '34') # virtual
       end
       radio_button_field_mk.should_receive(:parent).with('34') { @location_mock }
+      @radio_button_field_mock.stub_chain(:choices, :name_by_row) { ['c1','c2','c3'] }
     end
 
     describe 'GET edit' do
@@ -21,6 +22,7 @@ describe RadioButtonFieldsController do
         expect(assigns :choice_field).to be @radio_button_field_mock
         expect(assigns :field_set).to be @location_field_set_mock
         expect(assigns :parent).to be @location_mock
+        expect(assigns :choices).to eql ['c1','c2','c3']
         expect(response).to render_template :edit
       end
     end
@@ -41,9 +43,13 @@ describe RadioButtonFieldsController do
       describe 'w/o #gist_store' do
         before do
           radio_button_field_mk.should_receive(:gist_store).with(@location_mock, valid_attributes) { false }
+          @radio_button_field_mock.stub_chain(:choices, :name_by_row) { ['c1','c2','c3'] }
           put :update, id: '21', choice_field: valid_attributes
         end
         it do
+          expect(assigns :field_set).to be @location_field_set_mock
+          expect(assigns :parent).to be @location_mock
+          expect(assigns :choices).to eql ['c1','c2','c3']
           expect(flash[:alert]).to match /Failed to update choice field/i
           expect(response).to render_template :edit
         end

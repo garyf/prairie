@@ -9,6 +9,10 @@ class Choice < ActiveRecord::Base
 
   ranks :row, with_same: :custom_field_id
 
+  def self.name_by_row
+    select(:name).order('row')
+  end
+
   def self.name_ranked
     order(:row).pluck(:name)
   end

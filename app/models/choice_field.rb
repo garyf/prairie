@@ -22,7 +22,7 @@ class ChoiceField < CustomField
 
   def edit_able?
     !parent? || choice_row_edit_able?
-  end 
+  end
 
   def instructions
     # optional, implemented in decorator

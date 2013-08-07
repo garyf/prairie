@@ -4,8 +4,8 @@ class ChoiceFieldsController < ApplicationController
   respond_to :html
 
   def edit
-    @choices = @choice_field.choices.order(:row)
     @choice_field = @choice_field.gist_fetch(@parent)
+    choices_assign
   end
 
   def update
@@ -13,7 +13,7 @@ class ChoiceFieldsController < ApplicationController
       redirect_to(field_values_path(field_set_id: @field_set.id, parent_id: @parent.id),
         notice: 'Choice field successfully updated')
     else
-      @choice_field.parent_id = @parent.id
+      choices_assign
       flash[:alert] = 'Failed to update choice field'
       render :edit
     end
@@ -31,6 +31,10 @@ private
 
   def parent_assign
     @parent = @choice_field.parent(params[:parent_id] || params[:choice_field][:parent_id])
+  end
+
+  def choices_assign
+    @choices = @choice_field.choices.name_by_row
   end
 
   def params_white
