@@ -19,7 +19,7 @@ describe SelectFieldDecorator do
   end
 
   describe '#search_input' do
-    before { @o.stub_chain(:choices, :name_ranked) { ['Apple','Banana','Cherry'] } }
+    before { @o.stub_chain(:choices, :name_pluck_by_row) { ['Apple','Banana','Cherry'] } }
     subject { @o.search_input }
     it do
       expect(subject).to match /<select id="field_21_gist"/

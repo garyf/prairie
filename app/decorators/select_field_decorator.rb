@@ -11,7 +11,7 @@ module SelectFieldDecorator
   end
 
   def search_input
-    values = choices.name_ranked
+    values = choices.name_pluck_by_row
     select_tag "field_#{id}_gist", options_for_select(values), prompt: 'Please select'
   end
 

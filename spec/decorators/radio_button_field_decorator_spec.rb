@@ -19,7 +19,7 @@ describe RadioButtonFieldDecorator do
   end
 
   describe '#search_input' do
-    before { @o.stub_chain(:choices, :name_ranked) { ['Apple','Banana','Cherry'] } }
+    before { @o.stub_chain(:choices, :name_pluck_by_row) { ['Apple','Banana','Cherry'] } }
     subject { @o.search_input }
     it do
       expect(subject).to match /<input id="field_21_gist_Apple" name="field_21_gist" type="radio" value="Apple" \/><label for="Apple">Apple<\/label>/

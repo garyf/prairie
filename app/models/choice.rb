@@ -13,7 +13,7 @@ class Choice < ActiveRecord::Base
     select(:name).order('row')
   end
 
-  def self.name_ranked
+  def self.name_pluck_by_row
     order(:row).pluck(:name)
   end
 

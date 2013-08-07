@@ -7,7 +7,7 @@ module CheckboxBooleanFieldDecorator
 
   def link_to_value_edit(parent_id, value_str = nil)
     if value_str
-      values = choices.name_ranked
+      values = choices.name_pluck_by_row
       str = value_str == '1' ? values[0] : values[1]
     else
       str = 'checkbox, undefined'
