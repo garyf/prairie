@@ -22,11 +22,6 @@ FactoryGirl.define do
     type 'SelectField'
   end
 
-  factory :person_select_field, parent: :custom_field, class: 'SelectField' do
-    type 'SelectField'
-    association :field_set, factory: :person_field_set, strategy: :build
-  end
-
   factory :string_field, parent: :custom_field, class: 'StringField' do
     type 'StringField'
   end

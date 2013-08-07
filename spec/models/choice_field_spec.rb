@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe ChoiceField do
   context '#edit_able?' do
-    before { bld }
+    before { @o = ChoiceField.new }
     describe 'w/o parent?' do
       before { @o.should_receive(:parent?) { false } }
       it { expect(@o.edit_able?).to be true }
@@ -20,11 +20,5 @@ describe ChoiceField do
         it { expect(@o.edit_able?).to be false }
       end
     end
-  end
-
-private
-
-  def bld
-    @o = FactoryGirl.build_stubbed(:person_select_field)
   end
 end

@@ -5,7 +5,7 @@ describe ChoiceDecorator do
   context '#link_to_edit' do
     before do
       bld id: 8, name: 'Violet'
-      @select_field = FactoryGirl.build_stubbed(:person_select_field)
+      @select_field = SelectField.new
     end
     describe 'w #edit_able?' do
       before { @select_field.should_receive(:edit_able?) { true } }
