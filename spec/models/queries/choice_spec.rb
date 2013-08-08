@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Choice do
-  context '#name_by_row, #name_pluck_by_row, #human_row' do
+  context '::name_by_row, ::name_pluck_by_row, #human_row' do
     before { @choice0 = choice_cr(name: 'Apple', row_position: 0) }
     it 'w 1 choice' do
       expect(@choice0.human_row).to eql 1
@@ -21,7 +21,7 @@ describe Choice do
       end
     end
 
-    describe 'w 3 custom_fields' do
+    describe 'w 3 choicees' do
       before do
         @choice1 = choice_cr(name: 'Banana', row_position: 0)
         @choice2 = choice_cr(name: 'Cherry', row_position: 0)
