@@ -31,11 +31,12 @@ describe SelectFieldsController do
       describe 'w #gist_store' do
         before do
           select_field_mk.should_receive(:gist_store).with(@location_mock, valid_attributes) { true }
+          @select_field_mock.should_receive(:type_human) { 'Select list field' }
           put :update, id: '21', choice_field: valid_attributes
         end
         it do
           expect(assigns :choice_field).to be @select_field_mock
-          expect(flash[:notice]).to match /Choice field successfully updated/i
+          expect(flash[:notice]).to match /Select list field successfully updated/i
           expect(response).to redirect_to field_values_path(field_set_id: @location_field_set_mock.id, parent_id: @location_mock.id)
         end
       end
@@ -44,13 +45,14 @@ describe SelectFieldsController do
         before do
           select_field_mk.should_receive(:gist_store).with(@location_mock, valid_attributes) { false }
           @select_field_mock.stub_chain(:choices, :name_by_row) { ['c1','c2','c3'] }
+          @select_field_mock.should_receive(:type_human).with(true) { 'select list field' }
           put :update, id: '21', choice_field: valid_attributes
         end
         it do
           expect(assigns :field_set).to be @location_field_set_mock
           expect(assigns :parent).to be @location_mock
           expect(assigns :choices).to eql ['c1','c2','c3']
-          expect(flash[:alert]).to match /Failed to update choice field/i
+          expect(flash[:alert]).to match /Failed to update select list field/i
           expect(response).to render_template :edit
         end
       end

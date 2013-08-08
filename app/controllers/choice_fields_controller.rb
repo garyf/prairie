@@ -11,10 +11,10 @@ class ChoiceFieldsController < ApplicationController
   def update
     if @choice_field.gist_store(@parent, params_white)
       redirect_to(field_values_path(field_set_id: @field_set.id, parent_id: @parent.id),
-        notice: 'Choice field successfully updated')
+        notice: t('controllers.flash.update.success', entity: @choice_field.type_human))
     else
       choices_assign
-      flash[:alert] = 'Failed to update choice field'
+      flash[:alert] = t('controllers.flash.update.failure', entity: @choice_field.type_human(true))
       render :edit
     end
   end

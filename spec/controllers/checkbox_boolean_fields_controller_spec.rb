@@ -30,11 +30,12 @@ describe CheckboxBooleanFieldsController do
       describe 'w #gist_store' do
         before do
           checkbox_boolean_field_mk.should_receive(:gist_store).with(@location_mock, valid_attributes) { true }
+          @checkbox_boolean_field_mock.should_receive(:type_human) { 'Checkbox field' }
           put :update, id: '21', choice_field: valid_attributes
         end
         it do
           expect(assigns :choice_field).to be @checkbox_boolean_field_mock
-          expect(flash[:notice]).to match /Choice field successfully updated/i
+          expect(flash[:notice]).to match /Checkbox field successfully updated/i
           expect(response).to redirect_to field_values_path(field_set_id: @location_field_set_mock.id, parent_id: @location_mock.id)
         end
       end
@@ -43,12 +44,13 @@ describe CheckboxBooleanFieldsController do
         before do
           checkbox_boolean_field_mk.should_receive(:gist_store).with(@location_mock, valid_attributes) { false }
           @checkbox_boolean_field_mock.should_not_receive(:choices)
+          @checkbox_boolean_field_mock.should_receive(:type_human).with(true) { 'checkbox field' }
           put :update, id: '21', choice_field: valid_attributes
         end
         it do
           expect(assigns :field_set).to be @location_field_set_mock
           expect(assigns :parent).to be @location_mock
-          expect(flash[:alert]).to match /Failed to update choice field/i
+          expect(flash[:alert]).to match /Failed to update checkbox field/i
           expect(response).to render_template :edit
         end
       end
