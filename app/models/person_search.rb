@@ -13,7 +13,7 @@ class PersonSearch < Search
     result_ids = nil
     columns.each do |c|
       v = params[c.id2name]
-      value_ids = Person.ids_by_case_insensitive_value(c, v).pluck(:id)
+      value_ids = Person.id_where_case_insensitive_value(c, v).pluck(:id)
       result_ids = result_ids ? value_ids & result_ids : value_ids
       return [] if result_ids.empty?
     end
@@ -22,6 +22,6 @@ class PersonSearch < Search
 
   def people(params)
     result_ids = column_and_custom_ids(PersonFieldSet.by_name, params)
-    result_ids.empty? ? [] : Person.name_last_by_ids(result_ids)
+    result_ids.empty? ? [] : Person.name_last_where_id_by_name_last(result_ids)
   end
 end

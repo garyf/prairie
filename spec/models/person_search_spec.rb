@@ -119,7 +119,7 @@ describe PersonSearch do
     describe 'w result_ids' do
       before do
         @o.should_receive(:column_and_custom_ids).with(['s1','s2'], @params) { [13, 55] }
-        Person.should_receive(:name_last_by_ids).with([13, 55]) { ['p13','p55'] }
+        Person.should_receive(:name_last_where_id_by_name_last).with([13, 55]) { ['p13','p55'] }
       end
       it { expect(@o.people @params).to match_array ['p13','p55'] }
     end
@@ -127,7 +127,7 @@ describe PersonSearch do
     describe 'w/o result_ids' do
       before do
         @o.should_receive(:column_and_custom_ids).with(['s1','s2'], @params) { [] }
-        Person.should_not_receive(:name_last_by_ids)
+        Person.should_not_receive(:name_last_where_id_by_name_last)
       end
       it { expect(@o.people @params).to eql [] }
     end

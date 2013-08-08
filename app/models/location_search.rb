@@ -12,7 +12,7 @@ class LocationSearch < Search
     result_ids = nil
     columns.each do |c|
       v = params[c.id2name]
-      value_ids = Location.ids_by_case_insensitive_value(c, v).pluck(:id)
+      value_ids = Location.id_where_case_insensitive_value(c, v).pluck(:id)
       result_ids = result_ids ? value_ids & result_ids : value_ids
       return [] if result_ids.empty?
     end
@@ -21,6 +21,6 @@ class LocationSearch < Search
 
   def locations(params)
     result_ids = column_and_custom_ids(LocationFieldSet.by_name, params)
-    result_ids.empty? ? [] : Location.name_by_ids(result_ids)
+    result_ids.empty? ? [] : Location.name_where_id_by_name(result_ids)
   end
 end

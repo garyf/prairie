@@ -6,6 +6,6 @@ class LocationFieldSet < FieldSet
 
   def index_on_gist_delete(field_id, location_ids)
     return if location_ids.empty?
-    Location.by_ids(location_ids).each { |o| o.index_on_gist_delete field_id }
+    Location.id_where_id(location_ids).each { |o| o.index_on_gist_delete field_id }
   end
 end

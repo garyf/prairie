@@ -7,19 +7,19 @@ class Location < ActiveRecord::Base
 
   validates :name, presence: true
 
-  def self.by_ids(ids)
-    select(:id).where(id: ids)
-  end
-
   def self.by_name(page)
     order('name').page page
   end
 
-  def self.ids_by_case_insensitive_value(column, value)
+  def self.id_where_case_insensitive_value(column, value)
     select(:id).where(Location.arel_table[column].matches "%#{value}%")
   end
 
-  def self.name_by_ids(ids)
+  def self.id_where_id(ids)
+    select(:id).where(id: ids)
+  end
+
+  def self.name_where_id_by_name(ids)
     select(:id, :name).where(id: ids).order(:name)
   end
 end

@@ -6,6 +6,6 @@ class PersonFieldSet < FieldSet
 
   def index_on_gist_delete(field_id, person_ids)
     return if person_ids.empty?
-    Person.by_ids(person_ids).each { |o| o.index_on_gist_delete field_id }
+    Person.id_where_id(person_ids).each { |o| o.index_on_gist_delete field_id }
   end
 end
