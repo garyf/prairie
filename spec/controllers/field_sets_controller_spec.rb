@@ -12,14 +12,20 @@ describe FieldSetsController do
     end
   end
 
-  describe 'GET new' do
-    before do
-      PersonFieldSet.should_receive(:new) { person_field_set_mk }
-      get :new, kind: 'Person'
+  context 'GET new' do
+    describe 'w kind recognized' do
+      before do
+        PersonFieldSet.should_receive(:new) { person_field_set_mk }
+        get :new, kind: 'Person'
+      end
+      it do
+        expect(assigns :field_set).to be @person_field_set_mock
+        expect(response).to render_template :new
+      end
     end
-    it do
-      expect(assigns :field_set).to be @person_field_set_mock
-      expect(response).to render_template :new
+
+    it 'w/o kind recognized' do
+      expect{ get :new, kind: 'Thing' }.to raise_error(FieldSet::SubklassNotRecognized)
     end
   end
 
@@ -46,6 +52,10 @@ describe FieldSetsController do
         expect(flash[:alert]).to match /Failed to create field set/i
         expect(response).to render_template :new
       end
+    end
+
+    it 'w/o type recognized' do
+      expect{ post :create, field_set: valid_attributes.merge('type' => 'ThingFieldSet') }.to raise_error(FieldSet::SubklassNotRecognized)
     end
   end
 

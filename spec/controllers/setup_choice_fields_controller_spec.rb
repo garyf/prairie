@@ -4,15 +4,21 @@ describe SetupChoiceFieldsController do
   context 'w params[:field_set_id]' do
     before { FieldSet.should_receive(:find).with('34') { person_field_set_mk(id: '34') } }
 
-    describe 'GET new' do
-      before do
-        SelectField.should_receive(:new).with(type: 'SelectField', field_set_id: '34') { select_field_mk }
-        get :new, field_set_id: '34', kind: 'Select'
+    context 'GET new' do
+      describe 'w kind recognized' do
+        before do
+          SelectField.should_receive(:new).with(type: 'SelectField', field_set_id: '34') { select_field_mk }
+          get :new, field_set_id: '34', kind: 'Select'
+        end
+        it do
+          expect(assigns :field_set).to be @person_field_set_mock
+          expect(assigns :choice_field).to be @select_field_mock
+          expect(response).to render_template :new
+        end
       end
-      it do
-        expect(assigns :field_set).to be @person_field_set_mock
-        expect(assigns :choice_field).to be @select_field_mock
-        expect(response).to render_template :new
+
+      it 'w/o kind recognized' do
+        expect{ get :new, field_set_id: '34', kind: 'Thing' }.to raise_error(ChoiceField::SubklassNotRecognized)
       end
     end
 
@@ -42,6 +48,10 @@ describe SetupChoiceFieldsController do
           expect(flash[:alert]).to match /Failed to create select list field/
           expect(response).to render_template :new
         end
+      end
+
+      it 'w/o type recognized' do
+        expect{ post :create, choice_field: valid_attributes.merge('type' => 'ThingField') }.to raise_error(ChoiceField::SubklassNotRecognized)
       end
     end
   end
