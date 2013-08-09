@@ -13,6 +13,11 @@ class FieldSet < ActiveRecord::Base
     order('name')
   end
 
+  # each subklass may have 12 records
+  def self.new_able?
+    self.count < 13
+  end
+
   def self.subklass(kind)
     return LocationFieldSet.new(type: 'LocationFieldSet') if kind == 'Location'
     return PersonFieldSet.new(type: 'PersonFieldSet') if kind == 'Person'

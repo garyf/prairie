@@ -10,7 +10,7 @@ describe CheckboxBooleanFieldsController do
           parent_id: '34') # virtual
       end
       checkbox_boolean_field_mk.should_receive(:parent).with('34') { @location_mock }
-      @checkbox_boolean_field_mock.should_not_receive(:choices) # unnecessary in subKlass
+      @checkbox_boolean_field_mock.should_not_receive(:choices) # unnecessary in subklass
     end
 
     describe 'GET edit' do

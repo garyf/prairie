@@ -18,10 +18,6 @@ FactoryGirl.define do
     association :field_set, factory: :location_field_set, strategy: :build
   end
 
-  factory :select_field, parent: :custom_field, class: 'SelectField' do
-    type 'SelectField'
-  end
-
   factory :string_field, parent: :custom_field, class: 'StringField' do
     type 'StringField'
   end

@@ -1,6 +1,18 @@
 require 'spec_helper'
 
 describe FieldSet do
+  context '::new_able?' do
+    before { LocationFieldSet.stub(:count) { 13 } }
+    it 'w count >= 13' do
+      expect(LocationFieldSet.new_able?).to be false
+    end
+
+    describe 'w count < 13' do
+      before { PersonFieldSet.should_receive(:count) { 12 } }
+      it { expect(PersonFieldSet.new_able?).to be true }
+    end
+  end
+
   context '#destroyable?, #custom_field_new_able?, #custom_field_row_edit_able?' do
     before { @o = FieldSet.new }
     context 'w/o any custom fields' do
