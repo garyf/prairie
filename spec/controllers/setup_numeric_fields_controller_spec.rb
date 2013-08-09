@@ -2,45 +2,59 @@ require 'spec_helper'
 
 describe SetupNumericFieldsController do
   context 'w params[:field_set_id]' do
-    before { FieldSet.should_receive(:find).with('21') { person_field_set_mk } }
-
-    describe 'GET new' do
-      before do
-        person_field_set_mk.stub_chain(:numeric_fields, :new) { numeric_field_mk }
-        get :new, field_set_id: '21'
-      end
-      it do
-        expect(assigns :field_set).to be @person_field_set_mock
-        expect(assigns :numeric_field).to be @numeric_field_mock
-        expect(response).to render_template :new
-      end
-    end
-
-    context 'POST create' do
-      describe 'w #save' do
+    context 'w #new_allow?' do
+      before { FieldSet.should_receive(:find).with('21') { person_field_set_mk(custom_field_new_able?: true) } }
+      describe 'GET new' do
         before do
-          person_field_set_mk.stub_chain(:numeric_fields, :new).with(valid_attributes) { numeric_field_mk(save: true) }
-          numeric_field_mk.should_receive(:constraints_store).with(valid_attributes)
-          post :create, numeric_field: valid_attributes.merge('some' => 'attribute')
+          person_field_set_mk.stub_chain(:numeric_fields, :new) { numeric_field_mk }
+          get :new, field_set_id: '21'
         end
         it do
           expect(assigns :field_set).to be @person_field_set_mock
           expect(assigns :numeric_field).to be @numeric_field_mock
-          expect(flash[:notice]).to match /Numeric field successfully created/i
-          expect(response).to redirect_to field_set_path(@person_field_set_mock)
+          expect(response).to render_template :new
         end
       end
 
-      describe 'w/o #save' do
-        before do
-          person_field_set_mk.stub_chain(:numeric_fields, :new).with(valid_attributes) { numeric_field_mk(save: false) }
-          numeric_field_mk.should_not_receive(:constraints_store)
-          post :create, numeric_field: valid_attributes.merge('some' => 'attribute')
+      context 'POST create' do
+        describe 'w #save' do
+          before do
+            person_field_set_mk.stub_chain(:numeric_fields, :new).with(valid_attributes) { numeric_field_mk(save: true) }
+            numeric_field_mk.should_receive(:constraints_store).with(valid_attributes)
+            post :create, numeric_field: valid_attributes.merge('some' => 'attribute')
+          end
+          it do
+            expect(assigns :field_set).to be @person_field_set_mock
+            expect(assigns :numeric_field).to be @numeric_field_mock
+            expect(flash[:notice]).to match /Numeric field successfully created/i
+            expect(response).to redirect_to field_set_path(@person_field_set_mock)
+          end
         end
-        it do
-          expect(flash[:alert]).to match /Failed to create numeric field/i
-          expect(response).to render_template :new
+
+        describe 'w/o #save' do
+          before do
+            person_field_set_mk.stub_chain(:numeric_fields, :new).with(valid_attributes) { numeric_field_mk(save: false) }
+            numeric_field_mk.should_not_receive(:constraints_store)
+            post :create, numeric_field: valid_attributes.merge('some' => 'attribute')
+          end
+          it do
+            expect(flash[:alert]).to match /Failed to create numeric field/i
+            expect(response).to render_template :new
+          end
         end
+      end
+    end
+
+    context 'w/o #new_allow?' do
+      before { FieldSet.should_receive(:find).with('21') { person_field_set_mk(custom_field_new_able?: false) } }
+      it 'GET new' do
+        get :new, field_set_id: '21'
+        expect(response).to redirect_to root_path
+      end
+
+      it 'POST create' do
+        post :create, numeric_field: valid_attributes
+        expect(response).to redirect_to root_path
       end
     end
   end

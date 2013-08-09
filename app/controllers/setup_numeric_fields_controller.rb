@@ -1,6 +1,6 @@
 class SetupNumericFieldsController < ApplicationController
 
-  before_action :field_set_assign, only: [:new, :create]
+  before_action :field_set_assign, :new_allow?, only: [:new, :create]
   before_action :numeric_field_assign, :from_assn_field_set_assign, only: [:edit, :update, :destroy]
   respond_to :html
 
@@ -44,6 +44,10 @@ private
 
   def field_set_assign
     @field_set = FieldSet.find(params[:field_set_id] || params[:numeric_field][:field_set_id])
+  end
+
+  def new_allow?
+    redirect_to root_path and return unless @field_set.custom_field_new_able?
   end
 
   def numeric_field_assign

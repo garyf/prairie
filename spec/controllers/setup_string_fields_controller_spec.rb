@@ -2,45 +2,59 @@ require 'spec_helper'
 
 describe SetupStringFieldsController do
   context 'w params[:field_set_id]' do
-    before { FieldSet.should_receive(:find).with('55') { location_field_set_mk } }
-
-    describe 'GET new' do
-      before do
-        location_field_set_mk.stub_chain(:string_fields, :new) { string_field_mk }
-        get :new, field_set_id: '55'
-      end
-      it do
-        expect(assigns :field_set).to be @location_field_set_mock
-        expect(assigns :string_field).to be @string_field_mock
-        expect(response).to render_template :new
-      end
-    end
-
-    context 'POST create' do
-      describe 'w #save' do
+    context 'w #new_allow?' do
+      before { FieldSet.should_receive(:find).with('55') { location_field_set_mk(custom_field_new_able?: true) } }
+      describe 'GET new' do
         before do
-          location_field_set_mk.stub_chain(:string_fields, :new).with(valid_attributes) { string_field_mk(save: true) }
-          string_field_mk.should_receive(:constraints_store).with(valid_attributes)
-          post :create, string_field: valid_attributes.merge('some' => 'attribute')
+          location_field_set_mk.stub_chain(:string_fields, :new) { string_field_mk }
+          get :new, field_set_id: '55'
         end
         it do
           expect(assigns :field_set).to be @location_field_set_mock
           expect(assigns :string_field).to be @string_field_mock
-          expect(flash[:notice]).to match /String field successfully created/i
-          expect(response).to redirect_to field_set_path(@location_field_set_mock)
+          expect(response).to render_template :new
         end
       end
 
-      describe 'w/o #save' do
-        before do
-          location_field_set_mk.stub_chain(:string_fields, :new).with(valid_attributes) { string_field_mk(save: false) }
-          string_field_mk.should_not_receive(:constraints_store)
-          post :create, string_field: valid_attributes.merge('some' => 'attribute')
+      context 'POST create' do
+        describe 'w #save' do
+          before do
+            location_field_set_mk.stub_chain(:string_fields, :new).with(valid_attributes) { string_field_mk(save: true) }
+            string_field_mk.should_receive(:constraints_store).with(valid_attributes)
+            post :create, string_field: valid_attributes.merge('some' => 'attribute')
+          end
+          it do
+            expect(assigns :field_set).to be @location_field_set_mock
+            expect(assigns :string_field).to be @string_field_mock
+            expect(flash[:notice]).to match /String field successfully created/i
+            expect(response).to redirect_to field_set_path(@location_field_set_mock)
+          end
         end
-        it do
-          expect(flash[:alert]).to match /Failed to create string field/i
-          expect(response).to render_template :new
+
+        describe 'w/o #save' do
+          before do
+            location_field_set_mk.stub_chain(:string_fields, :new).with(valid_attributes) { string_field_mk(save: false) }
+            string_field_mk.should_not_receive(:constraints_store)
+            post :create, string_field: valid_attributes.merge('some' => 'attribute')
+          end
+          it do
+            expect(flash[:alert]).to match /Failed to create string field/i
+            expect(response).to render_template :new
+          end
         end
+      end
+    end
+
+    context 'w/o #new_allow?' do
+      before { FieldSet.should_receive(:find).with('55') { location_field_set_mk(custom_field_new_able?: false) } }
+      it 'GET new' do
+        get :new, field_set_id: '55'
+        expect(response).to redirect_to root_path
+      end
+
+      it 'POST create' do
+        post :create, string_field: valid_attributes
+        expect(response).to redirect_to root_path
       end
     end
   end
