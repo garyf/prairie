@@ -39,7 +39,6 @@ describe SetupChoiceFieldsController do
 
         describe 'w/o #save' do
           before do
-            with_errors_double
             SelectField.should_receive(:new).with(valid_attributes) { select_field_mk(save: false) }
             select_field_mk.should_receive(:type_human).with(true) { 'select list field' }
             post :create, choice_field: valid_attributes.merge('some' => 'attribute')
