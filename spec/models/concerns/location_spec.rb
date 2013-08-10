@@ -30,8 +30,8 @@ describe Location do
       expect(@numeric_field1.parents.count).to eql 1
     end
     it '#index_on_gist_add, #parents_find_by_gist' do
-      expect(@numeric_field0.parents_find_by_gist '34').to eql ["#{@o.id}"]
-      expect(@numeric_field1.parents_find_by_gist '89').to eql ["#{@o.id}"]
+      expect(@numeric_field0.parents_find_by_gist '34').to eql [@o.id]
+      expect(@numeric_field1.parents_find_by_gist '89').to eql [@o.id]
     end
 
     describe '#garbage_collect_and_self_destroy' do

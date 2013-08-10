@@ -23,13 +23,13 @@ describe Person do
       @field_id = '8'
       @string_field.gist_store(@o, {'gist' => 'Foo'})
     end
-    it { expect(@string_field.parents_find_by_gist 'Foo').to eql ["#{@o.id}"] }
+    it { expect(@string_field.parents_find_by_gist 'Foo').to eql [@o.id] }
 
     describe '#gist_store w #index_on_gist_remove' do
       before { @string_field.gist_store(@o, {'gist' => 'Bar'}) }
       it do
         expect(@string_field.parents_find_by_gist 'Foo').to eql []
-        expect(@string_field.parents_find_by_gist 'Bar').to eql ["#{@o.id}"]
+        expect(@string_field.parents_find_by_gist 'Bar').to eql [@o.id]
       end
     end
   end
@@ -48,8 +48,8 @@ describe Person do
       expect(@string_field1.parents.count).to eql 1
     end
     it '#index_on_gist_add, #parents_find_by_gist' do
-      expect(@string_field0.parents_find_by_gist 'Foo').to eql ["#{@o.id}"]
-      expect(@string_field1.parents_find_by_gist 'Bar').to eql ["#{@o.id}"]
+      expect(@string_field0.parents_find_by_gist 'Foo').to eql [@o.id]
+      expect(@string_field1.parents_find_by_gist 'Bar').to eql [@o.id]
     end
 
     describe '#garbage_collect_and_self_destroy' do
@@ -76,7 +76,7 @@ describe Person do
       @o.gist_store(@string_field.id, 'Baz')
       @string_field.index_on_gist_add(@o.id)
     end
-    it { expect(@string_field.parents_find_by_gist 'Baz').to eql ["#{@o.id}"] }
+    it { expect(@string_field.parents_find_by_gist 'Baz').to eql [@o.id] }
 
     describe '#index_on_gist_delete' do
       before { @o.index_on_gist_delete(@string_field.id) }

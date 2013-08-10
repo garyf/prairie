@@ -47,8 +47,8 @@ describe PersonSearch do
       end
       context 'w a search term' do
         describe 'w matching term' do
-          before { @string_field0.should_receive(:parents_find_by_gist).with('foo') { ['8'] } }
-          it { expect(@o.custom_result_ids([@field_set0], {"field_#{@string_field0.id}_gist" => 'foo'})).to eql ['8'] }
+          before { @string_field0.should_receive(:parents_find_by_gist).with('foo') { [8, 55] } }
+          it { expect(@o.custom_result_ids([@field_set0], {"field_#{@string_field0.id}_gist" => 'foo'})).to eql [8, 55] }
         end
         describe 'w/o matching term' do
           before { @string_field0.should_receive(:parents_find_by_gist).with('bar') { [] } }

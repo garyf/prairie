@@ -67,16 +67,16 @@ describe Choice do
     context 'w name' do
       before { bld(name: 'Magenta') }
       describe 'w #parents_find_by_gist' do
-        before { @custom_field.stub(:parents_find_by_gist).with('Magenta') { ['5','13'] } }
-        it { expect(@o.parents).to match_array ['5','13'] }
+        before { @custom_field.stub(:parents_find_by_gist).with('Magenta') { [5, 13] } }
+        it { expect(@o.parents).to match_array [5, 13] }
         it { expect(@o.parents?).to be true }
         it { expect(@o.name_edit_able?).to be false }
       end
 
       describe 'w/o #parents_find_by_gist' do
-        before { @custom_field.stub(:parents_find_by_gist).with('Magenta') { nil } }
-        it { expect(@o.parents).to be nil }
-        it { expect(@o.parents?).to be nil }
+        before { @custom_field.stub(:parents_find_by_gist).with('Magenta') { [] } }
+        it { expect(@o.parents).to eql [] }
+        it { expect(@o.parents?).to be false }
         it { expect(@o.name_edit_able?).to be true }
       end
     end

@@ -31,7 +31,7 @@ module RedisCustomFields
   end
 
   def parents_find_by_gist(str)
-    redis.smembers("custom_field:#{id}:#{str.downcase}")
+    redis.smembers("custom_field:#{id}:#{str.downcase}").map(&:to_i)
   end
 
   def garbage_collect_and_self_destroy

@@ -22,8 +22,8 @@ describe StringField do
         expect(subject.parent?).to be true
       end
       it '#index_on_gist_add, #parents_find_by_gist' do
-        expect(subject.parents_find_by_gist 'Foo').to eql ["#{@person.id}"]
-        expect(subject.parents_find_by_gist 'foo').to eql ["#{@person.id}"]
+        expect(subject.parents_find_by_gist 'Foo').to eql [@person.id]
+        expect(subject.parents_find_by_gist 'foo').to eql [@person.id]
         expect(subject.parents_find_by_gist 'bar').to eql []
       end
     end
@@ -55,8 +55,8 @@ describe StringField do
     describe 'w unique gists' do
       before do
         @o.should_receive(:valid?).twice { true }
-        @o.gist_store(@person0, {'gist' => 'Foo', 'parent_id' => "#{@person0.id}"})
-        @o.gist_store(@person1, {'gist' => 'Bar', 'parent_id' => "#{@person1.id}"})
+        @o.gist_store(@person0, {'gist' => 'Foo', 'parent_id' => @person0.id})
+        @o.gist_store(@person1, {'gist' => 'Bar', 'parent_id' => @person1.id})
       end
       it { expect(@o.parents.count).to eql 2 }
       it do
@@ -64,8 +64,8 @@ describe StringField do
         expect(@person1.gist_fetch @o.id).to eql 'Bar'
       end
       it '#index_on_gist_add, #parents_find_by_gist' do
-        expect(@o.parents_find_by_gist 'foo').to eql ["#{@person0.id}"]
-        expect(@o.parents_find_by_gist 'bar').to eql ["#{@person1.id}"]
+        expect(@o.parents_find_by_gist 'foo').to eql [@person0.id]
+        expect(@o.parents_find_by_gist 'bar').to eql [@person1.id]
       end
 
       describe '#garbage_collect_and_self_destroy' do
@@ -85,15 +85,15 @@ describe StringField do
     context 'w duplicate gists' do
       before do
         @o.should_receive(:valid?).twice { true }
-        @o.gist_store(@person0, {'gist' => 'Baz', 'parent_id' => "#{@person0.id}"})
-        @o.gist_store(@person1, {'gist' => 'Baz', 'parent_id' => "#{@person1.id}"})
+        @o.gist_store(@person0, {'gist' => 'Baz', 'parent_id' => @person0.id})
+        @o.gist_store(@person1, {'gist' => 'Baz', 'parent_id' => @person1.id})
       end
       describe '#index_on_gist_add, #parents_find_by_gist' do
         subject { @o.parents_find_by_gist 'baz' }
         it do
           expect(subject.count).to eql 2
-          expect(subject).to include "#{@person0.id}"
-          expect(subject).to include "#{@person1.id}"
+          expect(subject).to include @person0.id
+          expect(subject).to include @person1.id
         end
       end
     end
