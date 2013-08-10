@@ -14,6 +14,7 @@ class FieldSetsController < ApplicationController
 
   def new
     @field_set = FieldSet.subklass(params[:kind])
+    redirect_to(root_path, alert: "Quantity limit reached for #{@field_set.type_human true}s") unless @field_set.new_able?
   end
 
   def edit
@@ -21,19 +22,20 @@ class FieldSetsController < ApplicationController
 
   def create
     @field_set = FieldSet.subklass_with(params_white)
+    redirect_to(root_path, alert: "Quantity limit reached for #{@field_set.type_human true}s") and return unless @field_set.class.new_able?
     if @field_set.save
-      redirect_to field_sets_path, notice: 'Field set successfully created'
+      redirect_to field_sets_path, notice: t('controllers.flash.create.success', entity: @field_set.type_human)
     else
-      flash[:alert] = 'Failed to create field set'
+      flash[:alert] = t('controllers.flash.create.failure', entity: @field_set.type_human(true))
       render :new
     end
   end
 
   def update
     if @field_set.update(params_white)
-      redirect_to field_sets_path, notice: 'Field set successfully updated'
+      redirect_to field_sets_path, notice: t('controllers.flash.update.success', entity: @field_set.type_human)
     else
-      flash[:alert] = 'Failed to update field set'
+      flash[:alert] = t('controllers.flash.update.failure', entity: @field_set.type_human(true))
       render :edit
     end
   end
@@ -41,7 +43,7 @@ class FieldSetsController < ApplicationController
   def destroy
     redirect_to root_path and return unless @field_set.destroyable?
     @field_set.destroy
-    redirect_to field_sets_path, notice: 'Field set successfully destroyed'
+    redirect_to field_sets_path, notice: t('controllers.flash.destroy.success', entity: @field_set.type_human)
   end
 
 private

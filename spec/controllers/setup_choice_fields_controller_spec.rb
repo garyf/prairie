@@ -150,7 +150,7 @@ describe SetupChoiceFieldsController do
     describe 'DELETE destroy' do
       before do
         select_field_mk.should_receive(:garbage_collect_and_self_destroy)
-        select_field_mk.should_receive(:type_human) { 'Select list field' }
+        @select_field_mock.should_receive(:type_human) { 'Select list field' }
         delete :destroy, id: '21'
       end
       it do

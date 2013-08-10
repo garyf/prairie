@@ -8,4 +8,9 @@ class LocationFieldSet < FieldSet
     return if location_ids.empty?
     Location.id_where_id(location_ids).each { |o| o.index_on_gist_delete field_id }
   end
+
+  def type_human(downcase_p = false)
+    str = 'Location field set'
+    downcase_p ? str.downcase : str
+  end
 end

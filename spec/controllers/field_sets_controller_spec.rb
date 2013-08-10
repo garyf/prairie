@@ -13,14 +13,29 @@ describe FieldSetsController do
   end
 
   context 'GET new' do
-    describe 'w kind recognized' do
-      before do
-        PersonFieldSet.should_receive(:new) { person_field_set_mk }
-        get :new, kind: 'Person'
+    context 'w kind recognized' do
+      before { PersonFieldSet.should_receive(:new) { person_field_set_mk } }
+      describe 'w #new_able?' do
+        before do
+          person_field_set_mk.should_receive(:new_able?) { true }
+          get :new, kind: 'Person'
+        end
+        it do
+          expect(assigns :field_set).to be @person_field_set_mock
+          expect(response).to render_template :new
+        end
       end
-      it do
-        expect(assigns :field_set).to be @person_field_set_mock
-        expect(response).to render_template :new
+
+      describe 'w/o #new_able?' do
+        before do
+          person_field_set_mk.should_receive(:new_able?) { false }
+          @person_field_set_mock.should_receive(:type_human).with(true) { 'person field set' }
+          get :new, kind: 'Person'
+        end
+        it do
+          expect(flash[:alert]).to match /Quantity limit reached for person field sets/
+          expect(response).to redirect_to root_path
+        end
       end
     end
 
@@ -30,27 +45,30 @@ describe FieldSetsController do
   end
 
   context 'POST create' do
-    describe 'w #save' do
-      before do
-        PersonFieldSet.should_receive(:new).with(valid_attributes) { person_field_set_mk(save: true) }
-        post :create, field_set: valid_attributes.merge('some' => 'attribute')
+    context 'w #new_able?' do
+      describe 'w #save' do
+        before do
+          PersonFieldSet.should_receive(:new).with(valid_attributes) { person_field_set_mk(new_able?: true, save: true) }
+          person_field_set_mk.should_receive(:type_human) { 'Person field set' }
+          post :create, field_set: valid_attributes.merge('some' => 'attribute')
+        end
+        it do
+          expect(assigns :field_set).to be @person_field_set_mock
+          expect(flash[:notice]).to match /Person field set successfully created/i
+          expect(response).to redirect_to field_sets_path
+        end
       end
-      it do
-        expect(assigns :field_set).to be @person_field_set_mock
-        expect(flash[:notice]).to match /Field set successfully created/i
-        expect(response).to redirect_to field_sets_path
-      end
-    end
 
-    describe 'w/o #save' do
-      before do
-        with_errors_double
-        PersonFieldSet.should_receive(:new).with(valid_attributes) { person_field_set_mk(save: false, errors: @errors) }
-        post :create, field_set: valid_attributes.merge('some' => 'attribute')
-      end
-      it do
-        expect(flash[:alert]).to match /Failed to create field set/i
-        expect(response).to render_template :new
+      describe 'w/o #save' do
+        before do
+          PersonFieldSet.should_receive(:new).with(valid_attributes) { person_field_set_mk(new_able?: true, save: false) }
+          person_field_set_mk.should_receive(:type_human).with(true) { 'person field set' }
+          post :create, field_set: valid_attributes.merge('some' => 'attribute')
+        end
+        it do
+          expect(flash[:alert]).to match /Failed to create person field set/i
+          expect(response).to render_template :new
+        end
       end
     end
 
@@ -61,7 +79,6 @@ describe FieldSetsController do
 
   context 'w @person_field_set' do
     before { FieldSet.should_receive(:find).with('21') { person_field_set_mk } }
-
     describe 'GET show' do
       before do
         person_field_set_mk.stub_chain(:custom_fields, :ranked_page).with('2') { ['f1','f2','f3'] }
@@ -89,23 +106,24 @@ describe FieldSetsController do
       before do
         FieldSet.should_receive(:find).with('21') { person_field_set_mk }
         person_field_set_mk.should_receive(:update).with(valid_attributes) { true }
+        @person_field_set_mock.should_receive(:type_human) { 'Person field set' }
         put :update, id: '21', field_set: valid_attributes.merge('some' => 'attribute')
       end
       it do
-        expect(flash[:notice]).to match /Field set successfully updated/i
+        expect(flash[:notice]).to match /Person field set successfully updated/i
         expect(response).to redirect_to field_sets_path
       end
     end
 
     describe 'w/o #update' do
       before do
-        with_errors_double
-        FieldSet.should_receive(:find).with('21') { person_field_set_mk(errors: @errors) }
+        FieldSet.should_receive(:find).with('21') { person_field_set_mk }
         person_field_set_mk.should_receive(:update).with(valid_attributes) { false }
+        @person_field_set_mock.should_receive(:type_human).with(true) { 'person field set' }
         put :update, id: '21', field_set: valid_attributes.merge('some' => 'attribute')
       end
       it do
-        expect(flash[:alert]).to match /Failed to update field set/i
+        expect(flash[:alert]).to match /Failed to update person field set/i
         expect(response).to render_template :edit
       end
     end
@@ -116,11 +134,12 @@ describe FieldSetsController do
       before do
         FieldSet.should_receive(:find).with('21') { person_field_set_mk(destroyable?: true) }
         person_field_set_mk.should_receive(:destroy)
+        @person_field_set_mock.should_receive(:type_human) { 'Person field set' }
         delete :destroy, id: '21'
       end
       it do
         expect(assigns :field_set).to be @person_field_set_mock
-        expect(flash[:notice]).to match /Field set successfully destroyed/i
+        expect(flash[:notice]).to match /Person field set successfully destroyed/i
         expect(response).to redirect_to field_sets_path
       end
     end
