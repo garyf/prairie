@@ -1,6 +1,14 @@
 <h4>Listing field sets</h4>
-<%= link_to 'New set for locations', new_field_set_path(kind: 'Location') %> |
-<%= link_to 'New set for people', new_field_set_path(kind: 'Person') %>
+<% if PersonFieldSet.new_able? %>
+  <% prior_item = true %>
+  <%= link_to 'New set for locations', new_field_set_path(kind: 'Location') %>
+<% end %>
+<% if PersonFieldSet.new_able? %>
+  <% if prior_item %>
+    <%= ' |' %>
+  <% end %>
+  <%= link_to 'New set for people', new_field_set_path(kind: 'Person') %>
+<% end %>
 
 <% if @field_sets.any? %>
   <% @field_sets.each do |o| %><dl>
