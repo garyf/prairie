@@ -1,6 +1,8 @@
-<h4>Listing locations</h4>
-<%= link_to 'New location', new_location_path %> |
-<%= link_to 'New search', new_location_search_path %>
+<ul class='nav  nav-pills'>
+  <li><%= link_to 'New location', new_location_path %></li>
+  <li class='active'><a>Index</a></li>
+  <li><%= link_to 'New search', new_location_search_path %></li>
+</ul>
 
 <% if @locations.any? %>
   <%= paginate @locations %>

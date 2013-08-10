@@ -1,5 +1,8 @@
-<h4>Editing location</h4>
-<%= link_to 'Show', @location %> |
-<%= link_to 'Destroy', @location, method: :delete, data: {confirm: 'Are you sure?'} %>
+<ul class='nav  nav-pills'>
+  <li><%= link_to 'Show', @location %></li>
+  <li class='active'><a>Edit</a></li>
+  <li><%= link_to 'Destroy', @location, method: :delete, data: {confirm: 'Are you sure?'} %></li>
+  <li><%= link_to 'Index', locations_path %></li>
+</ul>
 
 <%= render 'form' %>

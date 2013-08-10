@@ -1,5 +1,8 @@
-<h4>Editing person</h4>
-<%= link_to 'Show', @person %> |
-<%= link_to 'Destroy', @person, method: :delete, data: {confirm: 'Are you sure?'} %>
+<ul class='nav  nav-pills'>
+  <li><%= link_to 'Show', @person %></li>
+  <li class='active'><a>Edit</a></li>
+  <li><%= link_to 'Destroy', @person, method: :delete, data: {confirm: 'Are you sure?'} %></li>
+  <li><%= link_to 'Index', people_path %></li>
+</ul>
 
 <%= render 'form' %>

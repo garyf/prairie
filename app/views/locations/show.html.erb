@@ -1,5 +1,8 @@
-<h4>Location</h4>
-<%= link_to 'Edit', edit_location_path(@location) %>
+<ul class='nav  nav-pills'>
+  <li><%= link_to 'Edit', edit_location_path(@location) %></li>
+  <li class='active'><a>Location</a></li>
+  <li><%= link_to 'Index', locations_path %></li>
+</ul>
 
 <dl class=dl-horizontal>
   <dt>Name</dt>

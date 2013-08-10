@@ -1,5 +1,8 @@
-<h4>Person</h4>
-<%= link_to 'Edit', edit_person_path(@person) %>
+<ul class='nav  nav-pills'>
+  <li><%= link_to 'Edit', edit_person_path(@person) %></li>
+  <li class='active'><a>Person</a></li>
+  <li><%= link_to 'Index', people_path %></li>
+</ul>
 
 <dl class=dl-horizontal>
   <dt>First name</dt>
