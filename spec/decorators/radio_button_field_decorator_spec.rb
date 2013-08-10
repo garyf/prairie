@@ -22,9 +22,9 @@ describe RadioButtonFieldDecorator do
     before { @o.stub_chain(:choices, :name_pluck_by_row) { ['Apple','Banana','Cherry'] } }
     subject { @o.search_input }
     it do
-      expect(subject).to match /<input id="field_21_gist_Apple" name="field_21_gist" type="radio" value="Apple" \/><label for="Apple">Apple<\/label>/
-      expect(subject).to match /<input id="field_21_gist_Banana" name="field_21_gist" type="radio" value="Banana" \/><label for="Banana">Banana<\/label>/
-      expect(subject).to match /<input id="field_21_gist_Cherry" name="field_21_gist" type="radio" value="Cherry" \/><label for="Cherry">Cherry<\/label>/
+      expect(subject).to match /<label class='radio'><input id="field_21_gist_Apple" name="field_21_gist" type="radio" value="Apple" \/>Apple<\/label>/
+      expect(subject).to match /<label class='radio'><input id="field_21_gist_Banana" name="field_21_gist" type="radio" value="Banana" \/>Banana<\/label>/
+      expect(subject).to match /<label class='radio'><input id="field_21_gist_Cherry" name="field_21_gist" type="radio" value="Cherry" \/>Cherry<\/label>/
     end
   end
 

@@ -13,7 +13,7 @@ module RadioButtonFieldDecorator
   def search_input
     values = choices.name_pluck_by_row
     str = ''
-    values.each { |v| str << radio_button_tag("field_#{id}_gist", v) << label_tag(v) }
+    values.each { |v| str << "<label class='radio'>#{radio_button_tag("field_#{id}_gist", v)}#{v}</label>" }
     str.html_safe
   end
 
