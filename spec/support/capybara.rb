@@ -1,3 +1,45 @@
+def checkbox_boolean_field_new(name)
+  click_link 'Checkbox'
+  expect(page).to have_content 'New checkbox field'
+  click_link 'Cancel'
+  click_link 'Checkbox'
+  fill_in 'Name', with: name
+  click_button 'Done'
+  expect(page).to have_content 'Checkbox field successfully created'
+  expect(page).to have_content name
+end
+
+def checkbox_boolean_field_edit(name)
+  click_link 'Edit'
+  click_link 'Checkbox field'
+  click_link 'Edit'
+  click_link 'Cancel'
+  click_link 'Edit'
+  fill_in 'Name', with: name
+  click_button 'Done'
+  expect(page).to have_content 'Checkbox field successfully updated'
+  expect(page).to have_content name
+end
+
+def choice_new(name)
+  click_link 'New choice'
+  click_link 'Cancel'
+  click_link 'New choice'
+  fill_in 'choice_name', with: name
+  click_button 'Done'
+  expect(page).to have_content 'Choice successfully created'
+end
+
+def choice_edit(name_old, name)
+  click_link name_old
+  expect(page).to have_content 'Editing a choice'
+  click_link 'Cancel'
+  click_link name_old
+  fill_in 'choice_name', with: name
+  click_button 'Done'
+  expect(page).to have_content 'Choice successfully updated'
+end
+
 def location_new(name, description = nil)
   visit '/locations'
   click_link 'New location'
