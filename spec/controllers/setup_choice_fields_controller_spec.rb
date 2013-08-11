@@ -110,7 +110,8 @@ describe SetupChoiceFieldsController do
           it do
             expect(assigns :choice_field).to be @select_field_mock
             expect(flash[:notice]).to match /Select list field successfully updated/
-            expect(response).to redirect_to field_set_path(@person_field_set_mock)
+            # expect(response).to redirect_to field_set_path(@person_field_set_mock)
+            expect(response).to redirect_to setup_choice_field_path(@select_field_mock)
           end
         end
 

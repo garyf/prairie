@@ -6,15 +6,18 @@
 
 <%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
 
-<strong>Add a new custom field</strong>
 <% if @field_set.custom_field_new_able? %>
+  <h5 class=mbn>Add a new custom field</h5>
   <ul class='nav  nav-pills'>
-    <li><%= link_to 'Check box', new_setup_choice_field_path(field_set_id: @field_set.id, kind: 'Checkbox') %></li>
+    <li><%= link_to 'Checkbox', new_setup_choice_field_path(field_set_id: @field_set.id, kind: 'Checkbox') %></li>
     <li><%= link_to 'Numeric', new_setup_numeric_field_path(field_set_id: @field_set.id) %></li>
     <li><%= link_to 'Radio button', new_setup_choice_field_path(field_set_id: @field_set.id, kind: 'Radio') %></li>
     <li><%= link_to 'Select list', new_setup_choice_field_path(field_set_id: @field_set.id, kind: 'Select') %></li>
     <li><%= link_to 'String', new_setup_string_field_path(field_set_id: @field_set.id) %></li>
   </ul>
+
+<% else %>
+  <h5>Custom field quantity limit reached for this field set</h5>
 <% end %>
 
 <%= render partial: 'custom_fields/list', locals: {

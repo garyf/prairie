@@ -29,7 +29,7 @@ class SetupChoiceFieldsController < ApplicationController
 
   def update
     if @choice_field.update(params_white_w_human_row)
-      redirect_to field_set_path(@field_set), notice: t('controllers.flash.update.success', entity: @choice_field.type_human)
+      redirect_to setup_choice_field_path(@choice_field), notice: t('controllers.flash.update.success', entity: @choice_field.type_human)
     else
       edit_assigns
       flash[:alert] = t('controllers.flash.update.failure', entity: @choice_field.type_human(true))
