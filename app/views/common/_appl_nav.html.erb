@@ -1,7 +1,10 @@
 <div class='row  navbar'>
-  <ul class='nav  nav-tabs'>
-    <li <%= nav_active 'locations' %> ><%= link_to 'Locations', locations_path %></li>
-    <li <%= nav_active 'people' %> ><%= link_to 'People', people_path %></li>
-    <li <%= nav_active 'field_sets' %> ><%= link_to 'Field sets', field_sets_path %></li>
-  </ul>
+  <div class=navbar-inner>
+    <a class='brand'>Prairie</a>
+    <ul class='nav'>
+      <li <%= nav_active 'locations' %> ><%= link_to 'Locations', locations_path %></li>
+      <li <%= nav_active 'people' %> ><%= link_to 'People', people_path %></li>
+      <li <%= nav_active 'field_sets' %> ><%= link_to 'Field sets', field_sets_path %></li>
+    </ul>
+  </div>
 </div>
