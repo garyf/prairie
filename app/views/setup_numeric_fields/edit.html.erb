@@ -1,6 +1,7 @@
-<h4>Editing numeric field</h4>
-<%= link_to 'Destroy', setup_numeric_field_path(@numeric_field), method: :delete, data: {confirm: 'Are you sure?'} %>
-
+<ul class='nav  nav-pills'>
+  <li class='active'><a>Edit a numeric field</a></li>
+  <li><%= link_to 'Destroy', setup_numeric_field_path(@numeric_field), method: :delete, data: {confirm: 'Are you sure?'} %></li>
+</ul>
 <%= render partial: 'common/link_to_field_set', locals: {o: @field_set} %>
 
 <%= form_for(@numeric_field,
