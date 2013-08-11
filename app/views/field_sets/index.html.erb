@@ -1,14 +1,12 @@
-<h4>Listing field sets</h4>
-<% if PersonFieldSet.new_able? %>
-  <% prior_item = true %>
-  <%= link_to 'New set for locations', new_field_set_path(kind: 'Location') %>
-<% end %>
-<% if PersonFieldSet.new_able? %>
-  <% if prior_item %>
-    <%= ' |' %>
+<ul class='nav  nav-pills'>
+  <% if PersonFieldSet.new_able? %>
+    <li><%= link_to 'New set for locations', new_field_set_path(kind: 'Location') %></li>
   <% end %>
-  <%= link_to 'New set for people', new_field_set_path(kind: 'Person') %>
-<% end %>
+  <% if PersonFieldSet.new_able? %>
+    <li><%= link_to 'New set for people', new_field_set_path(kind: 'Person') %></li>
+  <% end %>
+  <li class='active'><a>Index</a></li>
+</ul>
 
 <% if @field_sets.any? %>
   <% @field_sets.each do |o| %><dl>

@@ -1,5 +1,8 @@
-<h4>Editing <%= @choice_field.type_human true %></h4>
-<%= link_to 'Destroy', setup_choice_field_path(@choice_field), method: :delete, data: {confirm: 'Are you sure?'} %>
+<ul class='nav  nav-pills'>
+  <li><%= link_to @choice_field.type_human, setup_choice_field_path(@choice_field) %></li>
+  <li class='active'><a>Edit</a></li>
+  <li><%= link_to 'Destroy', setup_choice_field_path(@choice_field), method: :delete, data: {confirm: 'Are you sure?'} %></li>
+</ul>
 <%= render partial: 'common/link_to_field_set', locals: {o: @field_set} %>
 
 <%= form_for(@choice_field,

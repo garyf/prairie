@@ -1,7 +1,10 @@
-<h4>Editing custom field set</h4>
-<%= link_to 'Show', field_set_path(@field_set) %>
-<% if @field_set.destroyable? %>
-  | <%= link_to 'Destroy', field_set_path(@field_set), method: :delete, data: { confirm: 'Are you sure?' } %>
-<% end %>
+<ul class='nav  nav-pills'>
+  <li><%= link_to 'Show', field_set_path(@field_set) %></li>
+  <li class='active'><a>Edit</a></li>
+  <% if @field_set.destroyable? %>
+    <li><%= link_to 'Destroy', field_set_path(@field_set), method: :delete, data: {confirm: 'Are you sure?'} %></li>
+  <% end %>
+  <li><%= link_to 'Index', field_sets_path %></li>
+</ul>
 
 <%= render 'form' %>

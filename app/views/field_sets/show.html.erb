@@ -1,8 +1,13 @@
+<ul class='nav  nav-pills'>
+  <li><%= link_to 'Edit set', edit_field_set_path(@field_set) %></li>
+  <li class='active'><a>Field set</a></li>
+  <li><%= link_to 'Index', field_sets_path %></li>
+</ul>
+
 <%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
-<%= link_to 'Edit set', edit_field_set_path(@field_set) %>
 
 <% if @field_set.custom_field_new_able? %>
-  <ul class=inline><strong>Add new custom field:</strong>
+  <ul class='inline pbl'><strong>Add new custom field:</strong>
     <li><%= link_to 'Check box', new_setup_choice_field_path(field_set_id: @field_set.id, kind: 'Checkbox') %></li>
     <li><%= link_to 'Numeric', new_setup_numeric_field_path(field_set_id: @field_set.id) %></li>
     <li><%= link_to 'Radio button', new_setup_choice_field_path(field_set_id: @field_set.id, kind: 'Radio') %></li>

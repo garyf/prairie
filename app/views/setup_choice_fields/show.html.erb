@@ -1,17 +1,18 @@
-<h4><%= @choice_field.type_human %></h4>
-<%= link_to 'Edit', edit_setup_choice_field_path(@choice_field) %>
+<ul class='nav  nav-pills'>
+  <li><%= link_to 'Edit', edit_setup_choice_field_path(@choice_field) %></li>
+  <li class='active'><a><%= @choice_field.type_human %></a></li>
+</ul>
 <%= render partial: 'common/link_to_field_set', locals: {o: @field_set} %>
 
 <dl class=dl-horizontal>
-  <dt><%= @choice_field.type_human %></dt>
+  <dt>Name</dt>
   <dd><%= @choice_field.name %></dd>
 </dl>
 
-<h5>Choices</h5>
 <% if @choice_field.choice_new_able? %>
   <%= link_to 'New choice', new_choice_path(custom_field_id: @choice_field.id) %>
 <% end %>
-
+<h4>Choices</h4>
 <% if @choices.any? %>
 
   <%= paginate @choices %>
