@@ -7,7 +7,7 @@ class ChoicesController < ApplicationController
 
   def new
     @choice = @choice_field.choices.new
-    @name_edit_able_p = true
+    new_assigns
   end
 
   def edit
@@ -19,7 +19,7 @@ class ChoicesController < ApplicationController
     if @choice.save
       redirect_to setup_choice_field_path(@choice_field), notice: 'Choice successfully created'
     else
-      @name_edit_able_p = true
+      new_assigns
       flash[:alert] = 'Failed to create choice'
       render :new
     end
@@ -63,7 +63,17 @@ private
     redirect_to root_path and return unless @choice_field.edit_able? || @choice.name_edit_able?
   end
 
+  def field_set_assign
+    @field_set = @choice_field.field_set
+  end
+
+  def new_assigns
+    field_set_assign
+    @name_edit_able_p = true
+  end
+
   def edit_assigns
+    field_set_assign
     @row_edit_able_p = @choice_field.choice_row_edit_able?
     @choice.row_position = @choice.human_row if @row_edit_able_p
     @name_edit_able_p = @choice.name_edit_able?

@@ -3,7 +3,14 @@ require 'spec_helper'
 describe ChoicesController do
   context 'w params[:custom_field_id]' do
     context 'w #new_allow?' do
-      before { CustomField.should_receive(:find).with('89') { select_field_mk(choice_new_able?: true) } }
+      before do
+        CustomField.should_receive(:find).with('89') do
+          select_field_mk(
+            choice_new_able?: true,
+            field_set: person_field_set_mk)
+        end
+      end
+
       describe 'GET new' do
         before do
           select_field_mk.stub_chain(:choices, :new) { choice_mk }
@@ -12,6 +19,7 @@ describe ChoicesController do
         it do
           expect(assigns :choice_field).to be @select_field_mock
           expect(assigns :choice).to be @choice_mock
+          expect(assigns :field_set).to be @person_field_set_mock
           expect(assigns :name_edit_able_p).to be true
           expect(response).to render_template :new
         end
@@ -37,6 +45,7 @@ describe ChoicesController do
             post :create, choice: valid_attributes.merge('some' => 'attribute')
           end
           it do
+            expect(assigns :field_set).to be @person_field_set_mock
             expect(assigns :name_edit_able_p).to be true
             expect(flash[:alert]).to match /Failed to create choice/i
             expect(response).to render_template :new
@@ -63,7 +72,9 @@ describe ChoicesController do
     before do
       Choice.should_receive(:find).with('21') do
         choice_mk(
-          custom_field: select_field_mk(edit_able?: true),
+          custom_field: select_field_mk(
+            edit_able?: true,
+            field_set: person_field_set_mk),
           name_edit_able?: true)
       end
     end
@@ -77,6 +88,7 @@ describe ChoicesController do
         it do
           expect(assigns :choice).to be @choice_mock
           expect(assigns :choice_field).to be @select_field_mock
+          expect(assigns :field_set).to be @person_field_set_mock
           expect(assigns :row_edit_able_p).to be true
           expect(assigns :name_edit_able_p).to be true
           expect(response).to render_template :edit
@@ -103,6 +115,7 @@ describe ChoicesController do
             put :update, id: '21', choice: valid_attributes.merge('some' => 'attribute')
           end
           it do
+            expect(assigns :field_set).to be @person_field_set_mock
             expect(assigns :row_edit_able_p).to be true
             expect(assigns :name_edit_able_p).to be true
             expect(flash[:alert]).to match /Failed to update choice/i

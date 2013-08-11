@@ -1,3 +1,4 @@
+<%= render partial: 'common/link_to_field_set', locals: {o: @field_set} %>
 <%= render partial: 'common/link_to_choice_field', locals: {o: @choice_field} %>
 
 <%= form_for(@choice, html: {class: 'form-horizontal'}) do |f| %>
