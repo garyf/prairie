@@ -1,8 +1,8 @@
-<h4>Search for locations</h4>
-<%= link_to 'New location', new_location_path %> |
-<%= link_to 'New search', new_location_search_path %>
+<ul class='nav  nav-pills'>
+  <li class='active'><a>Search results</a></li>
+  <li><%= link_to 'New search for locations', new_location_search_path %></li>
+</ul>
 
-<h4>Search results</h4>
 <% if @locations.any? %>
   <h5>By name</h5>
   <ul class=unstyled><%= render partial: 'location', collection: @locations %></ul>

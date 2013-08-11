@@ -7,7 +7,7 @@ feature 'SetupStringFields', :redis do
     expect(page).to have_content 'Custom fields'
     string_field_new 'Item', '3', '34'
     click_link 'Item'
-    expect(page).to have_content 'Editing string field'
+    expect(page).to have_content 'Editing a string field'
     fill_in 'Length min', with: '5'
     click_button 'Done'
     expect(page).to have_content 'String field successfully updated'

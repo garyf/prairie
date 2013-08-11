@@ -7,7 +7,7 @@ feature 'SetupNumericFields', :redis do
     expect(page).to have_content 'Custom fields'
     numeric_field_new 'Mileage', '8', '55'
     click_link 'Mileage'
-    expect(page).to have_content 'Editing numeric field'
+    expect(page).to have_content 'Editing a numeric field'
     check 'numeric_field_only_integer_p'
     click_button 'Done'
     expect(page).to have_content 'Numeric field successfully updated'

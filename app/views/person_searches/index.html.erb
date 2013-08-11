@@ -1,8 +1,8 @@
-<h4>Search for people</h4>
-<%= link_to 'New person', new_person_path %> |
-<%= link_to 'New search', new_person_search_path %>
+<ul class='nav  nav-pills'>
+  <li class='active'><a>Search results</a></li>
+  <li><%= link_to 'New search for people', new_person_search_path %></li>
+</ul>
 
-<h4>Search results</h4>
 <% if @people.any? %>
   <h5>By last name</h5>
   <ul class=unstyled><%= render partial: 'person', collection: @people %></ul>
