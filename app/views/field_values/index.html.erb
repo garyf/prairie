@@ -2,7 +2,7 @@
 <%= render partial: 'common/link_to_parent_name', locals: {o: @parent} %>
 
 <% if @custom_fields.any? %>
-  <%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
+  <%= render partial: 'common/link_to_field_set', locals: {o: @field_set} %>
 
   <%= paginate @custom_fields %>
   <dl class=dl-horizontal>

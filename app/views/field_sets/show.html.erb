@@ -6,8 +6,9 @@
 
 <%= render partial: 'common/field_set_name', locals: {o: @field_set} %>
 
+<strong>Add a new custom field</strong>
 <% if @field_set.custom_field_new_able? %>
-  <ul class='inline pbl'><strong>Add new custom field:</strong>
+  <ul class='nav  nav-pills'>
     <li><%= link_to 'Check box', new_setup_choice_field_path(field_set_id: @field_set.id, kind: 'Checkbox') %></li>
     <li><%= link_to 'Numeric', new_setup_numeric_field_path(field_set_id: @field_set.id) %></li>
     <li><%= link_to 'Radio button', new_setup_choice_field_path(field_set_id: @field_set.id, kind: 'Radio') %></li>
