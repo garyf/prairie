@@ -70,6 +70,52 @@ def person_new(name_last, email, name_first = nil)
   expect(page).to have_content 'Person successfully created'
 end
 
+def radio_button_field_new(name)
+  click_link 'Radio button'
+  expect(page).to have_content 'New radio button field'
+  click_link 'Cancel'
+  click_link 'Radio button'
+  fill_in 'Name', with: name
+  click_button 'Done'
+  expect(page).to have_content 'Radio button field successfully created'
+  expect(page).to have_content name
+end
+
+def radio_button_field_edit(name)
+  click_link 'Edit'
+  click_link 'Radio button field'
+  click_link 'Edit'
+  click_link 'Cancel'
+  click_link 'Edit'
+  fill_in 'Name', with: name
+  click_button 'Done'
+  expect(page).to have_content 'Radio button field successfully updated'
+  expect(page).to have_content name
+end
+
+def select_field_new(name)
+  click_link 'Select list'
+  expect(page).to have_content 'New select list field'
+  click_link 'Cancel'
+  click_link 'Select list'
+  fill_in 'Name', with: name
+  click_button 'Done'
+  expect(page).to have_content 'Select list field successfully created'
+  expect(page).to have_content name
+end
+
+def select_field_edit(name)
+  click_link 'Edit'
+  click_link 'Select list field'
+  click_link 'Edit'
+  click_link 'Cancel'
+  click_link 'Edit'
+  fill_in 'Name', with: name
+  click_button 'Done'
+  expect(page).to have_content 'Select list field successfully updated'
+  expect(page).to have_content name
+end
+
 def string_field_new(name, min, max)
   click_link 'String'
   fill_in 'Name', with: name
