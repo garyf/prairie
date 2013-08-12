@@ -7,7 +7,7 @@ module NumericFieldDecorator
 
   def link_to_value_edit(parent_id, value_str = nil)
     value_str ||= 'numeric, undefined'
-    link_to value_str, edit_numeric_field_path(self, parent_id: parent_id)
+    link_to value_str, edit_numeric_field_path(self, parent_id: parent_id), {id: "field_#{id}"}
   end
 
   def search_input

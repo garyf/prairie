@@ -25,7 +25,7 @@ module CheckboxBooleanFieldDecorator
     else
       str = 'checkbox, undefined'
     end
-    link_to str, edit_checkbox_boolean_field_path(self, parent_id: parent_id)
+    link_to str, edit_checkbox_boolean_field_path(self, parent_id: parent_id), {id: "field_#{id}"}
   end
 
   def search_input
