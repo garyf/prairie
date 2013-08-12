@@ -36,7 +36,7 @@ class ChoicesController < ApplicationController
   end
 
   def destroy
-    redirect_to root_path and return unless @choice.name_edit_able?
+    redirect_to root_path and return unless @choice.destroyable?
     @choice.destroy
     redirect_to setup_choice_field_path(@choice_field), notice: 'Choice successfully destroyed'
   end

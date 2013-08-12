@@ -144,7 +144,7 @@ describe ChoicesController do
   end
 
   context 'w @choice w/o choice_field#edit_able?' do
-    context 'w choice.name_edit_able?' do
+    context 'w #name_edit_able?' do
       before do
         Choice.should_receive(:find).with('21') do
           choice_mk(
@@ -166,7 +166,7 @@ describe ChoicesController do
       end
     end
 
-    describe 'w/o choice.name_edit_able?' do
+    describe 'w/o #name_edit_able?' do
       before do
         Choice.should_receive(:find).with('21') do
           choice_mk(
@@ -187,12 +187,12 @@ describe ChoicesController do
   end
 
   context 'DELETE destroy' do
-    describe 'w choice.name_edit_able?' do
+    describe 'w #destroyable?' do
       before do
         Choice.should_receive(:find).with('21') do
           choice_mk(
             custom_field: select_field_mk,
-            name_edit_able?: true)
+            destroyable?: true)
         end
         choice_mk.should_receive(:destroy)
         delete :destroy, id: '21'
@@ -205,12 +205,12 @@ describe ChoicesController do
       end
     end
 
-    describe 'w/o choice.name_edit_able?' do
+    describe 'w/o #destroyable?' do
       before do
         Choice.should_receive(:find).with('21') do
           choice_mk(
             custom_field: select_field_mk,
-            name_edit_able?: false)
+            destroyable?: false)
         end
         choice_mk.should_not_receive(:destroy)
         delete :destroy, id: '21'

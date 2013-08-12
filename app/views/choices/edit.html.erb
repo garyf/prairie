@@ -1,3 +1,8 @@
-<%= render partial: 'common/nav_cxt_solo', locals: {str: 'Editing a choice'} %>
+<ul class='nav  nav-pills'>
+  <li class='active'><a>Editing a choice</a></li>
+  <% if @choice.destroyable? %>
+    <li><%= link_to 'Destroy', @choice, method: :delete, data: {confirm: 'Are you sure?'} %></li>
+  <% end %>
+</ul>
 
 <%= render 'form' %>
