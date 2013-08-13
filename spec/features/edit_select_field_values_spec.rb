@@ -8,6 +8,7 @@ feature 'EditSelectFieldValues', :redis do
     select_field_new 'Rentals?'
     choice_new 'Positive'
     choice_new 'Negative'
+    choice_field_enable
     visit "/locations/#{@location.id}"
     click_link 'Lakes'
   end

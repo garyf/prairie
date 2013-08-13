@@ -4,7 +4,7 @@ describe FieldValuesController do
   describe 'GET index' do
     before do
       FieldSet.should_receive(:find).with('13') { person_field_set_mk }
-      person_field_set_mk.stub_chain(:custom_fields, :ranked_page).with('2') { ['f1','f2','f3'] }
+      person_field_set_mk.stub_chain(:custom_fields, :enabled_by_row_page).with('2') { ['f1','f2','f3'] }
       person_field_set_mk.should_receive(:parent).with('89') { person_mk }
       person_mk.should_receive(:field_values) { ['v1','v2','v3'] }
       get :index, field_set_id: '13', page: '2', parent_id: '89'

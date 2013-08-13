@@ -21,6 +21,12 @@ def checkbox_boolean_field_edit(name)
   expect(page).to have_content name
 end
 
+def choice_field_enable
+  click_link 'Edit'
+  check 'choice_field_enabled_p'
+  click_button 'Done'
+end
+
 def choice_new(name)
   click_link 'New choice'
   click_link 'Cancel'

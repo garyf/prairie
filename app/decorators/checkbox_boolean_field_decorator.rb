@@ -11,7 +11,7 @@ module CheckboxBooleanFieldDecorator
   end
 
   def enabled?
-    enabled_p == '1' ? 'Yes' : 'No'
+    enabled_p == true ? 'Yes' : 'No'
   end
 
   def instructions

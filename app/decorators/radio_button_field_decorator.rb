@@ -11,7 +11,7 @@ module RadioButtonFieldDecorator
   end
 
   def enabled?
-    enabled_p == '1' ? 'Yes' : 'No'
+    enabled_p == true ? 'Yes' : 'No'
   end
 
   def link_to_edit
