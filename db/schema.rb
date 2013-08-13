@@ -29,10 +29,11 @@ ActiveRecord::Schema.define(version: 20130727180552) do
   add_index "choices", ["custom_field_id"], name: "index_choices_on_custom_field_id", using: :btree
 
   create_table "custom_fields", force: true do |t|
-    t.string   "type",         null: false
-    t.integer  "field_set_id", null: false
-    t.string   "name",         null: false
-    t.integer  "row",          null: false
+    t.string   "type",                        null: false
+    t.integer  "field_set_id",                null: false
+    t.string   "name",                        null: false
+    t.integer  "row",                         null: false
+    t.boolean  "enabled_p",    default: true, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

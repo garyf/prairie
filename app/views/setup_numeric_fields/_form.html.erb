@@ -38,6 +38,11 @@
   </div>
 <% end %>
 
+<div class=control-group>
+  <%= f.label 'Enabled?', class: 'control-label' %>
+  <div class=controls><%= f.check_box :enabled_p %></div>
+</div>
+
 <div class=form-actions>
   <%= f.button 'Done', class: 'btn  btn-primary' %>
   <%= @field_set.btn_to_cancel_field %>

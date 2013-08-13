@@ -5,6 +5,7 @@ class CreateCustomFields < ActiveRecord::Migration
       t.references :field_set, null: false, index: true
       t.string :name, null: false
       t.integer :row, null: false
+      t.boolean :enabled_p, null: false, default: true
 
       t.timestamps
     end

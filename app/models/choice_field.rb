@@ -2,10 +2,11 @@ class ChoiceField < CustomField
 
   class SubklassNotRecognized < StandardError ; end
 
+  # enabled_p requires > 1 choice
   def self.subklass(kind, field_set_id)
-    return CheckboxBooleanField.new(type: 'CheckboxBooleanField', field_set_id: field_set_id) if kind == 'Checkbox'
-    return RadioButtonField.new(type: 'RadioButtonField', field_set_id: field_set_id) if kind == 'Radio'
-    return SelectField.new(type: 'SelectField', field_set_id: field_set_id) if kind == 'Select'
+    return CheckboxBooleanField.new(type: 'CheckboxBooleanField', field_set_id: field_set_id, enabled_p: false) if kind == 'Checkbox'
+    return RadioButtonField.new(type: 'RadioButtonField', field_set_id: field_set_id, enabled_p: false) if kind == 'Radio'
+    return SelectField.new(type: 'SelectField', field_set_id: field_set_id, enabled_p: false) if kind == 'Select'
     raise SubklassNotRecognized
   end
 

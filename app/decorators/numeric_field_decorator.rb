@@ -15,7 +15,7 @@ module NumericFieldDecorator
   end
 
   def only_integer?
-    only_integer_p == '1' ? 'yes' : 'no'
+    only_integer_p == '1' ? 'Yes' : 'No'
   end
 
   def type_human(downcase_p = false)

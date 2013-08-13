@@ -67,6 +67,7 @@ private
 
   def params_white
     params.require(:string_field).permit(
+      :enabled_p,
       :field_set_id,
       :length_max,
       :length_min,

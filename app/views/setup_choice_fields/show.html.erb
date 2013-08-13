@@ -9,6 +9,11 @@
   <dd><%= @choice_field.name %></dd>
 </dl>
 
+<dl class=dl-horizontal>
+  <dt>Enabled?</dt>
+  <dd><%= @choice_field.enabled? %></dd>
+</dl>
+
 <% if @choice_field.choice_new_able? %>
   <%= link_to 'New choice', new_choice_path(custom_field_id: @choice_field.id) %>
 <% end %>

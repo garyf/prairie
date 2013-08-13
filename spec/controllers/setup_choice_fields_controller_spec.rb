@@ -7,7 +7,10 @@ describe SetupChoiceFieldsController do
       context 'GET new' do
         describe 'w kind recognized' do
           before do
-            SelectField.should_receive(:new).with(type: 'SelectField', field_set_id: '34') { select_field_mk }
+            SelectField.should_receive(:new).with(
+              type: 'SelectField',
+              field_set_id: '34',
+              enabled_p: false) { select_field_mk }
             get :new, field_set_id: '34', kind: 'Select'
           end
           it do

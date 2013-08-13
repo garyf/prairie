@@ -10,6 +10,10 @@ module CheckboxBooleanFieldDecorator
     link_to 'Cancel', field_set_path(field_set), class: 'btn'
   end
 
+  def enabled?
+    enabled_p == '1' ? 'Yes' : 'No'
+  end
+
   def instructions
     render 'checkbox_boolean'
   end

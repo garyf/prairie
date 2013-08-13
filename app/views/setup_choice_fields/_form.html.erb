@@ -8,8 +8,3 @@
 <% if @row_edit_able_p %>
   <%= render partial: 'common/row_edit', locals: {f: f, rankable: @choice_field} %>
 <% end %>
-
-<div class=form-actions>
-  <%= f.button 'Done', class: 'btn  btn-primary' %>
-  <%= @choice_field.btn_to_cancel_field(@field_set) %>
-</div>

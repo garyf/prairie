@@ -67,6 +67,7 @@ private
 
   def params_white
     params.require(:numeric_field).permit(
+      :enabled_p,
       :field_set_id,
       :name,
       :only_integer_p,

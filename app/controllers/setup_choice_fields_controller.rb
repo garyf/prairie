@@ -68,6 +68,7 @@ private
 
   def params_white
     params.require(:choice_field).permit(
+      :enabled_p,
       :field_set_id,
       :name,
       :row_position,
