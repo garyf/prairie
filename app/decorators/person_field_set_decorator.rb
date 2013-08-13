@@ -9,8 +9,13 @@ module PersonFieldSetDecorator
     link_to 'Cancel', field_values_path(field_set_id: id, parent_id: parent_id), class: 'btn'
   end
 
-  def name_with_type
-    "#{name}, for people"
+  def kind(downcase_p = false)
+    str = 'Person'
+    downcase_p ? str.downcase : str
+  end
+
+  def name_with_kind
+    "#{name} (#{kind true})"
   end
 
   def type_human(downcase_p = false)

@@ -10,7 +10,7 @@
 
 <% if @field_sets.any? %>
   <% @field_sets.each do |o| %><dl>
-    <dt><%= link_to o.name_with_type, field_set_path(o) %></dt>
+    <dt><%= link_to o.name_with_kind, field_set_path(o) %></dt>
     <dd><%= o.description %></dd>
   </dl><% end %>
 

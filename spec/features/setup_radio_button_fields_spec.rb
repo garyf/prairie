@@ -9,7 +9,7 @@ feature 'SetupRadioButtonFields', :redis do
     radio_button_field_edit 'Enabled?'
     choice_new 'Yes'
     choice_edit 'Yes', 'True'
-    click_link 'Vehicles, for people'
+    click_link 'Vehicles (person)'
     click_link 'Enabled?'
     expect(page).to have_content 'Choices'
   end
