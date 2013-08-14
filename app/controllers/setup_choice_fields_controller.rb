@@ -64,6 +64,7 @@ private
   def edit_assigns
     @row_edit_able_p = @field_set.custom_field_row_edit_able?
     @choice_field.row_position = @choice_field.human_row if @row_edit_able_p
+    @enable_able_p = @choice_field.enable_able?
   end
 
   def params_white

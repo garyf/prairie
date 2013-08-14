@@ -12,10 +12,18 @@
 
   <%= render partial: 'form', locals: {f: f} %>
 
-  <div class=control-group>
-    <%= f.label 'Enabled?', class: 'control-label' %>
-    <div class=controls><%= f.check_box :enabled_p %></div>
-  </div>
+  <% if @enable_able_p %>
+    <div class=control-group>
+      <%= f.label 'Enabled?', class: 'control-label' %>
+      <div class=controls><%= f.check_box :enabled_p %></div>
+    </div>
+
+  <% else %>
+    <dl class=dl-horizontal>
+      <dt>Enabled?</dt>
+      <dd><%= @choice_field.enabled? %></dd>
+    </dl>
+  <% end %>
 
   <div class=form-actions>
     <%= f.button 'Done', class: 'btn  btn-primary' %>
