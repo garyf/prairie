@@ -41,4 +41,33 @@ describe FieldSet do
       it { expect(@o.custom_field_new_able?).to be false }
     end
   end
+
+  context '#enabled?' do
+    before { cr }
+    it 'w/o custom_field' do
+      expect(@o.enabled?).to be false
+    end
+
+    it 'w 1 !enabled custom_field' do
+      string_field_cr(enabled_p: false)
+      expect(@o.enabled?).to be false
+    end
+
+    it 'w 1 enabled custom_field' do
+      string_field_cr
+      expect(@o.enabled?).to be true
+    end
+  end
+
+private
+
+  def cr
+    @o = FactoryGirl.create(:location_field_set)
+  end
+
+  def string_field_cr(options = {})
+    @o ||= cr
+    FactoryGirl.create(:string_field, {
+      field_set: @o}.merge(options))
+  end
 end

@@ -16,8 +16,10 @@
 <% if @field_sets.any? %>
   <h4>Custom field sets</h4>
   <% @field_sets.each do |o| %>
-    <%= render partial: 'field_sets/values_for_parent', locals: {
-      o: o,
-      parent_id: @location.id} %>
+    <% if o.enabled? %>
+      <%= render partial: 'field_sets/values_for_parent', locals: {
+        o: o,
+        parent_id: @location.id} %>
+    <% end %>
   <% end %>
 <% end %>

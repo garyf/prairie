@@ -22,8 +22,12 @@ class CustomField < ActiveRecord::Base
     order('row')
   end
 
+  def self.enabled
+    where(enabled_p: true)
+  end
+
   def self.enabled_by_row_page(page)
-    where(enabled_p: true).by_row.page page
+    enabled.by_row.page page
   end
 
   def self.ranked_page(page)

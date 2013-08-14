@@ -38,6 +38,10 @@ class FieldSet < ActiveRecord::Base
     custom_fields.count == 0
   end
 
+  def enabled?
+    custom_fields.enabled.count > 0
+  end
+
   def custom_field_new_able?
     custom_fields.count < 21
   end
