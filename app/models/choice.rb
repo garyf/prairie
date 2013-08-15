@@ -33,8 +33,12 @@ class Choice < ActiveRecord::Base
     !parents?
   end
 
-  def name_edit_able?
-    !parents?
+  alias_method :name_edit_able?, :destroyable?
+
+  def choice_field_enablement_confirm_and_self_destroy
+    return unless destroyable?
+    custom_field.enablement_confirm
+    self.destroy
   end
 
   def parents

@@ -95,6 +95,27 @@ describe Choice do
     end
   end
 
+  context '#choice_field_enablement_confirm_and_self_destroy' do
+    before { bld }
+    describe 'w #destroyable?' do
+      before do
+        @o.should_receive(:destroyable?) { true }
+        @custom_field.should_receive(:enablement_confirm)
+        @o.should_receive(:destroy)
+      end
+      it { @o.choice_field_enablement_confirm_and_self_destroy }
+    end
+
+    describe 'w/o #destroyable?' do
+      before do
+        @o.should_receive(:destroyable?) { false }
+        @custom_field.should_not_receive(:enablement_confirm)
+        @o.should_not_receive(:destroy)
+      end
+      it { @o.choice_field_enablement_confirm_and_self_destroy }
+    end
+  end
+
 private
 
   def bld(options = {})

@@ -37,7 +37,7 @@ class ChoicesController < ApplicationController
 
   def destroy
     redirect_to root_path and return unless @choice.destroyable?
-    @choice.destroy
+    @choice.choice_field_enablement_confirm_and_self_destroy
     redirect_to setup_choice_field_path(@choice_field), notice: 'Choice successfully destroyed'
   end
 

@@ -27,6 +27,14 @@ class ChoiceField < CustomField
     !parent? || choice_row_edit_able?
   end
 
+  def enablement_confirm
+    return unless enabled_p
+    if choices.count == 2
+      self.enabled_p = false
+      self.save
+    end
+  end
+
   def instructions
     # optional, define in decorator
   end

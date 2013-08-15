@@ -194,7 +194,7 @@ describe ChoicesController do
             custom_field: select_field_mk,
             destroyable?: true)
         end
-        choice_mk.should_receive(:destroy)
+        choice_mk.should_receive(:choice_field_enablement_confirm_and_self_destroy)
         delete :destroy, id: '21'
       end
       it do

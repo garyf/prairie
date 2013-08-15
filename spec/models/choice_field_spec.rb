@@ -21,4 +21,25 @@ describe ChoiceField do
       end
     end
   end
+
+  context '#enablement_confirm' do
+    context 'w :enabled_p' do
+      before { @o = ChoiceField.new }
+      describe 'w 3 choices' do
+        before do
+          @o.stub_chain(:choices, :count) { 3 }
+          @o.enablement_confirm
+        end
+        it { expect(@o.enabled_p).to be true }
+      end
+
+      describe 'w 2 choices' do
+        before do
+          @o.stub_chain(:choices, :count) { 2 }
+          @o.enablement_confirm
+        end
+        it { expect(@o.enabled_p).to be false }
+      end
+    end
+  end
 end
