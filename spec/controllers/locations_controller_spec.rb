@@ -51,7 +51,7 @@ describe LocationsController do
 
     describe 'GET show' do
       before do
-        LocationFieldSet.should_receive(:by_name) { ['s1','s2'] }
+        LocationFieldSet.should_receive(:enabled_by_name) { ['s1','s2'] }
         get :show, id: '21'
       end
       it do

@@ -8,7 +8,7 @@ class PeopleController < ApplicationController
   end
 
   def show
-    @field_sets = PersonFieldSet.by_name
+    @field_sets = PersonFieldSet.enabled_by_name
   end
 
   def new

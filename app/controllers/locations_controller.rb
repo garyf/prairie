@@ -8,7 +8,7 @@ class LocationsController < ApplicationController
   end
 
   def show
-    @field_sets = LocationFieldSet.by_name
+    @field_sets = LocationFieldSet.enabled_by_name
   end
 
   def new

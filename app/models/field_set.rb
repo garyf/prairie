@@ -13,6 +13,10 @@ class FieldSet < ActiveRecord::Base
     order('name')
   end
 
+  def self.enabled_by_name
+    by_name.find_all { |o| o.enabled? }
+  end
+
   # each subklass may have 12 records
   def self.new_able?
     self.count < 13

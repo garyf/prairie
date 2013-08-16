@@ -1,6 +1,37 @@
 require 'spec_helper'
 
 describe FieldSet do
+  context 'w 3 field sets' do
+    before do
+      @o0 = cr(name: 'Alpha')
+      @o1 = cr(name: 'Gamma')
+      @o2 = cr(name: 'Beta')
+    end
+    describe '::by_name' do
+      subject { FieldSet.by_name }
+      it do
+        expect(subject[0]).to eql @o0
+        expect(subject[1]).to eql @o2
+        expect(subject[2]).to eql @o1
+      end
+    end
+
+    describe '::enabled_by_name' do
+      before do
+        string_field_cr(field_set: @o0)
+        string_field_cr(field_set: @o1, enabled_p: false)
+        string_field_cr(field_set: @o2)
+      end
+      subject { FieldSet.enabled_by_name }
+      it do
+        expect(subject).to match_array [@o0, @o2]
+        expect(subject[0]).to eql @o0
+        expect(subject[1]).to eql @o2
+        expect(subject.count).to eql 2
+      end
+    end
+  end
+
   context '::new_able?' do
     before { LocationFieldSet.stub(:count) { 13 } }
     it 'w count >= 13' do
@@ -43,7 +74,7 @@ describe FieldSet do
   end
 
   context '#enabled?' do
-    before { cr }
+    before { cr1 }
     it 'w/o custom_field' do
       expect(@o.enabled?).to be false
     end
@@ -61,12 +92,16 @@ describe FieldSet do
 
 private
 
-  def cr
+  def cr(options = {})
+    FactoryGirl.create(:location_field_set, options)
+  end
+
+  def cr1
     @o = FactoryGirl.create(:location_field_set)
   end
 
   def string_field_cr(options = {})
-    @o ||= cr
+    @o ||= cr1
     FactoryGirl.create(:string_field, {
       field_set: @o}.merge(options))
   end
