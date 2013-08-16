@@ -41,12 +41,11 @@ describe LocationSearch do
   context '#locations' do
     before do
       bld
-      LocationFieldSet.should_receive(:by_name) { ['s1','s2'] }
-      @params = {'key0' => 'value0', 'key1' => 'value1'}
+      @params = {'key0' => 'value0', 'key1' => 'value1', 'key2' => ''}
     end
     describe 'w result_ids' do
       before do
-        @o.should_receive(:column_and_custom_ids).with(['s1','s2'], @params) { [13, 55] }
+        @o.should_receive(:column_and_custom_ids).with(@params) { [13, 55] }
         Location.should_receive(:name_where_id_by_name).with([13, 55]) { ['p13','p55'] }
       end
       it { expect(@o.locations @params).to match_array ['p13','p55'] }
@@ -54,7 +53,7 @@ describe LocationSearch do
 
     describe 'w/o result_ids' do
       before do
-        @o.should_receive(:column_and_custom_ids).with(['s1','s2'], @params) { [] }
+        @o.should_receive(:column_and_custom_ids).with(@params) { [] }
         Location.should_not_receive(:name_where_id_by_name)
       end
       it { expect(@o.locations @params).to eql [] }

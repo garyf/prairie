@@ -21,7 +21,7 @@ class PersonSearch < Search
   end
 
   def people(params)
-    result_ids = column_and_custom_ids(PersonFieldSet.by_name, params)
+    result_ids = column_and_custom_ids(params)
     result_ids.empty? ? [] : Person.name_last_where_id_by_name_last(result_ids)
   end
 end

@@ -1,23 +1,27 @@
 class Search
 
-  def custom_result_ids(field_sets, params)
+  FIELD_GIST_KEY = %r{^field_\d+_gist$}
+
+  def params_custom_w_values(params)
+    params.select { |k, v| k =~ FIELD_GIST_KEY unless v.blank? }
+  end
+
+  def custom_result_ids(params)
+    hsh = params_custom_w_values(params)
     result_ids = nil
-    field_sets.each do |set|
-      set.custom_fields.each do |o|
-        v = params["field_#{o.id}_gist"]
-        next if v.blank?
-        value_ids = o.parents_find_by_gist(v)
-        result_ids = result_ids ? value_ids & result_ids : value_ids
-        return [] if result_ids.empty?
-      end
+    hsh.each do |k, v|
+      o = CustomField.find(k.split('_')[1])
+      value_ids = o.parents_find_by_gist(v)
+      result_ids = result_ids ? value_ids & result_ids : value_ids
+      return [] if result_ids.empty?
     end
     result_ids
   end
 
-  def column_and_custom_ids(field_sets, params)
+  def column_and_custom_ids(params)
     column_ids = column_result_ids(params)
     return [] if column_ids.try(:empty?)
-    custom_ids = custom_result_ids(field_sets, params)
+    custom_ids = custom_result_ids(params)
     return [] if custom_ids.try(:empty?)
     if custom_ids
       column_ids ? column_ids & custom_ids : custom_ids

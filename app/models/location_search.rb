@@ -20,7 +20,7 @@ class LocationSearch < Search
   end
 
   def locations(params)
-    result_ids = column_and_custom_ids(LocationFieldSet.by_name, params)
+    result_ids = column_and_custom_ids(params)
     result_ids.empty? ? [] : Location.name_where_id_by_name(result_ids)
   end
 end
