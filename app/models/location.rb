@@ -12,6 +12,10 @@ class Location < ActiveRecord::Base
   end
 
   def self.id_where_case_insensitive_value(column, value)
+    select(:id).where("lower(#{column}) = ?", value.downcase)
+  end
+
+  def self.id_where_ILIKE_value(column, value)
     select(:id).where(Location.arel_table[column].matches "%#{value}%")
   end
 
