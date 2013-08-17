@@ -6,10 +6,21 @@ class PersonSearch < Search
     :name_last]
   end
 
-  def column_result_ids(params)
+  def column_find_ids(params, any_agree_p = false)
     c = columns_searchable
     columns = c.delete_if { |sym| params[sym.id2name].blank? }
     return if columns.empty?
+    any_agree_p ? column_any_agree(columns, params) : column_all_agree(columns, params)
+  end
+
+  def people(params)
+    result_ids = all_agree_find_ids(params)
+    result_ids.empty? ? [] : Person.name_last_where_id_by_name_last(result_ids)
+  end
+
+private
+
+  def column_all_agree(columns, params)
     result_ids = nil
     columns.each do |c|
       v = params[c.id2name]
@@ -20,8 +31,12 @@ class PersonSearch < Search
     result_ids
   end
 
-  def people(params)
-    result_ids = column_and_custom_ids(params)
-    result_ids.empty? ? [] : Person.name_last_where_id_by_name_last(result_ids)
+  def column_any_agree(columns, params)
+    result_ids = []
+    columns.each do |c|
+      v = params[c.id2name]
+      result_ids = result_ids | Person.id_where_case_insensitive_value(c, v).pluck(:id)
+    end
+    result_ids
   end
 end

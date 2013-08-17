@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe PersonSearch do
-  context '#column_result_ids' do
+  context '#column_find_ids' do
     describe 'w/o a search term' do
       before { bld }
-      it { expect(@o.column_result_ids({'name_last' => ''})).to be nil }
+      it { expect(@o.column_find_ids({'name_last' => ''})).to be nil }
     end
 
     context 'w 2 people' do
@@ -16,21 +16,21 @@ describe PersonSearch do
       end
       context 'w 1 search term' do
         it 'w matching term' do
-          expect(@o.column_result_ids({'name_last' => 'Anders'})).to match_array [@person0.id, @person1.id]
+          expect(@o.column_find_ids({'name_last' => 'Anders'})).to match_array [@person0.id, @person1.id]
         end
         it 'w/o matching term' do
-          expect(@o.column_result_ids({'name_last' => 'bar'})).to eql []
+          expect(@o.column_find_ids({'name_last' => 'bar'})).to eql []
         end
       end
 
       context 'w 2 search terms' do
         it 'w matching term' do
-          expect(@o.column_result_ids({
+          expect(@o.column_find_ids({
             'name_last' => 'Anders',
             'email' => 'geo@example.com'})).to match_array [@person1.id]
         end
         it 'w/o matching term' do
-          expect(@o.column_result_ids({
+          expect(@o.column_find_ids({
             'name_last' => 'Anders',
             'email' => 'foo@example.com'})).to eql []
         end
@@ -62,49 +62,49 @@ describe PersonSearch do
     end
   end
 
-  context 'super #column_and_custom_ids' do
+  context 'super #all_agree_find_ids' do
     before do
       bld
       @params = {'these' => 'params'}
     end
-    describe 'w #column_result_ids empty?' do
-      before { @o.should_receive(:column_result_ids).with(@params) { [] } }
-      it { expect(@o.column_and_custom_ids @params).to eql [] }
+    describe 'w #column_find_ids empty?' do
+      before { @o.should_receive(:column_find_ids).with(@params) { [] } }
+      it { expect(@o.all_agree_find_ids @params).to eql [] }
     end
 
-    context 'w/o #column_result_ids' do
-      before { @o.should_receive(:column_result_ids).with(@params) { nil } }
+    context 'w/o #column_find_ids' do
+      before { @o.should_receive(:column_find_ids).with(@params) { nil } }
       describe 'w #custom_result_ids empty?' do
         before { @o.should_receive(:custom_result_ids).with(@params) { [] } }
-        it { expect(@o.column_and_custom_ids @params).to eql [] }
+        it { expect(@o.all_agree_find_ids @params).to eql [] }
       end
 
       describe 'w #custom_result_ids' do
         before { @o.should_receive(:custom_result_ids).with(@params) { [5, 8, 3] } }
-        it { expect(@o.column_and_custom_ids @params).to match_array [3, 5, 8] }
+        it { expect(@o.all_agree_find_ids @params).to match_array [3, 5, 8] }
       end
 
       describe 'w/o #custom_result_ids' do
         before { @o.should_receive(:custom_result_ids).with(@params) { nil } }
-        it { expect(@o.column_and_custom_ids @params).to match_array [] }
+        it { expect(@o.all_agree_find_ids @params).to match_array [] }
       end
     end
 
-    context 'w #column_result_ids' do
-      before { @o.should_receive(:column_result_ids).with(@params) { [8, 13, 5] } }
+    context 'w #column_find_ids' do
+      before { @o.should_receive(:column_find_ids).with(@params) { [8, 13, 5] } }
       describe 'w #custom_result_ids empty?' do
         before { @o.should_receive(:custom_result_ids).with(@params) { [] } }
-        it { expect(@o.column_and_custom_ids @params).to eql [] }
+        it { expect(@o.all_agree_find_ids @params).to eql [] }
       end
 
       describe 'w #custom_result_ids' do
         before { @o.should_receive(:custom_result_ids).with(@params) { [5, 8, 3] } }
-        it { expect(@o.column_and_custom_ids @params).to match_array [5, 8] }
+        it { expect(@o.all_agree_find_ids @params).to match_array [5, 8] }
       end
 
       describe 'w/o #custom_result_ids' do
         before { @o.should_receive(:custom_result_ids).with(@params) { nil } }
-        it { expect(@o.column_and_custom_ids @params).to match_array [5, 8, 13] }
+        it { expect(@o.all_agree_find_ids @params).to match_array [5, 8, 13] }
       end
     end
   end
@@ -116,7 +116,7 @@ describe PersonSearch do
     end
     describe 'w result_ids' do
       before do
-        @o.should_receive(:column_and_custom_ids).with(@params) { [13, 55] }
+        @o.should_receive(:all_agree_find_ids).with(@params) { [13, 55] }
         Person.should_receive(:name_last_where_id_by_name_last).with([13, 55]) { ['p13','p55'] }
       end
       it { expect(@o.people @params).to match_array ['p13','p55'] }
@@ -124,7 +124,7 @@ describe PersonSearch do
 
     describe 'w/o result_ids' do
       before do
-        @o.should_receive(:column_and_custom_ids).with(@params) { [] }
+        @o.should_receive(:all_agree_find_ids).with(@params) { [] }
         Person.should_not_receive(:name_last_where_id_by_name_last)
       end
       it { expect(@o.people @params).to eql [] }
