@@ -7,32 +7,53 @@ describe PersonSearch do
       it { expect(@o.column_find_ids({'name_last' => ''})).to be nil }
     end
 
-    context 'w 2 people' do
+    context 'w 3 people' do
       before do
-        @person0 = c_person_cr(name_last: 'Anders', email: 'ndr@example.com')
-        @person1 = c_person_cr(name_last: 'anders', email: 'geo@example.com')
-        @person2 = c_person_cr(name_last: 'foo', email: 'foo@example.com')
+        @person0 = c_person_cr(name_last: 'Anders', email: 'foo@example.com')
+        @person1 = c_person_cr(name_last: 'Brady', email: 'bar@example.com')
+        @person2 = c_person_cr(name_last: 'Carson', email: 'baz@example.com')
         bld
       end
       context 'w 1 search term' do
         it 'w matching term' do
-          expect(@o.column_find_ids({'name_last' => 'Anders'})).to match_array [@person0.id, @person1.id]
+          expect(@o.column_find_ids({'name_last' => 'Anders'})).to match_array [@person0.id]
+          expect(@o.column_find_ids({'name_last' => 'Anders'}, true)).to match_array [@person0.id]
         end
         it 'w/o matching term' do
           expect(@o.column_find_ids({'name_last' => 'bar'})).to eql []
+          expect(@o.column_find_ids({'name_last' => 'bar'}, true)).to eql []
         end
       end
 
       context 'w 2 search terms' do
-        it 'w matching term' do
-          expect(@o.column_find_ids({
-            'name_last' => 'Anders',
-            'email' => 'geo@example.com'})).to match_array [@person1.id]
+        describe 'w 2 matching terms' do
+          before do
+            @params = {
+              'name_last' => 'Anders',
+              'email' => 'bar@example.com'}
+          end
+          it { expect(@o.column_find_ids @params).to eql [] }
+          it { expect(@o.column_find_ids @params, true).to match_array [@person0.id, @person1.id] }
         end
-        it 'w/o matching term' do
-          expect(@o.column_find_ids({
-            'name_last' => 'Anders',
-            'email' => 'foo@example.com'})).to eql []
+
+        describe 'w 1 matching term' do
+          before do
+            @params = {
+              'name_last' => 'Brady',
+              'email' => 'wherever@example.com'}
+          end
+          it { expect(@o.column_find_ids @params).to match_array [] }
+          it { expect(@o.column_find_ids @params, true).to match_array [@person1.id] }
+        end
+
+        describe 'w/o matching term' do
+          before do
+            @params = {
+              'name_last' => 'Name',
+              'email' => 'wherever@example.com'}
+          end
+          it { expect(@o.column_find_ids @params).to eql [] }
+          it { expect(@o.column_find_ids @params, true).to eql [] }
         end
       end
     end
@@ -40,24 +61,60 @@ describe PersonSearch do
 
   context 'super #custom_find_ids' do
     before { bld }
-    context 'w 1 field_set, 1 custom_field' do
-      before { @string_field0 = string_field_mk(id: 34) }
+    context 'w 1 string field' do
+      before { @string_field = string_field_mk(id: 34) }
       context 'w a search term' do
-        before { CustomField.should_receive(:find).with('34') { @string_field0 } }
+        before { CustomField.should_receive(:find).with('34') { @string_field } }
         describe 'w matching term' do
-          before { @string_field0.should_receive(:parents_find_by_gist).with('foo') { [8, 55] } }
-          it { expect(@o.custom_find_ids({"field_#{@string_field0.id}_gist" => 'foo'})).to eql [8, 55] }
+          before do
+            @string_field.should_receive(:parents_find_by_gist).with('foo') { [8, 55] }
+            @params = {"field_#{@string_field.id}_gist" => 'foo'}
+          end
+          it { expect(@o.custom_find_ids @params).to eql [8, 55] }
+          it { expect(@o.custom_find_ids @params, true).to eql [8, 55] }
         end
 
         describe 'w/o matching term' do
-          before { @string_field0.should_receive(:parents_find_by_gist).with('bar') { [] } }
-          it { expect(@o.custom_find_ids({"field_#{@string_field0.id}_gist" => 'bar'})).to eql [] }
+          before do
+            @string_field.should_receive(:parents_find_by_gist).with('bar') { [] }
+            @params = {"field_#{@string_field.id}_gist" => 'bar'}
+          end
+          it { expect(@o.custom_find_ids @params).to eql [] }
+          it { expect(@o.custom_find_ids @params, true).to eql [] }
+        end
+
+        context 'w 1 numeric field w 2 search terms' do
+          before do
+            @numeric_field = numeric_field_mk(id: 55)
+            CustomField.stub(:find).with('55') { @numeric_field }
+            @params = {
+              "field_#{@string_field.id}_gist" => 'foo',
+              "field_#{@numeric_field.id}_gist" => 'bar'}
+          end
+          describe 'w 2 matching terms' do
+            before do
+              @string_field.should_receive(:parents_find_by_gist).with('foo') { [8, 55] }
+              @numeric_field.should_receive(:parents_find_by_gist).with('bar') { [8, 21] }
+            end
+            it { expect(@o.custom_find_ids @params).to eql [8] }
+            it { expect(@o.custom_find_ids @params, true).to match_array [8, 21, 55] }
+          end
+
+          describe 'w 1 matching term' do
+            before do
+              @string_field.should_receive(:parents_find_by_gist).with('foo') { [] }
+              @numeric_field.stub(:parents_find_by_gist).with('bar') { [8, 21] }
+            end
+            it { expect(@o.custom_find_ids @params).to eql [] }
+            it { expect(@o.custom_find_ids @params, true).to match_array [8, 21] }
+          end
         end
       end
 
       describe 'w/o a search term' do
         before { CustomField.should_not_receive(:find) }
-        it { expect(@o.custom_find_ids({"field_#{@string_field0.id}_gist" => ''})).to be nil }
+        it { expect(@o.custom_find_ids({"field_#{@string_field.id}_gist" => ''})).to be nil }
+        it { expect(@o.custom_find_ids({"field_#{@string_field.id}_gist" => ''}, true)).to be nil }
       end
     end
   end

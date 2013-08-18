@@ -7,32 +7,53 @@ describe LocationSearch do
       it { expect(@o.column_find_ids({'name' => ''})).to be nil }
     end
 
-    context 'w 2 locations' do
+    context 'w 3 locations' do
       before do
-        @location0 = c_location_cr(name: 'Annapolis', description: 'city')
-        @location1 = c_location_cr(name: 'annapolis', description: 'seaport')
-        @location2 = c_location_cr(name: 'foo', description: 'bar')
+        @location0 = c_location_cr(name: 'Annapolis', description: 'capital')
+        @location1 = c_location_cr(name: 'Baltimore', description: 'industrial')
+        @location2 = c_location_cr(name: 'Camden', description: 'seaport')
         bld
       end
       context 'w 1 search term' do
         it 'w matching term' do
-          expect(@o.column_find_ids({'name' => 'Annapolis'})).to match_array [@location0.id, @location1.id]
+          expect(@o.column_find_ids({'name' => 'Annapolis'})).to match_array [@location0.id]
+          expect(@o.column_find_ids({'name' => 'Annapolis'}, true)).to match_array [@location0.id]
         end
         it 'w/o matching term' do
           expect(@o.column_find_ids({'name' => 'bar'})).to eql []
+          expect(@o.column_find_ids({'name' => 'bar'}, true)).to eql []
         end
       end
 
       context 'w 2 search terms' do
-        it 'w matching term' do
-          expect(@o.column_find_ids({
-            'name' => 'Annapolis',
-            'description' => 'seaport'})).to match_array [@location1.id]
+        describe 'w 2 matching terms' do
+          before do
+            @params = {
+              'name' => 'Annapolis',
+              'description' => 'seaport'}
+          end
+          it { expect(@o.column_find_ids @params). to eql [] }
+          it { expect(@o.column_find_ids @params, true). to match_array [@location0.id, @location2.id] }
         end
-        it 'w/o matching term' do
-          expect(@o.column_find_ids({
-            'name' => 'Annapolis',
-            'description' => 'bar'})).to eql []
+
+        describe 'w 1 matching term' do
+          before do
+            @params = {
+              'name' => 'Baltimore',
+              'description' => 'wherever'}
+          end
+          it { expect(@o.column_find_ids @params).to match_array [] }
+          it { expect(@o.column_find_ids @params, true).to match_array [@location1.id] }
+        end
+
+        describe 'w/o matching term' do
+          before do
+            @params = {
+              'name' => 'City',
+              'description' => 'wherever'}
+          end
+          it { expect(@o.column_find_ids @params).to eql [] }
+          it { expect(@o.column_find_ids @params, true).to eql [] }
         end
       end
     end
