@@ -71,7 +71,7 @@ describe PersonSearch do
             @params = {"field_#{@string_field.id}_gist" => 'foo'}
           end
           it { expect(@o.custom_find_ids @params).to eql [8, 55] }
-          it { expect(@o.custom_find_ids @params, true).to eql [8, 55] }
+          it { expect(@o.custom_find_ids @params, true).to eql [[1, [8, 55]]] }
         end
 
         describe 'w/o matching term' do
@@ -97,7 +97,7 @@ describe PersonSearch do
               @numeric_field.should_receive(:parents_find_by_gist).with('bar') { [8, 21] }
             end
             it { expect(@o.custom_find_ids @params).to eql [8] }
-            it { expect(@o.custom_find_ids @params, true).to match_array [8, 21, 55] }
+            it { expect(@o.custom_find_ids @params, true).to match_array [[2, [8]], [1, [55, 21]]] }
           end
 
           describe 'w 1 matching term' do
@@ -106,7 +106,7 @@ describe PersonSearch do
               @numeric_field.stub(:parents_find_by_gist).with('bar') { [8, 21] }
             end
             it { expect(@o.custom_find_ids @params).to eql [] }
-            it { expect(@o.custom_find_ids @params, true).to match_array [8, 21] }
+            it { expect(@o.custom_find_ids @params, true).to match_array [[1, [8, 21]]] }
           end
         end
       end
