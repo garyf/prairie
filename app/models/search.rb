@@ -3,8 +3,42 @@ class Search
   FIELD_GIST_KEY = %r{^field_\d+_gist$}
   RESULTS_COUNT_MIN = 55
 
+  def columns_w_values(params)
+    columns_searchable.delete_if { |sym| params[sym.id2name].blank? }
+  end
+
+  def column_all_gather_ids(params)
+    columns = columns_w_values(params)
+    return if columns.empty?
+    column_all_agree(columns, params)
+  end
+
   def params_custom_w_values(params)
     params.select { |k, v| k =~ FIELD_GIST_KEY unless v.blank? }
+  end
+
+  def custom_all_gather_ids(params)
+    hsh = params_custom_w_values(params)
+    return if hsh.empty?
+    custom_all_agree(hsh)
+  end
+
+  def all_agree_ids_for_find(params)
+    column_ids = column_all_gather_ids(params)
+    return [] if column_ids.try(:empty?)
+    custom_ids = custom_all_gather_ids(params)
+    return [] if custom_ids.try(:empty?)
+    if custom_ids
+      column_ids ? column_ids & custom_ids : custom_ids
+    else
+      column_ids ? column_ids : []
+    end
+  end
+
+  def column_any_gather_ids(params)
+    columns = columns_w_values(params)
+    return [] if columns.empty?
+    column_parent_appearances(columns, params)
   end
 
   def custom_parent_appearances(hsh)
@@ -14,6 +48,12 @@ class Search
       ids = ids + o.parents_find_by_gist(v)
     end
     ids
+  end
+
+  def custom_any_gather_ids(params)
+    hsh = params_custom_w_values(params)
+    return [] if hsh.empty?
+    custom_parent_appearances(hsh)
   end
 
   # return a hash with {k, v} as {parent_id: agree_frequency}
@@ -31,42 +71,16 @@ class Search
     hsh.sort.reverse
   end
 
-  def custom_find_ids(params, any_agree_p = false)
-    hsh = params_custom_w_values(params)
-    return if hsh.empty?
-    any_agree_p ? custom_any_agree(hsh) : custom_all_agree(hsh)
+  def any_agree_ids_for_find(params)
+    ids = column_any_gather_ids(params) + custom_any_gather_ids(params)
+    return [] if ids.empty?
+    parent_ids_by_agree_frequency(ids)
   end
 
-  def all_agree_find_ids(params)
-    column_ids = column_find_ids(params)
-    return [] if column_ids.try(:empty?)
-    custom_ids = custom_find_ids(params)
-    return [] if custom_ids.try(:empty?)
-    if custom_ids
-      column_ids ? column_ids & custom_ids : custom_ids
-    else
-      column_ids ? column_ids : []
-    end
-  end
-
-  def any_agree_find_ids(params)
-    column_ids = column_find_ids(params, true)
-    custom_ids = custom_find_ids(params, true)
-    if custom_ids
-      if column_ids
-        column_ids | custom_ids
-      else
-        custom_ids
-      end
-    else
-      column_ids ? column_ids : []
-    end
-  end
-
-  def all_and_any_agree_find_ids(params)
-    result_ids = all_agree_find_ids(params)
+  def all_and_any_agree_ids_for_find(params)
+    result_ids = all_agree_ids_for_find(params)
     if result_ids.length < RESULTS_COUNT_MIN
-      any_agree_ids = any_agree_find_ids(params) - result_ids
+      any_agree_ids = any_agree_ids_for_find(params) - result_ids
       result_ids = result_ids + any_agree_ids
     end
     result_ids
@@ -83,11 +97,5 @@ private
       return [] if result_ids.empty?
     end
     result_ids
-  end
-
-  # preference given to parents having more fields that agree with the search terms
-  def custom_any_agree(hsh)
-    parent_ids = custom_parent_appearances(hsh)
-    parent_ids_by_agree_frequency(parent_ids)
   end
 end

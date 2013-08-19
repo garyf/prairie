@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe LocationSearch do
-  context '#column_find_ids' do
+  context '#column_all_gather_ids' do
     describe 'w/o a search term' do
       before { bld }
-      it { expect(@o.column_find_ids({'name' => ''})).to be nil }
+      it { expect(@o.column_all_gather_ids({'name' => ''})).to be nil }
     end
 
     context 'w 3 locations' do
@@ -16,12 +16,10 @@ describe LocationSearch do
       end
       context 'w 1 search term' do
         it 'w matching term' do
-          expect(@o.column_find_ids({'name' => 'Annapolis'})).to match_array [@location0.id]
-          expect(@o.column_find_ids({'name' => 'Annapolis'}, true)).to match_array [@location0.id]
+          expect(@o.column_all_gather_ids({'name' => 'Annapolis'})).to match_array [@location0.id]
         end
         it 'w/o matching term' do
-          expect(@o.column_find_ids({'name' => 'bar'})).to eql []
-          expect(@o.column_find_ids({'name' => 'bar'}, true)).to eql []
+          expect(@o.column_all_gather_ids({'name' => 'bar'})).to eql []
         end
       end
 
@@ -32,8 +30,7 @@ describe LocationSearch do
               'name' => 'Annapolis',
               'description' => 'seaport'}
           end
-          it { expect(@o.column_find_ids @params). to eql [] }
-          it { expect(@o.column_find_ids @params, true). to match_array [@location0.id, @location2.id] }
+          it { expect(@o.column_all_gather_ids @params). to eql [] }
         end
 
         describe 'w 1 matching term' do
@@ -42,8 +39,7 @@ describe LocationSearch do
               'name' => 'Baltimore',
               'description' => 'wherever'}
           end
-          it { expect(@o.column_find_ids @params).to match_array [] }
-          it { expect(@o.column_find_ids @params, true).to match_array [@location1.id] }
+          it { expect(@o.column_all_gather_ids @params).to match_array [] }
         end
 
         describe 'w/o matching term' do
@@ -52,8 +48,7 @@ describe LocationSearch do
               'name' => 'City',
               'description' => 'wherever'}
           end
-          it { expect(@o.column_find_ids @params).to eql [] }
-          it { expect(@o.column_find_ids @params, true).to eql [] }
+          it { expect(@o.column_all_gather_ids @params).to eql [] }
         end
       end
     end
@@ -66,7 +61,7 @@ describe LocationSearch do
     end
     describe 'w result_ids' do
       before do
-        @o.should_receive(:all_agree_find_ids).with(@params) { [13, 55] }
+        @o.should_receive(:all_agree_ids_for_find).with(@params) { [13, 55] }
         Location.should_receive(:name_where_id_by_name).with([13, 55]) { ['p13','p55'] }
       end
       it { expect(@o.locations @params).to match_array ['p13','p55'] }
@@ -74,7 +69,7 @@ describe LocationSearch do
 
     describe 'w/o result_ids' do
       before do
-        @o.should_receive(:all_agree_find_ids).with(@params) { [] }
+        @o.should_receive(:all_agree_ids_for_find).with(@params) { [] }
         Location.should_not_receive(:name_where_id_by_name)
       end
       it { expect(@o.locations @params).to eql [] }
