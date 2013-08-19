@@ -1,17 +1,5 @@
 class PersonSearch < Search
 
-  def columns_searchable() [
-    :email,
-    :name_first,
-    :name_last]
-  end
-
-  def column_parent_appearances(columns, params)
-    ids = []
-    columns.each { |c| ids = ids + Person.id_where_case_insensitive_value(c, params[c.id2name]).pluck(:id) }
-    ids
-  end
-
   def people(params)
     result_ids = all_agree_ids_for_find(params)
     result_ids.empty? ? [] : Person.name_last_where_id_by_name_last(result_ids)
@@ -28,5 +16,17 @@ private
       return [] if result_ids.empty?
     end
     result_ids
+  end
+
+  def column_parent_appearances(columns, params)
+    ids = []
+    columns.each { |c| ids = ids + Person.id_where_case_insensitive_value(c, params[c.id2name]).pluck(:id) }
+    ids
+  end
+
+  def columns_searchable() [
+    :email,
+    :name_first,
+    :name_last]
   end
 end

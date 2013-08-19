@@ -1,59 +1,6 @@
 require 'spec_helper'
 
 describe PersonSearch do
-  context '#column_all_gather_ids' do
-    describe 'w/o a search term' do
-      before { bld }
-      it { expect(@o.column_all_gather_ids({'name_last' => ''})).to be nil }
-    end
-
-    context 'w 3 people' do
-      before do
-        @person0 = c_person_cr(name_last: 'Anders', email: 'foo@example.com')
-        @person1 = c_person_cr(name_last: 'Brady', email: 'bar@example.com')
-        @person2 = c_person_cr(name_last: 'Carson', email: 'baz@example.com')
-        bld
-      end
-      context 'w 1 search term' do
-        it 'w matching term' do
-          expect(@o.column_all_gather_ids({'name_last' => 'Anders'})).to match_array [@person0.id]
-        end
-        it 'w/o matching term' do
-          expect(@o.column_all_gather_ids({'name_last' => 'bar'})).to eql []
-        end
-      end
-
-      context 'w 2 search terms' do
-        describe 'w 2 matching terms' do
-          before do
-            @params = {
-              'name_last' => 'Anders',
-              'email' => 'bar@example.com'}
-          end
-          it { expect(@o.column_all_gather_ids @params).to eql [] }
-        end
-
-        describe 'w 1 matching term' do
-          before do
-            @params = {
-              'name_last' => 'Brady',
-              'email' => 'wherever@example.com'}
-          end
-          it { expect(@o.column_all_gather_ids @params).to match_array [] }
-        end
-
-        describe 'w/o matching term' do
-          before do
-            @params = {
-              'name_last' => 'Name',
-              'email' => 'wherever@example.com'}
-          end
-          it { expect(@o.column_all_gather_ids @params).to eql [] }
-        end
-      end
-    end
-  end
-
   context 'super #custom_all_gather_ids' do
     before { bld }
     context 'w 1 string field' do
