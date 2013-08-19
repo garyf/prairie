@@ -71,19 +71,19 @@ class Search
     hsh.sort.reverse
   end
 
-  def any_agree_ids_for_find(params)
-    ids = column_any_gather_ids(params) + custom_any_gather_ids(params)
+  def any_agree_ids_for_find(params, all_agree_ids)
+    ids = column_any_gather_ids(params) + custom_any_gather_ids(params) - all_agree_ids
     return [] if ids.empty?
     parent_ids_by_agree_frequency(ids)
   end
 
   def all_and_any_agree_ids_for_find(params)
-    result_ids = all_agree_ids_for_find(params)
-    if result_ids.length < RESULTS_COUNT_MIN
-      any_agree_ids = any_agree_ids_for_find(params) - result_ids
-      result_ids = result_ids + any_agree_ids
+    all_agree_ids = all_agree_ids_for_find(params)
+    if any_agree_ids_few?(all_agree_ids)
+      [all_agree_ids, any_agree_ids_for_find(params, all_agree_ids)]
+    else
+      [all_agree_ids, []]
     end
-    result_ids
   end
 
 private
@@ -97,5 +97,9 @@ private
       return [] if result_ids.empty?
     end
     result_ids
+  end
+
+  def any_agree_ids_few?(all_agree_ids)
+    all_agree_ids.length < RESULTS_COUNT_MIN
   end
 end

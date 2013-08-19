@@ -77,31 +77,57 @@ describe Search do
     before do
       bld
       @params = {'these' => 'params'}
+      @all_agree_ids = [13, 21]
     end
     context 'w #column_any_gather_ids' do
-      before { @o.should_receive(:column_any_gather_ids).with(@params) { [5, 8, 3] } }
+      before { @o.should_receive(:column_any_gather_ids).with(@params) { [5, 8, 3, 21] } }
       describe 'w #custom_any_gather_ids' do
-        before { @o.should_receive(:custom_any_gather_ids).with(@params) { [8, 13, 5] } }
-        it { expect(@o.any_agree_ids_for_find @params).to match_array [[2, [5, 8]], [1, [3, 13]]] }
+        before { @o.should_receive(:custom_any_gather_ids).with(@params) { [8, 13, 5, 34] } }
+        it { expect(@o.any_agree_ids_for_find @params, @all_agree_ids).to match_array [[2, [5, 8]], [1, [3, 34]]] }
       end
 
       describe 'w/o #custom_any_gather_ids' do
         before { @o.should_receive(:custom_any_gather_ids).with(@params) { [] } }
-        it { expect(@o.any_agree_ids_for_find @params).to match_array [[1, [5, 8, 3]]] }
+        it { expect(@o.any_agree_ids_for_find @params, @all_agree_ids).to match_array [[1, [5, 8, 3]]] }
       end
     end
 
     context 'w/o #column_any_gather_ids' do
       before { @o.should_receive(:column_any_gather_ids).with(@params) { [] } }
       describe 'w #custom_any_gather_ids' do
-        before { @o.should_receive(:custom_any_gather_ids).with(@params) { [55, 8, 34, 8, 8] } }
-        it { expect(@o.any_agree_ids_for_find @params).to match_array [[3, [8]], [1, [55, 34]]] }
+        before { @o.should_receive(:custom_any_gather_ids).with(@params) { [8, 13, 5, 34, 8, 8] } }
+        it { expect(@o.any_agree_ids_for_find @params, @all_agree_ids).to match_array [[3, [8]], [1, [5, 34]]] }
       end
 
       describe 'w/o #custom_any_gather_ids' do
         before { @o.should_receive(:custom_any_gather_ids).with(@params) { [] } }
-        it { expect(@o.any_agree_ids_for_find @params).to eql [] }
+        it { expect(@o.any_agree_ids_for_find @params, @all_agree_ids).to eql [] }
       end
+    end
+  end
+
+  context '#all_and_any_agree_ids_for_find' do
+    before do
+      bld
+      @params = {'these' => 'params'}
+      @all_agree_ids = double('array of all_agree_ids')
+      @o.should_receive(:all_agree_ids_for_find).with(@params) { @all_agree_ids }
+    end
+    describe 'w #any_agree_ids_few?' do
+      before do
+        @all_agree_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN - 1 }
+        @any_agree_ids = double('array of any_agree_ids')
+        @o.should_receive(:any_agree_ids_for_find).with(@params, @all_agree_ids) { @any_agree_ids }
+      end
+      it { expect(@o.all_and_any_agree_ids_for_find @params).to eql [@all_agree_ids, @any_agree_ids] }
+    end
+
+    describe 'w/o #any_agree_ids_few?' do
+      before do
+        @all_agree_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN }
+        @o.should_not_receive(:any_agree_ids_for_find)
+      end
+      it { expect(@o.all_and_any_agree_ids_for_find @params).to eql [@all_agree_ids, []] }
     end
   end
 
