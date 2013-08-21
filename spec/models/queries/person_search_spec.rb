@@ -43,7 +43,7 @@ describe PersonSearch do
       end
 
       context 'w 2 search terms' do
-        describe 'w 1 all_agree term' do
+        describe 'w 1 all_agree parent' do
           before do
             @params = {
               'email' => 'foo@example.com',
@@ -55,7 +55,7 @@ describe PersonSearch do
           end
         end
 
-        describe 'w/o any all_agree terms' do
+        describe 'w/o any all_agree parents' do
           before do
             @params = {
               'email' => 'foo@example.com',

@@ -33,15 +33,6 @@ class Search
     column_parent_appearances(columns, params)
   end
 
-  def custom_parent_appearances(hsh)
-    ids = []
-    hsh.each do |k, v|
-      o = CustomField.find(k.split('_')[1])
-      ids = ids + o.parents_find_by_gist(v)
-    end
-    ids
-  end
-
   def custom_any_gather_ids(params)
     hsh = params_custom_w_values(params)
     return [] if hsh.empty?
@@ -97,6 +88,15 @@ private
       return [] if result_ids.empty?
     end
     result_ids
+  end
+
+  def custom_parent_appearances(hsh)
+    ids = []
+    hsh.each do |k, v|
+      o = CustomField.find(k.split('_')[1])
+      ids = ids + o.parents_find_by_gist(v)
+    end
+    ids
   end
 
   def any_agree_ids_few?(all_agree_ids)

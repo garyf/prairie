@@ -1,57 +1,72 @@
 require 'spec_helper'
 
 describe Search do
-  context '#custom_all_gather_ids' do
+  context '#custom_all_gather_ids, #custom_any_gather_ids' do
     before { bld }
-    context 'w 1 string field' do
-      before { @string_field = string_field_mk(id: 34) }
-      context 'w a search term' do
-        before { CustomField.should_receive(:find).with('34') { @string_field } }
-        describe 'w matching term' do
-          before do
-            @string_field.should_receive(:parents_find_by_gist).with('foo') { [8, 55] }
-            @params = {"field_#{@string_field.id}_gist" => 'foo'}
-          end
-          it { expect(@o.custom_all_gather_ids @params).to eql [8, 55] }
+    context 'w 3 custom fields' do
+      before do
+        @numeric_field = numeric_field_mk(id: 55)
+        @select_field = select_field_mk(id: 34)
+        @string_field = string_field_mk(id: 21)
+      end
+      describe 'w/o any params_custom_w_values' do
+        before do
+          @params = {
+            "field_#{@numeric_field.id}_gist" => '',
+            "field_#{@select_field.id}_gist" => '',
+            "field_#{@string_field.id}_gist" => ''}
         end
+        it { expect(@o.custom_all_gather_ids @params).to be nil }
+        it { expect(@o.custom_any_gather_ids @params).to eql [] }
+      end
 
-        describe 'w/o matching term' do
-          before do
-            @string_field.should_receive(:parents_find_by_gist).with('bar') { [] }
-            @params = {"field_#{@string_field.id}_gist" => 'bar'}
-          end
+      context 'w 1 search term' do
+        before do
+          CustomField.should_receive(:find).with('55') { @numeric_field }
+          @params = {
+            "field_#{@numeric_field.id}_gist" => '89',
+            "field_#{@select_field.id}_gist" => '',
+            "field_#{@string_field.id}_gist" => ''}
+        end
+        describe 'w/o any matching' do
+          before { @numeric_field.should_receive(:parents_find_by_gist).with('89') { [] } }
           it { expect(@o.custom_all_gather_ids @params).to eql [] }
+          it { expect(@o.custom_any_gather_ids @params).to eql [] }
         end
 
-        context 'w 1 numeric field w 2 search terms' do
-          before do
-            @numeric_field = numeric_field_mk(id: 55)
-            CustomField.stub(:find).with('55') { @numeric_field }
-            @params = {
-              "field_#{@string_field.id}_gist" => 'foo',
-              "field_#{@numeric_field.id}_gist" => 'bar'}
-          end
-          describe 'w 2 matching terms' do
-            before do
-              @string_field.should_receive(:parents_find_by_gist).with('foo') { [8, 55] }
-              @numeric_field.should_receive(:parents_find_by_gist).with('bar') { [8, 21] }
-            end
-            it { expect(@o.custom_all_gather_ids @params).to eql [8] }
-          end
-
-          describe 'w 1 matching term' do
-            before do
-              @string_field.should_receive(:parents_find_by_gist).with('foo') { [] }
-              @numeric_field.stub(:parents_find_by_gist).with('bar') { [8, 21] }
-            end
-            it { expect(@o.custom_all_gather_ids @params).to eql [] }
-          end
+        describe 'w 1 matching' do
+          before { @numeric_field.should_receive(:parents_find_by_gist).with('89') { [1, 2] } }
+          it { expect(@o.custom_all_gather_ids @params).to eql [1, 2] }
+          it { expect(@o.custom_any_gather_ids @params).to eql [1, 2] }
         end
       end
 
-      describe 'w/o a search term' do
-        before { CustomField.should_not_receive(:find) }
-        it { expect(@o.custom_all_gather_ids({"field_#{@string_field.id}_gist" => ''})).to be nil }
+      context 'w 2 search terms' do
+        before do
+          CustomField.should_receive(:find).with('34') { @select_field }
+          CustomField.should_receive(:find).with('21') { @string_field }
+          @params = {
+            "field_#{@numeric_field.id}_gist" => '',
+            "field_#{@select_field.id}_gist" => '8',
+            "field_#{@string_field.id}_gist" => 'foo'}
+        end
+        describe 'w 1 all_agree parent' do
+          before do
+            @select_field.should_receive(:parents_find_by_gist).with('8') { [3, 4] }
+            @string_field.should_receive(:parents_find_by_gist).with('foo') { [4, 5] }
+          end
+          it { expect(@o.custom_all_gather_ids @params).to eql [4] }
+          it { expect(@o.custom_any_gather_ids @params).to eql [3, 4, 4, 5] }
+        end
+
+        describe 'w/o any all_agree parents' do
+          before do
+            @select_field.should_receive(:parents_find_by_gist).with('8') { [3, 4] }
+            @string_field.should_receive(:parents_find_by_gist).with('foo') { [5, 6] }
+          end
+          it { expect(@o.custom_all_gather_ids @params).to eql [] }
+          it { expect(@o.custom_any_gather_ids @params).to eql [3, 4, 5, 6] }
+        end
       end
     end
   end
@@ -99,50 +114,6 @@ describe Search do
       describe 'w/o #custom_all_gather_ids' do
         before { @o.should_receive(:custom_all_gather_ids).with(@params) { nil } }
         it { expect(@o.all_agree_ids_for_find @params).to match_array [5, 8, 13] }
-      end
-    end
-  end
-
-  context '#custom_parent_appearances' do
-    before { bld }
-    context 'w 1 string field' do
-      before do
-        @string_field = string_field_mk(id: 34)
-        CustomField.should_receive(:find).with('34') { @string_field }
-      end
-      describe 'w matching term' do
-        before { @string_field.should_receive(:parents_find_by_gist).with('foo') { [8, 55] } }
-        it { expect(@o.custom_parent_appearances({"field_#{@string_field.id}_gist" => 'foo'})).to eql [8, 55] }
-      end
-
-      describe 'w/o matching term' do
-        before { @string_field.should_receive(:parents_find_by_gist).with('bar') { [] } }
-        it { expect(@o.custom_parent_appearances({"field_#{@string_field.id}_gist" => 'bar'})).to eql [] }
-      end
-
-      context 'w 1 numeric field w 2 search terms' do
-        before do
-          @numeric_field = numeric_field_mk(id: 55)
-          CustomField.stub(:find).with('55') { @numeric_field }
-          @hsh = {
-            "field_#{@string_field.id}_gist" => 'foo',
-            "field_#{@numeric_field.id}_gist" => 'bar'}
-        end
-        describe 'w 2 matching terms' do
-          before do
-            @string_field.should_receive(:parents_find_by_gist).with('foo') { [8, 55] }
-            @numeric_field.should_receive(:parents_find_by_gist).with('bar') { [8, 21] }
-          end
-          it { expect(@o.custom_parent_appearances(@hsh)).to eql [8, 55, 8, 21] }
-        end
-
-        describe 'w 1 matching term' do
-          before do
-            @string_field.should_receive(:parents_find_by_gist).with('foo') { [] }
-            @numeric_field.stub(:parents_find_by_gist).with('bar') { [8, 21] }
-          end
-          it { expect(@o.custom_parent_appearances(@hsh)).to eql [8, 21] }
-        end
       end
     end
   end
