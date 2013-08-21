@@ -3,18 +3,10 @@ class Search
   FIELD_GIST_KEY = %r{^field_\d+_gist$}
   RESULTS_COUNT_MIN = 55
 
-  def columns_w_values(params)
-    columns_searchable.delete_if { |sym| params[sym.id2name].blank? }
-  end
-
   def column_all_gather_ids(params)
     columns = columns_w_values(params)
     return if columns.empty?
     column_all_agree(columns, params)
-  end
-
-  def params_custom_w_values(params)
-    params.select { |k, v| k =~ FIELD_GIST_KEY unless v.blank? }
   end
 
   def custom_all_gather_ids(params)
@@ -87,6 +79,14 @@ class Search
   end
 
 private
+
+  def columns_w_values(params)
+    columns_searchable.delete_if { |sym| params[sym.id2name].blank? }
+  end
+
+  def params_custom_w_values(params)
+    params.select { |k, v| k =~ FIELD_GIST_KEY unless v.blank? }
+  end
 
   def custom_all_agree(hsh)
     result_ids = nil
