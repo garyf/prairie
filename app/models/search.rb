@@ -62,7 +62,7 @@ class Search
 
   def all_and_any_agree_ids_for_find(params)
     all_agree_ids = all_agree_ids_for_find(params)
-    if any_agree_ids_few?(all_agree_ids)
+    if all_agree_ids_few?(all_agree_ids)
       [all_agree_ids, any_agree_ids_for_find(params, all_agree_ids)]
     else
       [all_agree_ids, []]
@@ -104,7 +104,7 @@ private
     ids
   end
 
-  def any_agree_ids_few?(all_agree_ids)
+  def all_agree_ids_few?(all_agree_ids)
     all_agree_ids.length < RESULTS_COUNT_MIN
   end
 end

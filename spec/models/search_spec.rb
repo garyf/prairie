@@ -186,7 +186,7 @@ describe Search do
       @all_agree_ids = double('array of all_agree_ids')
       @o.should_receive(:all_agree_ids_for_find).with(@params) { @all_agree_ids }
     end
-    describe 'w #any_agree_ids_few?' do
+    describe 'w #all_agree_ids_few?' do
       before do
         @all_agree_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN - 1 }
         @any_agree_ids = double('array of any_agree_ids')
@@ -195,7 +195,7 @@ describe Search do
       it { expect(@o.all_and_any_agree_ids_for_find @params).to eql [@all_agree_ids, @any_agree_ids] }
     end
 
-    describe 'w/o #any_agree_ids_few?' do
+    describe 'w/o #all_agree_ids_few?' do
       before do
         @all_agree_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN }
         @o.should_not_receive(:any_agree_ids_for_find)
