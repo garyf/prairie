@@ -22,8 +22,4 @@ class Person < ActiveRecord::Base
   def self.id_where_id(ids)
     select(:id).where(id: ids)
   end
-
-  def self.name_last_where_id_by_name_last(ids)
-    select(:id, :name_last).where(id: ids).order(:name_last)
-  end
 end

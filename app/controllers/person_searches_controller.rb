@@ -11,7 +11,7 @@ class PersonSearchesController < ApplicationController
   end
 
   def create
-    @people = PersonSearch.new.people(params)
+    @people = PersonSearch.new.results_united(params)
     render :index
   end
 end

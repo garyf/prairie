@@ -11,7 +11,7 @@ feature 'Location search w/o custom field' do
     fill_in 'name', with: 'Tysons'
     click_button 'Search'
     expect(page).to have_content 'Search results'
-    expect(page).to have_content 'By name'
+    expect(page).to have_content 'By relevance'
     click_link 'Tysons'
     expect(page).to have_content 'mall'
   end

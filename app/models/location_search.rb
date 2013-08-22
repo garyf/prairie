@@ -1,10 +1,5 @@
 class LocationSearch < Search
 
-  def locations(params)
-    result_ids = all_agree_ids_for_find(params)
-    result_ids.empty? ? [] : Location.name_where_id_by_name(result_ids)
-  end
-
 private
 
   def columns_searchable() [

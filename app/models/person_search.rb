@@ -1,10 +1,5 @@
 class PersonSearch < Search
 
-  def people(params)
-    result_ids = all_agree_ids_for_find(params)
-    result_ids.empty? ? [] : Person.name_last_where_id_by_name_last(result_ids)
-  end
-
 private
 
   def columns_searchable() [

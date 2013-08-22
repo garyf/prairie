@@ -11,7 +11,7 @@ feature 'Person search w/o custom field' do
     fill_in 'name_last', with: 'Edwards'
     click_button 'Search'
     expect(page).to have_content 'Search results'
-    expect(page).to have_content 'By last name'
+    expect(page).to have_content 'By relevance'
     click_link 'Edwards'
     expect(page).to have_content 'mike@example.com'
   end

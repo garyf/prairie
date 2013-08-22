@@ -22,8 +22,4 @@ class Location < ActiveRecord::Base
   def self.id_where_id(ids)
     select(:id).where(id: ids)
   end
-
-  def self.name_where_id_by_name(ids)
-    select(:id, :name).where(id: ids).order(:name)
-  end
 end

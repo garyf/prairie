@@ -11,7 +11,7 @@ class LocationSearchesController < ApplicationController
   end
 
   def create
-    @locations = LocationSearch.new.locations(params)
+    @locations = LocationSearch.new.results_united(params)
     render :index
   end
 end
