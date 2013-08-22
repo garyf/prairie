@@ -69,6 +69,11 @@ class Search
     end
   end
 
+  def results_united(params)
+    grouped_ids = all_and_any_agree_ids_for_find(params)
+    all_agree_locations(grouped_ids[0]) + any_agree_locations(grouped_ids[1])
+  end
+
 private
 
   def columns_w_values(params)
