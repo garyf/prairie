@@ -36,7 +36,7 @@ class Search
   def custom_any_gather_ids(params)
     hsh = params_custom_w_values(params)
     return [] if hsh.empty?
-    custom_parent_appearances(hsh)
+    custom_any_agree(hsh)
   end
 
   # return a hash with {k, v} as {parent_id: agree_frequency}
@@ -85,17 +85,17 @@ private
   end
 
   def custom_all_agree(hsh)
-    result_ids = nil
+    ids = nil
     hsh.each do |k, v|
       o = CustomField.find(k.split('_')[1])
       value_ids = o.parents_find_by_gist(v)
-      result_ids = result_ids ? value_ids & result_ids : value_ids
-      return [] if result_ids.empty?
+      ids = ids ? value_ids & ids : value_ids
+      return [] if ids.empty?
     end
-    result_ids
+    ids
   end
 
-  def custom_parent_appearances(hsh)
+  def custom_any_agree(hsh)
     ids = []
     hsh.each do |k, v|
       o = CustomField.find(k.split('_')[1])
