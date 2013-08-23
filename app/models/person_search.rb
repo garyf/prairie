@@ -19,7 +19,7 @@ private
     result_ids
   end
 
-  def column_parent_appearances(columns, params)
+  def column_any_agree(columns, params)
     ids = []
     columns.each { |c| ids = ids + Person.id_where_case_insensitive_value(c, params[c.id2name]).pluck(:id) }
     ids

@@ -30,7 +30,7 @@ class Search
   def column_any_gather_ids(params)
     columns = columns_w_values(params)
     return [] if columns.empty?
-    column_parent_appearances(columns, params)
+    column_any_agree(columns, params)
   end
 
   def custom_any_gather_ids(params)
