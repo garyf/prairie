@@ -24,6 +24,12 @@ private
     ids
   end
 
+  def column_substring_agree(columns, params)
+    ids = []
+    columns.each { |c| ids = ids + Location.id_where_ILIKE_value(c, params[c.id2name]).pluck(:id) }
+    ids
+  end
+
   def all_agree_locations(all_agree_ids)
     all_agree_ids.empty? ? [] : Location.find(all_agree_ids)
   end

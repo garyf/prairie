@@ -118,35 +118,43 @@ describe Search do
     end
   end
 
-  context 'w 4 parents appearing' do
+  describe '#parent_distribution' do
     before do
       bld
       @parent_ids = [6, 6, 1, 1, 4, 3, 5, 5, 5, 5, 5, 2, 2, 2]
     end
-    describe '#parent_distribution' do
-      subject { @o.parent_distribution @parent_ids }
-      it do
-        expect(subject).to include 1 => 2
-        expect(subject).to include 2 => 3
-        expect(subject).to include 3 => 1
-        expect(subject).to include 4 => 1
-        expect(subject).to include 5 => 5
-      end
-    end
-
-    describe '#parent_ids_by_agree_frequency' do
-      subject { @o.parent_ids_by_agree_frequency @parent_ids }
-      it do
-        expect(subject).to match_array [[5, [5]], [3, [2]], [2, [6, 1]], [1, [4, 3]]]
-        expect(subject[0][0]).to eql 5
-        expect(subject[1][0]).to eql 3
-        expect(subject[2][0]).to eql 2
-        expect(subject[3][0]).to eql 1
-      end
+    subject { @o.parent_distribution @parent_ids }
+    it do
+      expect(subject).to include 1 => 2
+      expect(subject).to include 2 => 3
+      expect(subject).to include 3 => 1
+      expect(subject).to include 4 => 1
+      expect(subject).to include 5 => 5
     end
   end
 
-  context '#any_agree_ids_for_find' do
+  describe '#ids_grouped_by_agree_frequency' do
+    before do
+      bld
+      @parent_distribution_hsh = {
+        6 => 2,
+        1 => 2,
+        2 => 3,
+        4 => 1,
+        3 => 1,
+        5 => 5}
+    end
+    subject { @o.ids_grouped_by_agree_frequency(@parent_distribution_hsh) }
+    it do
+      expect(subject).to match_array [[5, [5]], [3, [2]], [2, [6, 1]], [1, [4, 3]]]
+      expect(subject[0][0]).to eql 5
+      expect(subject[1][0]).to eql 3
+      expect(subject[2][0]).to eql 2
+      expect(subject[3][0]).to eql 1
+    end
+  end
+
+  context '#any_agree_frequency_by_parent' do
     before do
       bld
       @params = {'these' => 'params'}
@@ -155,26 +163,38 @@ describe Search do
     context 'w #column_any_gather_ids' do
       before { @o.should_receive(:column_any_gather_ids).with(@params) { [5, 8, 3, 21] } }
       describe 'w #custom_any_gather_ids' do
-        before { @o.should_receive(:custom_any_gather_ids).with(@params) { [8, 13, 5, 34] } }
-        it { expect(@o.any_agree_ids_for_find @params, @all_agree_ids).to match_array [[2, [5, 8]], [1, [3, 34]]] }
+        before do
+          @o.should_receive(:custom_any_gather_ids).with(@params) { [8, 13, 5, 34] }
+          @o.should_receive(:parent_distribution).with([5, 8, 3, 8, 5, 34]) { 'pd_hsh' }
+        end
+        it { expect(@o.any_agree_frequency_by_parent @params, @all_agree_ids).to eql 'pd_hsh' }
       end
 
       describe 'w/o #custom_any_gather_ids' do
-        before { @o.should_receive(:custom_any_gather_ids).with(@params) { [] } }
-        it { expect(@o.any_agree_ids_for_find @params, @all_agree_ids).to match_array [[1, [5, 8, 3]]] }
+        before do
+          @o.should_receive(:custom_any_gather_ids).with(@params) { [] }
+          @o.should_receive(:parent_distribution).with([5, 8, 3]) { 'pd_hsh' }
+        end
+        it { expect(@o.any_agree_frequency_by_parent @params, @all_agree_ids).to eql 'pd_hsh' }
       end
     end
 
     context 'w/o #column_any_gather_ids' do
       before { @o.should_receive(:column_any_gather_ids).with(@params) { [] } }
       describe 'w #custom_any_gather_ids' do
-        before { @o.should_receive(:custom_any_gather_ids).with(@params) { [8, 13, 5, 34, 8, 8] } }
-        it { expect(@o.any_agree_ids_for_find @params, @all_agree_ids).to match_array [[3, [8]], [1, [5, 34]]] }
+        before do
+          @o.should_receive(:custom_any_gather_ids).with(@params) { [8, 13, 5, 34, 8, 8] }
+          @o.should_receive(:parent_distribution).with([8, 5, 34, 8, 8]) { 'pd_hsh' }
+        end
+        it { expect(@o.any_agree_frequency_by_parent @params, @all_agree_ids).to eql 'pd_hsh' }
       end
 
       describe 'w/o #custom_any_gather_ids' do
-        before { @o.should_receive(:custom_any_gather_ids).with(@params) { [] } }
-        it { expect(@o.any_agree_ids_for_find @params, @all_agree_ids).to eql [] }
+        before do
+          @o.should_receive(:custom_any_gather_ids).with(@params) { [] }
+          @o.should_not_receive(:parent_distribution)
+        end
+        it { expect(@o.any_agree_frequency_by_parent @params, @all_agree_ids).to be nil }
       end
     end
   end

@@ -39,6 +39,16 @@ class Search
     custom_any_agree(hsh)
   end
 
+  def column_substring_gather_ids(params)
+    columns = columns_w_values(params)
+    return if columns.empty?
+    column_substring_agree(columns, params)
+  end
+
+  def custom_substring_gather_ids(params)
+    [] # stub
+  end
+
   # return a hash with {k, v} as {parent_id: agree_frequency}
   def parent_distribution(ids)
     ids.inject(Hash.new 0) do |hsh, i|
@@ -47,26 +57,40 @@ class Search
     end
   end
 
+  def any_agree_frequency_by_parent(params, all_agree_ids)
+    ids = column_any_gather_ids(params) + custom_any_gather_ids(params) - all_agree_ids
+    return if ids.empty?
+    parent_distribution(ids)
+  end
+
+  def substring_agree_frequency_by_parent(params, all_agree_ids, any_agree_ids)
+    ids = column_substring_gather_ids(params) + custom_substring_gather_ids(params) - all_agree_ids - any_agree_ids
+    return if ids.empty?
+    parent_distribution(ids)
+  end
+
   # return an array of pairs with each pair as [agree_frequency, [parent_ids]], ordered by frequency descending
-  def parent_ids_by_agree_frequency(parent_ids)
+  def ids_grouped_by_agree_frequency(parent_distribution_hsh)
     hsh = {}
-    parent_distribution(parent_ids).each { |k, v| hsh[v] ? (hsh[v] << k) : hsh[v] = [k] }
+    parent_distribution_hsh.each { |k, v| hsh[v] ? (hsh[v] << k) : hsh[v] = [k] }
     hsh.sort.reverse
   end
 
-  def any_agree_ids_for_find(params, all_agree_ids)
-    ids = column_any_gather_ids(params) + custom_any_gather_ids(params) - all_agree_ids
-    return [] if ids.empty?
-    parent_ids_by_agree_frequency(ids)
+  def any_agree_ids_for_find(any_agree_hsh)
+    return [] if any_agree_hsh.empty?
+    ids_grouped_by_agree_frequency(any_agree_hsh)
+  end
+
+  def substring_agree_ids_for_find(substring_agree_hsh)
+    return [] if substring_agree_hsh.empty?
+    ids_grouped_by_agree_frequency(substring_agree_hsh)
   end
 
   def all_and_any_agree_ids_for_find(params)
     all_agree_ids = all_agree_ids_for_find(params)
-    if all_agree_ids_few?(all_agree_ids)
-      [all_agree_ids, any_agree_ids_for_find(params, all_agree_ids)]
-    else
-      [all_agree_ids, []]
-    end
+    return [all_agree_ids, []] unless all_agree_ids_few?(all_agree_ids)
+    any_agree_hsh = any_agree_frequency_by_parent(params, all_agree_ids)
+    [all_agree_ids, any_agree_ids_for_find(any_agree_hsh)]
   end
 
   def results_united(params)
@@ -106,5 +130,9 @@ private
 
   def all_agree_ids_few?(all_agree_ids)
     all_agree_ids.length < RESULTS_COUNT_MIN
+  end
+
+  def any_agree_ids_few?(all_agree_ids, any_agree_ids)
+    all_agree_ids.length + any_agree_ids.length < RESULTS_COUNT_MIN
   end
 end
