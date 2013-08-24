@@ -180,9 +180,9 @@ describe Search do
     end
 
     context 'w/o #column_any_gather_ids' do
-      before { @o.should_receive(:column_any_gather_ids).with(@params) { [] } }
       describe 'w #custom_any_gather_ids' do
         before do
+          @o.should_receive(:column_any_gather_ids).with(@params) { [] }
           @o.should_receive(:custom_any_gather_ids).with(@params) { [8, 13, 5, 34, 8, 8] }
           @o.should_receive(:parent_distribution).with([8, 5, 34, 8, 8]) { 'pd_hsh' }
         end
@@ -191,10 +191,12 @@ describe Search do
 
       describe 'w/o #custom_any_gather_ids' do
         before do
+          pending 'anomaly'
+          @o.should_receive(:column_any_gather_ids).with(@params) { [] }
           @o.should_receive(:custom_any_gather_ids).with(@params) { [] }
           @o.should_not_receive(:parent_distribution)
         end
-        it { expect(@o.any_agree_frequency_by_parent @params, @all_agree_ids).to be nil }
+        it { expect(@o.any_agree_frequency_by_parent @params, @all_agree_ids).to eql {} }
       end
     end
   end
@@ -203,16 +205,17 @@ describe Search do
     before do
       bld
       @params = {'these' => 'params'}
-      @all_agree_ids = double('array of all_agree_ids')
+      @all_agree_ids = [3, 5, 8, 13]
       @o.should_receive(:all_agree_ids_for_find).with(@params) { @all_agree_ids }
     end
     describe 'w #all_agree_ids_few?' do
       before do
         @all_agree_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN - 1 }
-        @any_agree_ids = double('array of any_agree_ids')
-        @o.should_receive(:any_agree_ids_for_find).with(@params, @all_agree_ids) { @any_agree_ids }
+        @parent_distribution = {21 => 3, 34 => 7}
+        @o.should_receive(:any_agree_frequency_by_parent).with(@params, @all_agree_ids) { @parent_distribution }
+        @o.should_receive(:any_agree_ids_for_find).with(@parent_distribution) { 'any_agree_grouped_ids' }
       end
-      it { expect(@o.all_and_any_agree_ids_for_find @params).to eql [@all_agree_ids, @any_agree_ids] }
+      it { expect(@o.all_and_any_agree_ids_for_find @params).to eql [@all_agree_ids, 'any_agree_grouped_ids'] }
     end
 
     describe 'w/o #all_agree_ids_few?' do

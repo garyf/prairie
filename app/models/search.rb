@@ -59,13 +59,12 @@ class Search
 
   def any_agree_frequency_by_parent(params, all_agree_ids)
     ids = column_any_gather_ids(params) + custom_any_gather_ids(params) - all_agree_ids
-    return if ids.empty?
-    parent_distribution(ids)
+    ids.empty? ? {} : parent_distribution(ids)
   end
 
   def substring_agree_frequency_by_parent(params, all_agree_ids, any_agree_ids)
     ids = column_substring_gather_ids(params) + custom_substring_gather_ids(params) - all_agree_ids - any_agree_ids
-    return if ids.empty?
+    return {} if ids.empty?
     parent_distribution(ids)
   end
 
