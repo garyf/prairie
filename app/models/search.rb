@@ -49,7 +49,7 @@ class Search
     [] # stub
   end
 
-  # return a hash with {k, v} as {parent_id: agree_frequency}
+  # return a hash of {parent_id: agree_frequency} pairs
   def parent_distribution(ids)
     ids.inject(Hash.new 0) do |hsh, i|
       hsh[i] += 1
@@ -57,17 +57,12 @@ class Search
     end
   end
 
-  def any_agree_frequency_by_parent(params, all_agree_ids)
-    ids = column_any_gather_ids(params) + custom_any_gather_ids(params) - all_agree_ids
-    ids.empty? ? {} : parent_distribution(ids)
+  def agree_frequency_by_parent(params, all_agree_ids, any_agree_ids = [])
+    ids = column_any_gather_ids(params) + custom_any_gather_ids(params) - all_agree_ids - any_agree_ids
+    ids.any? ? parent_distribution(ids) : {}
   end
 
-  def substring_agree_frequency_by_parent(params, all_agree_ids, any_agree_ids)
-    ids = column_substring_gather_ids(params) + custom_substring_gather_ids(params) - all_agree_ids - any_agree_ids
-    ids.empty? ? {} : parent_distribution(ids)
-  end
-
-  # return an array of pairs with each pair as [agree_frequency, [parent_ids]], ordered by frequency descending
+  # return an array of [agree_frequency, [parent_ids]] pairs, ordered by frequency descending
   def ids_grouped_by_agree_frequency(parent_distribution_hsh)
     return [] if parent_distribution_hsh.empty?
     hsh = {}
@@ -78,7 +73,7 @@ class Search
   def all_and_any_agree_ids_for_find(params)
     all_agree_ids = all_agree_ids_for_find(params)
     return [all_agree_ids, []] unless all_agree_ids_few?(all_agree_ids)
-    any_agree_hsh = any_agree_frequency_by_parent(params, all_agree_ids)
+    any_agree_hsh = agree_frequency_by_parent(params, all_agree_ids)
     [all_agree_ids, ids_grouped_by_agree_frequency(any_agree_hsh)]
   end
 
