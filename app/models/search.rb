@@ -41,7 +41,7 @@ class Search
 
   def column_substring_gather_ids(params)
     columns = columns_w_values(params)
-    return if columns.empty?
+    return [] if columns.empty?
     column_substring_agree(columns, params)
   end
 
@@ -51,15 +51,19 @@ class Search
 
   # return a hash of {parent_id: agree_frequency} pairs
   def parent_distribution(ids)
+    return {} if ids.empty?
     ids.inject(Hash.new 0) do |hsh, i|
       hsh[i] += 1
       hsh
     end
   end
 
-  def agree_frequency_by_parent(params, all_agree_ids, any_agree_ids = [])
-    ids = column_any_gather_ids(params) + custom_any_gather_ids(params) - all_agree_ids - any_agree_ids
-    ids.any? ? parent_distribution(ids) : {}
+  def any_agree_ids(params, all_agree_ids)
+    column_any_gather_ids(params) + custom_any_gather_ids(params) - all_agree_ids
+  end
+
+  def substring_agree_ids(params, all_agree_ids, any_agree_ids)
+    column_substring_gather_ids(params) + custom_substring_gather_ids(params) - all_agree_ids - any_agree_ids
   end
 
   # return an array of [agree_frequency, [parent_ids]] pairs, ordered by frequency descending
@@ -70,15 +74,15 @@ class Search
     hsh.sort.reverse
   end
 
-  def all_and_any_agree_ids_for_find(params)
+  def grouped_result_ids(params)
     all_agree_ids = all_agree_ids_for_find(params)
     return [all_agree_ids, []] unless all_agree_ids_few?(all_agree_ids)
-    any_agree_hsh = agree_frequency_by_parent(params, all_agree_ids)
+    any_agree_hsh = parent_distribution(any_agree_ids params, all_agree_ids)
     [all_agree_ids, ids_grouped_by_agree_frequency(any_agree_hsh)]
   end
 
   def results_united(params)
-    grouped_ids = all_and_any_agree_ids_for_find(params)
+    grouped_ids = grouped_result_ids(params)
     all_agree_locations(grouped_ids[0]) + any_agree_locations(grouped_ids[1])
   end
 

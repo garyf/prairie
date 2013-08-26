@@ -10,7 +10,7 @@ describe PersonSearch do
       before { Person.should_receive(:find).with([21, 34]) { ['l_21','l_34'] } }
       describe 'w 1 pair of any_agree_grouped_ids' do
         before do
-          @o.should_receive(:all_and_any_agree_ids_for_find).with(@params) { [[21, 34], [[3, [5, 8]]]] }
+          @o.should_receive(:grouped_result_ids).with(@params) { [[21, 34], [[3, [5, 8]]]] }
           Person.should_receive(:find).with([5, 8]) { ['l_5','l_8'] }
         end
         subject { @o.results_united(@params) }
@@ -21,7 +21,7 @@ describe PersonSearch do
 
       describe 'w 2 pair of any_agree_grouped_ids' do
         before do
-          @o.should_receive(:all_and_any_agree_ids_for_find).with(@params) { [[21, 34], [[3, [5, 8]], [1, [55, 89]]]] }
+          @o.should_receive(:grouped_result_ids).with(@params) { [[21, 34], [[3, [5, 8]], [1, [55, 89]]]] }
           Person.should_receive(:find).with([5, 8]) { ['l_5','l_8'] }
           Person.should_receive(:find).with([55, 89]) { ['l_55','l_89'] }
         end
@@ -33,7 +33,7 @@ describe PersonSearch do
       end
 
       describe 'w/o any any_agree_grouped_ids' do
-        before { @o.should_receive(:all_and_any_agree_ids_for_find).with(@params) { [[21, 34], []] } }
+        before { @o.should_receive(:grouped_result_ids).with(@params) { [[21, 34], []] } }
         it { expect(@o.results_united(@params)).to match_array ['l_21','l_34'] }
       end
     end
@@ -41,7 +41,7 @@ describe PersonSearch do
     context 'w/o any all_agree_ids' do
       describe 'w 2 pair of any_agree_grouped_ids' do
         before do
-          @o.should_receive(:all_and_any_agree_ids_for_find).with(@params) { [[], [[3, [5, 8]], [1, [55, 89]]]] }
+          @o.should_receive(:grouped_result_ids).with(@params) { [[], [[3, [5, 8]], [1, [55, 89]]]] }
           Person.should_receive(:find).with([5, 8]) { ['l_5','l_8'] }
           Person.should_receive(:find).with([55, 89]) { ['l_55','l_89'] }
         end
