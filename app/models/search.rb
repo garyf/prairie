@@ -2,6 +2,7 @@ class Search
 
   FIELD_GIST_KEY = %r{^field_\d+_gist$}
   RESULTS_COUNT_MIN = 55
+  SUBSTRING_MIN = 3
 
   def column_all_gather_ids(params)
     columns = columns_w_values(params)
@@ -40,7 +41,7 @@ class Search
   end
 
   def column_substring_gather_ids(params)
-    columns = columns_w_values(params)
+    columns = columns_w_substring_values(params)
     return [] if columns.empty?
     column_substring_agree(columns, params)
   end
@@ -90,6 +91,13 @@ private
 
   def columns_w_values(params)
     columns_searchable.delete_if { |sym| params[sym.id2name].blank? }
+  end
+
+  def columns_w_substring_values(params)
+    columns_searchable.delete_if do |sym|
+      v = params[sym.id2name]
+      v.blank? || v.length < SUBSTRING_MIN
+    end
   end
 
   def params_custom_w_values(params)
