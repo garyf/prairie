@@ -6,14 +6,12 @@ class Search
 
   def column_all_gather_ids(params)
     columns = columns_w_values(params)
-    return if columns.empty?
-    column_all_agree(columns, params)
+    column_all_agree(columns, params) unless columns.empty?
   end
 
   def custom_all_gather_ids(params)
     hsh = params_custom_w_values(params)
-    return if hsh.empty?
-    custom_all_agree(hsh)
+    custom_all_agree(hsh) unless hsh.empty?
   end
 
   def all_agree_ids_for_find(params)
@@ -30,14 +28,12 @@ class Search
 
   def column_any_gather_ids(params)
     columns = columns_w_values(params)
-    return [] if columns.empty?
-    column_any_agree(columns, params)
+    columns.empty? ? [] : column_any_agree(columns, params)
   end
 
   def custom_any_gather_ids(params)
     hsh = params_custom_w_values(params)
-    return [] if hsh.empty?
-    custom_any_agree(hsh)
+    hsh.empty? ? [] : custom_any_agree(hsh)
   end
 
   def column_substring_gather_ids(params)
