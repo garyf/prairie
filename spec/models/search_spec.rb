@@ -225,7 +225,14 @@ describe Search do
     end
   end
 
-  context '#grouped_result_ids' do
+  context '#groups_flatten' do
+    before { bld }
+    it { expect(@o.groups_flatten []).to eql [] }
+    it { expect(@o.groups_flatten [[5, [34]], [3, [21, 55]]]).to eql [34, 21, 55] }
+    it { expect(@o.groups_flatten [[5, [34]], [3, [8, 21, 55]], [2, [89, 233]], [1, [144]]]).to eql [34, 8, 21, 55, 89, 233, 144] }
+  end
+
+  context '#result_ids_by_relevance' do
     before do
       bld
       @params = {'these' => 'params'}
@@ -248,7 +255,7 @@ describe Search do
           @o.should_receive(:substring_agree_ids).with(@params, @all_ids, @any_ids) { @substring_ids }
           @o.should_receive(:parent_distribution).with(@substring_ids) { {89 => 2, 144 => 1} }
         end
-        it { expect(@o.grouped_result_ids @params).to eql [@all_ids, [[5, [34]], [3, [21, 55]]], [2, [89]], [1, [144]]] }
+        it { expect(@o.result_ids_by_relevance @params).to eql [3, 5, 8, 13, 34, 21, 55, 89, 144] }
       end
 
       describe 'w/o #any_agree_ids_few?' do
@@ -256,7 +263,7 @@ describe Search do
           @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { false }
           @o.should_not_receive(:substring_agree_ids)
         end
-        it { expect(@o.grouped_result_ids @params).to eql [@all_ids, [[5, [34]], [3, [21, 55]]]] }
+        it { expect(@o.result_ids_by_relevance @params).to eql [3, 5, 8, 13, 34, 21, 55] }
       end
     end
 
@@ -265,7 +272,7 @@ describe Search do
         @all_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN }
         @o.should_not_receive(:any_agree_ids)
       end
-      it { expect(@o.grouped_result_ids @params).to eql [@all_ids] }
+      it { expect(@o.result_ids_by_relevance @params).to eql [@all_ids] }
     end
   end
 

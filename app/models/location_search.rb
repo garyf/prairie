@@ -1,5 +1,10 @@
 class LocationSearch < Search
 
+  def results_find(params)
+    ids = result_ids_by_relevance(params)
+    ids.empty? ? [] : Location.find(ids)
+  end
+
 private
 
   def columns_searchable() [
@@ -28,16 +33,5 @@ private
     ids = []
     columns.each { |c| ids = ids + Location.id_where_ILIKE_value(c, params[c.id2name]).pluck(:id) }
     ids
-  end
-
-  def all_agree_locations(all_agree_ids)
-    all_agree_ids.empty? ? [] : Location.find(all_agree_ids)
-  end
-
-  def any_agree_locations(ids_by_agree_frequency)
-    return [] if ids_by_agree_frequency.empty?
-    ary = []
-    ids_by_agree_frequency.each { |pair| ary = ary + Location.find(pair[1]) }
-    ary
   end
 end

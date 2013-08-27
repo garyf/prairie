@@ -21,7 +21,7 @@ describe LocationSearchesController do
 
   describe 'POST create' do
     before do
-      LocationSearch.stub_chain(:new, :results_united).with({'controller' => 'location_searches', 'action' => 'create'}.merge(valid_params)) { ['o1','o2'] }
+      LocationSearch.stub_chain(:new, :results_find).with({'controller' => 'location_searches', 'action' => 'create'}.merge(valid_params)) { ['o1','o2'] }
       post :create, valid_params
     end
     it do

@@ -21,7 +21,7 @@ describe PersonSearchesController do
 
   describe 'POST create' do
     before do
-      PersonSearch.stub_chain(:new, :results_united).with({'controller' => 'person_searches', 'action' => 'create'}.merge(valid_params)) { ['p1','p2'] }
+      PersonSearch.stub_chain(:new, :results_find).with({'controller' => 'person_searches', 'action' => 'create'}.merge(valid_params)) { ['p1','p2'] }
       post :create, valid_params
     end
     it do

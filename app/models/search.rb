@@ -71,20 +71,20 @@ class Search
     hsh.sort.reverse
   end
 
-  def grouped_result_ids(params)
+  # return an array of ids, preserving their 'by relevance' order
+  def groups_flatten(grouped_ids)
+    grouped_ids.inject([]) { |ary, pair| ary + pair[1] }
+  end
+
+  def result_ids_by_relevance(params)
     all_ids = all_agree_ids_for_find(params)
     return [all_ids] unless all_agree_ids_few?(all_ids)
     any_agree_hsh = parent_distribution(any_agree_ids params, all_ids)
-    grouped_ids = [all_ids, ids_grouped_by_agree_frequency(any_agree_hsh)]
+    result_ids = all_ids + ids_by_relevance(any_agree_hsh)
     any_ids = any_agree_hsh.keys
-    return grouped_ids unless any_agree_ids_few?(all_ids, any_ids)
+    return result_ids unless any_agree_ids_few?(all_ids, any_ids)
     substring_agree_hsh = parent_distribution(substring_agree_ids params, all_ids, any_ids)
-    grouped_ids + ids_grouped_by_agree_frequency(substring_agree_hsh)
-  end
-
-  def results_united(params)
-    grouped_ids = grouped_result_ids(params)
-    all_agree_locations(grouped_ids[0]) + any_agree_locations(grouped_ids[1])
+    result_ids + ids_by_relevance(substring_agree_hsh)
   end
 
 private
@@ -130,5 +130,10 @@ private
 
   def any_agree_ids_few?(all_agree_ids, any_agree_ids)
     all_agree_ids.length + any_agree_ids.length < RESULTS_COUNT_MIN
+  end
+
+  def ids_by_relevance(parent_distribution_hsh)
+    grouped_ids = ids_grouped_by_agree_frequency(parent_distribution_hsh)
+    groups_flatten(grouped_ids)
   end
 end
