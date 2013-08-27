@@ -141,18 +141,18 @@ describe Search do
     before do
       bld
       @params = {'these' => 'params'}
-      @all_agree_ids = [13, 21]
+      @all_ids = [13, 21]
     end
     context 'w #column_any_gather_ids' do
       before { @o.should_receive(:column_any_gather_ids).with(@params) { [5, 8, 3, 21] } }
       describe 'w #custom_any_gather_ids' do
         before { @o.should_receive(:custom_any_gather_ids).with(@params) { [8, 13, 5, 34] } }
-        it { expect(@o.any_agree_ids @params, @all_agree_ids).to eql [5, 8, 3, 8, 5, 34] }
+        it { expect(@o.any_agree_ids @params, @all_ids).to eql [5, 8, 3, 8, 5, 34] }
       end
 
       describe 'w/o #custom_any_gather_ids' do
         before { @o.should_receive(:custom_any_gather_ids).with(@params) { [] } }
-        it { expect(@o.any_agree_ids @params, @all_agree_ids).to eql [5, 8, 3] }
+        it { expect(@o.any_agree_ids @params, @all_ids).to eql [5, 8, 3] }
       end
     end
 
@@ -160,12 +160,46 @@ describe Search do
       before { @o.should_receive(:column_any_gather_ids).with(@params) { [] } }
       context 'w #custom_any_gather_ids' do
         before { @o.should_receive(:custom_any_gather_ids).with(@params) { [8, 13, 5, 34] } }
-        it { expect(@o.any_agree_ids @params, @all_agree_ids).to eql [8, 5, 34] }
+        it { expect(@o.any_agree_ids @params, @all_ids).to eql [8, 5, 34] }
       end
 
       describe 'w/o #custom_any_gather_ids' do
         before { @o.should_receive(:custom_any_gather_ids).with(@params) { [] } }
-        it { expect(@o.any_agree_ids @params, @all_agree_ids).to eql [] }
+        it { expect(@o.any_agree_ids @params, @all_ids).to eql [] }
+      end
+    end
+  end
+
+  context '#substring_agree_ids' do
+    before do
+      bld
+      @params = {'these' => 'params'}
+      @all_ids = [13]
+      @any_ids = [21]
+    end
+    context 'w #column_substring_gather_ids' do
+      before { @o.should_receive(:column_substring_gather_ids).with(@params) { [5, 8, 3, 21] } }
+      describe 'w #custom_substring_gather_ids' do
+        before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [8, 13, 5, 34] } }
+        it { expect(@o.substring_agree_ids @params, @all_ids, @any_ids).to eql [5, 8, 3, 8, 5, 34] }
+      end
+
+      describe 'w/o #custom_substring_gather_ids' do
+        before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [] } }
+        it { expect(@o.substring_agree_ids @params, @all_ids, @any_ids).to eql [5, 8, 3] }
+      end
+    end
+
+    context 'w/o #column_substring_gather_ids' do
+      before { @o.should_receive(:column_substring_gather_ids).with(@params) { [] } }
+      context 'w #custom_substring_gather_ids' do
+        before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [8, 13, 5, 34] } }
+        it { expect(@o.substring_agree_ids @params, @all_ids, @any_ids).to eql [8, 5, 34] }
+      end
+
+      describe 'w/o #custom_substring_gather_ids' do
+        before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [] } }
+        it { expect(@o.substring_agree_ids @params, @all_ids, @any_ids).to eql [] }
       end
     end
   end
@@ -195,26 +229,43 @@ describe Search do
     before do
       bld
       @params = {'these' => 'params'}
-      @all_agree_ids = [3, 5, 8, 13]
-      @o.should_receive(:all_agree_ids_for_find).with(@params) { @all_agree_ids }
+      @all_ids = [3, 5, 8, 13]
+      @o.should_receive(:all_agree_ids_for_find).with(@params) { @all_ids }
     end
-    describe 'w #all_agree_ids_few?' do
+    context 'w #all_agree_ids_few?' do
       before do
-        @all_agree_ids.should_receive(:length).at_least(:once) { Search::RESULTS_COUNT_MIN - 1 }
+        @all_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN - 1 }
         @any_agree_ids = [21, 21, 21, 34, 34, 34, 34, 34, 55, 55, 55]
-        @o.should_receive(:any_agree_ids).with(@params, @all_agree_ids) { @any_agree_ids }
-        @parent_distribution = {21 => 3, 34 => 5, 55 => 3}
-        @o.should_receive(:parent_distribution).with(@any_agree_ids) { @parent_distribution }
+        @o.should_receive(:any_agree_ids).with(@params, @all_ids) { @any_agree_ids }
+        @any_pd = {21 => 3, 34 => 5, 55 => 3}
+        @o.should_receive(:parent_distribution).with(@any_agree_ids) { @any_pd }
+        @any_ids = @any_pd.keys
       end
-      it { expect(@o.grouped_result_ids @params).to eql [@all_agree_ids, [[5, [34]], [3, [21, 55]]]] }
+      describe 'w #any_agree_ids_few?' do
+        before do
+          @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { true }
+          @substring_ids = [89, 144, 89]
+          @o.should_receive(:substring_agree_ids).with(@params, @all_ids, @any_ids) { @substring_ids }
+          @o.should_receive(:parent_distribution).with(@substring_ids) { {89 => 2, 144 => 1} }
+        end
+        it { expect(@o.grouped_result_ids @params).to eql [@all_ids, [[5, [34]], [3, [21, 55]]], [2, [89]], [1, [144]]] }
+      end
+
+      describe 'w/o #any_agree_ids_few?' do
+        before do
+          @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { false }
+          @o.should_not_receive(:substring_agree_ids)
+        end
+        it { expect(@o.grouped_result_ids @params).to eql [@all_ids, [[5, [34]], [3, [21, 55]]]] }
+      end
     end
 
     describe 'w/o #all_agree_ids_few?' do
       before do
-        @all_agree_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN }
-        @o.should_not_receive(:any_agree_ids_for_find)
+        @all_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN }
+        @o.should_not_receive(:any_agree_ids)
       end
-      it { expect(@o.grouped_result_ids @params).to eql [@all_agree_ids, []] }
+      it { expect(@o.grouped_result_ids @params).to eql [@all_ids] }
     end
   end
 
