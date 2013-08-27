@@ -55,12 +55,12 @@ class Search
     end
   end
 
-  def any_agree_ids(params, all_agree_ids)
-    column_any_gather_ids(params) + custom_any_gather_ids(params) - all_agree_ids
+  def any_agree_ids_for_find(params, all_ids)
+    column_any_gather_ids(params) + custom_any_gather_ids(params) - all_ids
   end
 
-  def substring_agree_ids(params, all_agree_ids, any_agree_ids)
-    column_substring_gather_ids(params) + custom_substring_gather_ids(params) - all_agree_ids - any_agree_ids
+  def substring_agree_ids_for_find(params, all_ids, any_ids)
+    column_substring_gather_ids(params) + custom_substring_gather_ids(params) - all_ids - any_ids
   end
 
   # return an array of [agree_frequency, [parent_ids]] pairs, ordered by frequency descending
@@ -79,11 +79,11 @@ class Search
   def result_ids_by_relevance(params)
     all_ids = all_agree_ids_for_find(params)
     return [all_ids] unless all_agree_ids_few?(all_ids)
-    any_agree_hsh = parent_distribution(any_agree_ids params, all_ids)
+    any_agree_hsh = parent_distribution(any_agree_ids_for_find params, all_ids)
     result_ids = all_ids + ids_by_relevance(any_agree_hsh)
     any_ids = any_agree_hsh.keys
     return result_ids unless any_agree_ids_few?(all_ids, any_ids)
-    substring_agree_hsh = parent_distribution(substring_agree_ids params, all_ids, any_ids)
+    substring_agree_hsh = parent_distribution(substring_agree_ids_for_find params, all_ids, any_ids)
     result_ids + ids_by_relevance(substring_agree_hsh)
   end
 
@@ -124,12 +124,12 @@ private
     ids
   end
 
-  def all_agree_ids_few?(all_agree_ids)
-    all_agree_ids.length < RESULTS_COUNT_MIN
+  def all_agree_ids_few?(all_ids)
+    all_ids.length < RESULTS_COUNT_MIN
   end
 
-  def any_agree_ids_few?(all_agree_ids, any_agree_ids)
-    all_agree_ids.length + any_agree_ids.length < RESULTS_COUNT_MIN
+  def any_agree_ids_few?(all_ids, any_ids)
+    all_ids.length + any_ids.length < RESULTS_COUNT_MIN
   end
 
   def ids_by_relevance(parent_distribution_hsh)
