@@ -1,5 +1,7 @@
 class Search
 
+  include Redis::Objects
+
   FIELD_GIST_KEY = %r{^field_\d+_gist$}
   RESULTS_COUNT_MIN = 55
   SUBSTRING_MIN = 3
@@ -87,6 +89,16 @@ class Search
     result_ids + ids_by_relevance(substring_agree_hsh)
   end
 
+  def result_ids_store(old_key, params)
+    redis.del(old_key) if old_key
+    ids = result_ids_by_relevance(params)
+    return if ids.empty?
+    key = unique_redis_key_generate
+    redis.lpush(key, ids)
+    redis.expire(key, 900)
+    key
+  end
+
 private
 
   def columns_w_values(params)
@@ -135,5 +147,12 @@ private
   def ids_by_relevance(parent_distribution_hsh)
     grouped_ids = ids_grouped_by_agree_frequency(parent_distribution_hsh)
     groups_flatten(grouped_ids)
+  end
+
+  def unique_redis_key_generate
+    loop do
+      key = SecureRandom.hex(8)
+      break key unless redis.exists(key)
+    end
   end
 end

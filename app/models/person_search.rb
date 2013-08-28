@@ -1,8 +1,8 @@
 class PersonSearch < Search
 
-  def results_find(params)
-    ids = result_ids_by_relevance(params)
-    ids.empty? ? [] : Person.find(ids)
+  def self.people_fetch(key, page)
+    ids = redis.lrange(key, 0, 99)
+    Person.find(ids)
   end
 
 private

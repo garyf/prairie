@@ -1,10 +1,36 @@
 require 'spec_helper'
 
 describe PersonSearchesController do
-  describe 'GET index' do
-    it do
-      get :index
-      expect(response).to redirect_to new_person_search_path
+  context 'GET index' do
+    context 'w key' do
+      before { session[:person_search_key] = 'redis_key' }
+      describe 'w params[:page]' do
+        before do
+          PersonSearch.should_receive(:people_fetch).with('redis_key', '1') { ['o1','o2'] }
+          get :index, page: '1'
+        end
+        it do
+          expect(assigns :people).to eql ['o1','o2']
+          expect(response).to render_template :index
+        end
+      end
+
+      describe 'w/o params[:page]' do
+        before do
+          PersonSearch.should_not_receive(:people_fetch)
+          get :index
+        end
+        it { expect(response).to redirect_to new_person_search_path }
+      end
+    end
+
+    describe 'w/o key' do
+      before do
+        session[:person_search_key] = nil
+        PersonSearch.should_not_receive(:people_fetch)
+        get :index, page: '1'
+      end
+      it { expect(response).to redirect_to new_person_search_path }
     end
   end
 
@@ -20,13 +46,32 @@ describe PersonSearchesController do
   end
 
   describe 'POST create' do
-    before do
-      PersonSearch.stub_chain(:new, :results_find).with({'controller' => 'person_searches', 'action' => 'create'}.merge(valid_params)) { ['p1','p2'] }
-      post :create, valid_params
+    before { session[:person_search_key] = 'old_key' }
+    describe 'w #result_ids_store' do
+      before do
+        PersonSearch.stub_chain(:new, :result_ids_store).with(
+          'old_key',
+          {'controller' => 'person_searches', 'action' => 'create'}.merge(valid_params)) { 'redis_key' }
+        post :create, valid_params
+      end
+      it do
+        expect(session[:person_search_key]).to eql 'redis_key'
+        expect(response).to redirect_to person_searches_path(page: '1')
+      end
     end
-    it do
-      expect(assigns :people).to eql ['p1','p2']
-      expect(response).to render_template :index
+
+    describe 'w/o #result_ids_store' do
+      before do
+        PersonSearch.stub_chain(:new, :result_ids_store).with(
+          'old_key',
+          {'controller' => 'person_searches', 'action' => 'create'}.merge(valid_params)) { nil }
+        post :create, valid_params
+      end
+      it do
+        expect(session[:person_search_key]).to be nil
+        expect(assigns :people).to eql []
+        expect(response).to render_template :index
+      end
     end
   end
 

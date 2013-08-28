@@ -1,8 +1,8 @@
 class LocationSearch < Search
 
-  def results_find(params)
-    ids = result_ids_by_relevance(params)
-    ids.empty? ? [] : Location.find(ids)
+  def self.locations_fetch(key, page)
+    ids = redis.lrange(key, 0, 99)
+    Location.find(ids)
   end
 
 private

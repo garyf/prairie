@@ -1,10 +1,36 @@
 require 'spec_helper'
 
 describe LocationSearchesController do
-  describe 'GET index' do
-    it do
-      get :index
-      expect(response).to redirect_to new_location_search_path
+  context 'GET index' do
+    context 'w key' do
+      before { session[:location_search_key] = 'redis_key' }
+      describe 'w params[:page]' do
+        before do
+          LocationSearch.should_receive(:locations_fetch).with('redis_key', '1') { ['o1','o2'] }
+          get :index, page: '1'
+        end
+        it do
+          expect(assigns :locations).to eql ['o1','o2']
+          expect(response).to render_template :index
+        end
+      end
+
+      describe 'w/o params[:page]' do
+        before do
+          LocationSearch.should_not_receive(:locations_fetch)
+          get :index
+        end
+        it { expect(response).to redirect_to new_location_search_path }
+      end
+    end
+
+    describe 'w/o key' do
+      before do
+        session[:location_search_key] = nil
+        LocationSearch.should_not_receive(:locations_fetch)
+        get :index, page: '1'
+      end
+      it { expect(response).to redirect_to new_location_search_path }
     end
   end
 
@@ -19,14 +45,33 @@ describe LocationSearchesController do
     end
   end
 
-  describe 'POST create' do
-    before do
-      LocationSearch.stub_chain(:new, :results_find).with({'controller' => 'location_searches', 'action' => 'create'}.merge(valid_params)) { ['o1','o2'] }
-      post :create, valid_params
+  context 'POST create' do
+    before { session[:location_search_key] = 'old_key' }
+    describe 'w #result_ids_store' do
+      before do
+        LocationSearch.stub_chain(:new, :result_ids_store).with(
+          'old_key',
+          {'controller' => 'location_searches', 'action' => 'create'}.merge(valid_params)) { 'redis_key' }
+        post :create, valid_params
+      end
+      it do
+        expect(session[:location_search_key]).to eql 'redis_key'
+        expect(response).to redirect_to location_searches_path(page: '1')
+      end
     end
-    it do
-      expect(assigns :locations).to eql ['o1','o2']
-      expect(response).to render_template :index
+
+    describe 'w/o #result_ids_store' do
+      before do
+        LocationSearch.stub_chain(:new, :result_ids_store).with(
+          'old_key',
+          {'controller' => 'location_searches', 'action' => 'create'}.merge(valid_params)) { nil }
+        post :create, valid_params
+      end
+      it do
+        expect(session[:location_search_key]).to be nil
+        expect(assigns :locations).to eql []
+        expect(response).to render_template :index
+      end
     end
   end
 
