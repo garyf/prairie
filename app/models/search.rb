@@ -93,7 +93,7 @@ class Search
     redis.del(old_key) if old_key
     ids = result_ids_by_relevance(params)
     return if ids.empty?
-    key = unique_redis_key_generate
+    key = result_ids_redis_key
     redis.lpush(key, ids)
     redis.expire(key, 900)
     key
@@ -149,10 +149,11 @@ private
     groups_flatten(grouped_ids)
   end
 
-  def unique_redis_key_generate
-    loop do
+  def unique_redis_key_generate(kind)
+    str = "#{kind}:search:ids:"
+    str << loop do
       key = SecureRandom.hex(8)
-      break key unless redis.exists(key)
+      break key unless redis.exists(str << key)
     end
   end
 end

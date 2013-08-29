@@ -35,4 +35,8 @@ private
     columns.each { |c| ids = ids + Person.id_where_ILIKE_value(c, params[c.id2name]).pluck(:id) }
     ids
   end
+
+  def result_ids_redis_key
+    unique_redis_key_generate('person')
+  end
 end
