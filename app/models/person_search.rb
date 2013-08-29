@@ -2,7 +2,7 @@ class PersonSearch < Search
 
   def self.people_fetch(key, page)
     ids = redis.lrange(key, 0, 99)
-    Person.find(ids)
+    Person.name_last_where_ids_preserve_order(ids)
   end
 
 private

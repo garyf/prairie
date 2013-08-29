@@ -22,4 +22,9 @@ class Location < ActiveRecord::Base
   def self.id_where_id(ids)
     select(:id).where(id: ids)
   end
+
+  def self.name_where_ids_preserve_order(ids)
+    hsh = select(:id, :name).where(id: ids).group_by(&:id)
+    ids.map { |k| hsh[k.to_i].first }
+  end
 end
