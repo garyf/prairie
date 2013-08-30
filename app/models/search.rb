@@ -4,7 +4,20 @@ class Search
 
   FIELD_GIST_KEY = %r{^field_\d+_gist$}
   RESULTS_COUNT_MIN = 55
+  RESULTS_PER_PAGE = 25
   SUBSTRING_MIN = 3
+
+  def self.page_begin(page)
+    (page.to_i - 1) * RESULTS_PER_PAGE
+  end
+
+  def self.page_end(page)
+    page.to_i * RESULTS_PER_PAGE - 1
+  end
+
+  def self.result_ids_fetch(key, page)
+    redis.lrange(key, page_begin(page), page_end(page))
+  end
 
   def column_all_gather_ids(params)
     columns = columns_w_values(params)
@@ -94,7 +107,7 @@ class Search
     ids = result_ids_by_relevance(params)
     return if ids.empty?
     key = result_ids_redis_key
-    redis.lpush(key, ids)
+    redis.rpush(key, ids)
     redis.expire(key, 900)
     key
   end
@@ -153,7 +166,7 @@ private
     str = "#{kind}:search:ids:"
     str << loop do
       key = SecureRandom.hex(8)
-      break key unless redis.exists(str << key)
+      break key unless redis.exists(str + key)
     end
   end
 end

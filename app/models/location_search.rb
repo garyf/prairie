@@ -1,8 +1,7 @@
 class LocationSearch < Search
 
   def self.locations_fetch(key, page)
-    ids = redis.lrange(key, 0, 99)
-    Location.name_where_ids_preserve_order(ids)
+    Location.name_where_ids_preserve_order(result_ids_fetch key, page)
   end
 
 private
