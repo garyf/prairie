@@ -3,6 +3,7 @@ class Search
   include Redis::Objects
 
   FIELD_GIST_KEY = %r{^field_\d+_gist$}
+  FIELD_SUBSTRING_GIST_KEY = %r{^field_\d+_substring_gist$}
   RESULTS_COUNT_MIN = 55
   RESULTS_PER_PAGE = 25
   SUBSTRING_MIN = 3
@@ -53,12 +54,12 @@ class Search
 
   def column_substring_gather_ids(params)
     columns = columns_w_substring_values(params)
-    return [] if columns.empty?
-    column_substring_agree(columns, params)
+    columns.empty? ? [] : column_substring_agree(columns, params)
   end
 
   def custom_substring_gather_ids(params)
-    [] # stub
+    hsh = params_custom_w_values(params, true)
+    hsh.empty? ? [] : custom_substring_agree(hsh)
   end
 
   # return a hash of {parent_id: agree_frequency} pairs
@@ -125,8 +126,9 @@ private
     end
   end
 
-  def params_custom_w_values(params)
-    params.select { |k, v| k =~ FIELD_GIST_KEY unless v.blank? }
+  def params_custom_w_values(params, substring_p = false)
+    regex = substring_p ? FIELD_SUBSTRING_GIST_KEY : FIELD_GIST_KEY
+    params.select { |k, v| k =~ regex unless v.blank? }
   end
 
   def custom_all_agree(hsh)
@@ -145,6 +147,15 @@ private
     hsh.each do |k, v|
       o = CustomField.find(k.split('_')[1])
       ids = ids + o.parents_find_by_gist(v)
+    end
+    ids
+  end
+
+  def custom_substring_agree(hsh)
+    ids = []
+    hsh.each do |k, v|
+      o = CustomField.find(k.split('_')[1])
+      ids = ids # + o.parents_find_by_substring(v)
     end
     ids
   end
