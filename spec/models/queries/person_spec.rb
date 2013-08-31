@@ -34,6 +34,37 @@ describe Person do
     end
   end
 
+  context '::name_last_where_ids_preserve_order' do
+    before do
+      @person0 = c_person_cr(name_last: 'Anders')
+      @person1 = c_person_cr(name_last: 'Brady')
+      @person2 = c_person_cr(name_last: 'Carson')
+      @person3 = c_person_cr(name_last: 'Dixon')
+      @id0 = @person0.id
+      @id1 = @person1.id
+      @id2 = @person2.id
+    end
+    describe 'passing [0, 1, 2]' do
+      subject { Person.name_last_where_ids_preserve_order(["#{@id0}","#{@id1}","#{@id2}"]) }
+      it do
+        expect(subject.length).to eql 3
+        expect(subject[0].name_last).to eql 'Anders'
+        expect(subject[1].name_last).to eql 'Brady'
+        expect(subject[2].name_last).to eql 'Carson'
+      end
+    end
+
+    describe 'passing [2, 0, 1]' do
+      subject { Person.name_last_where_ids_preserve_order(["#{@id2}","#{@id0}","#{@id1}"]) }
+      it do
+        expect(subject.length).to eql 3
+        expect(subject[0].name_last).to eql 'Carson'
+        expect(subject[1].name_last).to eql 'Anders'
+        expect(subject[2].name_last).to eql 'Brady'
+      end
+    end
+  end
+
 private
 
   def cr(options = {})

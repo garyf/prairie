@@ -34,6 +34,37 @@ describe Location do
     end
   end
 
+  context '::name_where_ids_preserve_order' do
+    before do
+      @location0 = c_location_cr(name: 'Annapolis', description: 'seaport')
+      @location1 = c_location_cr(name: 'Baltimore', description: 'industrial')
+      @location2 = c_location_cr(name: 'Camden', description: 'seaport')
+      @location3 = c_location_cr(name: 'Denver', description: 'mountains')
+      @id0 = @location0.id
+      @id1 = @location1.id
+      @id2 = @location2.id
+    end
+    describe 'passing [0, 1, 2]' do
+      subject { Location.name_where_ids_preserve_order(["#{@id0}","#{@id1}","#{@id2}"]) }
+      it do
+        expect(subject.length).to eql 3
+        expect(subject[0].name).to eql 'Annapolis'
+        expect(subject[1].name).to eql 'Baltimore'
+        expect(subject[2].name).to eql 'Camden'
+      end
+    end
+
+    describe 'passing [2, 0, 1]' do
+      subject { Location.name_where_ids_preserve_order(["#{@id2}","#{@id0}","#{@id1}"]) }
+      it do
+        expect(subject.length).to eql 3
+        expect(subject[0].name).to eql 'Camden'
+        expect(subject[1].name).to eql 'Annapolis'
+        expect(subject[2].name).to eql 'Baltimore'
+      end
+    end
+  end
+
 private
 
   def cr(options = {})
