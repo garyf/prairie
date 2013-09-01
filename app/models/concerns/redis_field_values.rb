@@ -6,8 +6,8 @@ module RedisFieldValues
     hash_key :field_values
   end
 
-  def gist_store(field_id, gist)
-    index_on_gist_remove(field_id)
+  def gist_store(field_id, gist, index_to_remove_p = false)
+    index_on_gist_remove(field_id) if index_to_remove_p
     return field_values.delete(field_id) if gist.blank?
     field_values[field_id] = gist
   end

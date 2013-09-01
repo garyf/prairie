@@ -21,6 +21,24 @@ class StringField < CustomField
     self
   end
 
+  def index_on_gist_add(parent_id)
+    StringGist.create(
+      custom_field_id: id,
+      gist: gist.downcase,
+      parent_id: parent_id)
+  end
+
+  def parents_find_by_gist(str)
+    StringGist.parent_ids_where_field_and_gist(id, str.downcase)
+  end
+
+  def index_on_gist_update(parent_id)
+    o = StringGist.where_field_and_parent(id, parent_id)[0]
+    return unless o
+    o.update_attributes(gist: gist)
+    false
+  end
+
 private
 
   def length_min_lte_length_max

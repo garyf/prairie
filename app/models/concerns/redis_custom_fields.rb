@@ -12,10 +12,15 @@ module RedisCustomFields
     !parents.empty?
   end
 
+  def index_on_gist_update(parent_id)
+    true
+  end
+
   def gist_store(parent, params_white)
     self.gist = params_white['gist']
     return false unless self.valid?
-    parent.gist_store(id, gist)
+    index_to_remove_p = index_on_gist_update(parent.id)
+    parent.gist_store(id, gist, index_to_remove_p)
     index_on_gist_add(parent.id)
     parents << parent.id
   end
