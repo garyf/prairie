@@ -118,7 +118,7 @@ describe LocationSearch do
             'description' => 'apo',
             'name' => 'amd'}
         end
-        it { expect(@o.column_substring_gather_ids @params). to match_array [@location2.id, @location2.id, @location0.id] }
+        it { expect(@o.column_substring_gather_ids @params). to eql [@location2.id] }
       end
 
       describe 'w 1 substring by 1 parent' do
@@ -127,7 +127,7 @@ describe LocationSearch do
             'description' => 'ndu',
             'name' => 'Denver'}
         end
-        it { expect(@o.column_substring_gather_ids @params). to eql [@location1.id] }
+        it { expect(@o.column_substring_gather_ids @params). to eql [] }
       end
 
       describe 'w/o matching term' do

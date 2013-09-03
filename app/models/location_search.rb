@@ -29,8 +29,12 @@ private
   end
 
   def column_substring_agree(columns, params)
-    ids = []
-    columns.each { |c| ids = ids + Location.id_where_ILIKE_value(c, params[c.id2name]).pluck(:id) }
+    ids = nil
+    columns.each do |c|
+      value_ids = Location.id_where_ILIKE_value(c, params[c.id2name]).pluck(:id)
+      ids = ids ? value_ids & ids : value_ids
+      return [] if ids.empty?
+    end
     ids
   end
 

@@ -118,7 +118,7 @@ describe PersonSearch do
             'email' => 'foo',
             'name_last' => 'rso'}
         end
-        it { expect(@o.column_substring_gather_ids @params). to match_array [@person2.id, @person2.id, @person0.id] }
+        it { expect(@o.column_substring_gather_ids @params). to eql [@person2.id] }
       end
 
       describe 'w 1 substring by 1 parent' do
@@ -127,7 +127,7 @@ describe PersonSearch do
             'email' => 'bar',
             'name_last' => 'Dixon'}
         end
-        it { expect(@o.column_substring_gather_ids @params). to eql [@person1.id] }
+        it { expect(@o.column_substring_gather_ids @params). to eql [] }
       end
 
       describe 'w/o matching term' do
