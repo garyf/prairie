@@ -2,7 +2,7 @@ class Search
 
   include Redis::Objects
 
-  FIELD_GIST_KEY = %r{^field_\d+_gist$}
+  FIELD_GIST_KEY = %r{^field_\d+_[gist]+}
   FIELD_SUBSTRING_GIST_KEY = %r{^field_\d+_substring_gist$}
   RESULTS_COUNT_MIN = 55
   RESULTS_PER_PAGE = 25
@@ -54,12 +54,12 @@ class Search
 
   def column_substring_gather_ids(params)
     columns = columns_w_substring_values(params)
-    columns.empty? ? [] : column_substring_agree(columns, params)
+    column_substring_agree(columns, params) unless columns.empty?
   end
 
   def custom_substring_gather_ids(params)
     hsh = params_custom_w_values(params, true)
-    hsh.empty? ? [] : custom_substring_agree(hsh)
+    custom_substring_agree(hsh) unless hsh.empty?
   end
 
   # return a hash of {parent_id: agree_frequency} pairs
@@ -150,10 +150,12 @@ private
   end
 
   def custom_substring_agree(hsh)
-    ids = []
+    ids = nil
     hsh.each do |k, v|
       o = CustomField.find(k.split('_')[1])
-      ids = ids # + o.parents_find_by_substring(v)
+      value_ids = o.parents_find_by_substring(v)
+      ids = ids ? value_ids & ids : value_ids
+      return [] if ids.empty?
     end
     ids
   end

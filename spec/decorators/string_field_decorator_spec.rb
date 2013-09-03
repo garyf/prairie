@@ -22,8 +22,8 @@ describe StringFieldDecorator do
     subject { @o.search_input }
     it do
       expect(subject).to match /class="input-mini"/
-      expect(subject).to match /id="field_21_gist"/
-      expect(subject).to match /name="field_21_gist"/
+      expect(subject).to match /id="field_21_substring_gist"/
+      expect(subject).to match /name="field_21_substring_gist"/
       expect(subject).to match /type="text"/
     end
   end

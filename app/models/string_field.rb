@@ -1,5 +1,7 @@
 class StringField < CustomField
 
+  has_many :string_gists, foreign_key: :custom_field_id, dependent: :destroy
+
   validates :length_max, :length_min, allow_blank: true, numericality: {greater_than: 0, less_than: 256, only_integer: true}
   validate :length_min_lte_length_max, :gist_lte_length_max, :gist_gte_length_min
 
@@ -27,6 +29,10 @@ class StringField < CustomField
 
   def parents_find_by_gist(str)
     StringGist.parent_ids_where_field_and_gist(id, str.downcase)
+  end
+
+  def parents_find_by_substring(str)
+    string_gists.id_where_ILIKE_value(str)
   end
 
   def index_on_gist_update(parent_id)

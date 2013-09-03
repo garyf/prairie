@@ -11,7 +11,7 @@ module StringFieldDecorator
   end
 
   def search_input
-    text_field_tag "field_#{id}_gist", nil, class: 'input-mini'
+    text_field_tag "field_#{id}_substring_gist", nil, class: 'input-mini'
   end
 
   def type_human(downcase_p = false)

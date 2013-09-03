@@ -88,7 +88,7 @@ describe PersonSearch do
           'email' => 'fo',
           'name_last' => 'An'}
       end
-      it { expect(@o.column_substring_gather_ids @params).to eql [] }
+      it { expect(@o.column_substring_gather_ids @params).to be nil }
     end
 
     context 'w 1 search term' do
