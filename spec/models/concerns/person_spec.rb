@@ -36,9 +36,9 @@ describe Person do
 
   context 'w 2 custom fields each w gist', :redis do
     before do
-      @string_field0 = c_person_string_field_bs
-      @string_field1 = c_person_string_field_bs
-      c_person_bs
+      @string_field0 = c_person_string_field_cr
+      @string_field1 = c_person_string_field_cr
+      @o = c_person_cr
       @string_field0.gist_store(@o, {'gist' => 'Foo'})
       @string_field1.gist_store(@o, {'gist' => 'Bar'})
     end
@@ -53,10 +53,7 @@ describe Person do
     end
 
     describe '#garbage_collect_and_self_destroy' do
-      before do
-        @o.should_receive(:destroy)
-        @o.garbage_collect_and_self_destroy
-      end
+      before { @o.garbage_collect_and_self_destroy }
       it '#remove_self_from_custom_field_parents' do
         expect(@string_field0.parents.empty?).to be true
         expect(@string_field1.parents.empty?).to be true
@@ -74,7 +71,7 @@ describe Person do
       @string_field = c_person_string_field_bs(gist: 'Baz')
       c_person_bs
       @o.gist_store(@string_field.id, 'Baz')
-      @string_field.index_on_gist_add(@o.id)
+      @string_field.index_on_gist_add(@o)
     end
     it { expect(@string_field.parents_find_by_gist 'Baz').to eql [@o.id] }
 

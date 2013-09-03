@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 20130901165245) do
   end
 
   create_table "string_gists", force: true do |t|
+    t.string  "type",            null: false
     t.integer "custom_field_id", null: false
     t.string  "gist",            null: false
     t.integer "parent_id",       null: false

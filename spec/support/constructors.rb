@@ -21,3 +21,7 @@ end
 def c_person_string_field_bs(options = {})
   @o = FactoryGirl.build_stubbed(:person_string_field, options)
 end
+
+def c_person_string_field_cr(options = {})
+  FactoryGirl.create(:person_string_field, options)
+end

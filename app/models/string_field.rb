@@ -21,11 +21,8 @@ class StringField < CustomField
     self
   end
 
-  def index_on_gist_add(parent_id)
-    StringGist.create(
-      custom_field_id: id,
-      gist: gist.downcase,
-      parent_id: parent_id)
+  def index_on_gist_add(parent)
+    parent.index_on_gist_add(id, gist)
   end
 
   def parents_find_by_gist(str)

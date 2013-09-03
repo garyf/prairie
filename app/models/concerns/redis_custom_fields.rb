@@ -21,7 +21,7 @@ module RedisCustomFields
     return false unless self.valid?
     index_to_remove_p = index_on_gist_update(parent.id)
     parent.gist_store(id, gist, index_to_remove_p)
-    index_on_gist_add(parent.id)
+    index_on_gist_add(parent)
     parents << parent.id
   end
 
@@ -31,8 +31,8 @@ module RedisCustomFields
     self
   end
 
-  def index_on_gist_add(parent_id)
-    redis.sadd("custom_field:#{id}:#{gist.downcase}", parent_id)
+  def index_on_gist_add(parent)
+    redis.sadd("custom_field:#{id}:#{gist.downcase}", parent.id)
   end
 
   def parents_find_by_gist(str)

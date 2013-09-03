@@ -3,6 +3,8 @@ class Location < ActiveRecord::Base
   include Redis::Objects
   include RedisFieldValues
 
+  has_many :location_string_gists, foreign_key: :parent_id, dependent: :destroy
+
   paginates_per 8
 
   validates :name, presence: true
@@ -26,5 +28,12 @@ class Location < ActiveRecord::Base
   def self.name_where_ids_preserve_order(ids)
     hsh = select(:id, :name).where(id: ids).group_by(&:id)
     ids.map { |k| hsh[k.to_i].first }
+  end
+
+  def index_on_gist_add(custom_field_id, gist)
+    LocationStringGist.create(
+      custom_field_id: custom_field_id,
+      gist: gist.downcase,
+      parent_id: id)
   end
 end
