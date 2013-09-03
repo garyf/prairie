@@ -65,19 +65,4 @@ describe Person do
       it { expect(@o.field_values.empty?).to be true }
     end
   end
-
-  context 'RedisCustomFields#index_on_gist_add', :redis do
-    before do
-      @string_field = c_person_string_field_bs(gist: 'Baz')
-      c_person_bs
-      @o.gist_store(@string_field.id, 'Baz')
-      @string_field.index_on_gist_add(@o)
-    end
-    it { expect(@string_field.parents_find_by_gist 'Baz').to eql [@o.id] }
-
-    describe '#index_on_gist_delete' do
-      before { @o.index_on_gist_delete(@string_field.id) }
-      it { expect(@string_field.parents_find_by_gist 'Baz').to eql [] }
-    end
-  end
 end

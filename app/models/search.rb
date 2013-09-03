@@ -30,10 +30,10 @@ class Search
     custom_all_agree(hsh) unless hsh.empty?
   end
 
-  def all_agree_ids_for_find(params)
-    column_ids = column_all_gather_ids(params)
+  def all_agree_ids_for_find(params, substring_p = false)
+    column_ids = substring_p ? column_substring_gather_ids(params) : column_all_gather_ids(params)
     return [] if column_ids.try(:empty?)
-    custom_ids = custom_all_gather_ids(params)
+    custom_ids = substring_p ? custom_substring_gather_ids(params) : custom_all_gather_ids(params)
     return [] if custom_ids.try(:empty?)
     if custom_ids
       column_ids ? column_ids & custom_ids : custom_ids
@@ -75,10 +75,6 @@ class Search
     column_any_gather_ids(params) + custom_any_gather_ids(params) - all_ids
   end
 
-  def substring_agree_ids_for_find(params, all_ids, any_ids)
-    column_substring_gather_ids(params) + custom_substring_gather_ids(params) - all_ids - any_ids
-  end
-
   # return an array of [agree_frequency, [parent_ids]] pairs, ordered by frequency descending
   def ids_grouped_by_agree_frequency(parent_distribution_hsh)
     return [] if parent_distribution_hsh.empty?
@@ -99,7 +95,9 @@ class Search
     result_ids = all_ids + ids_by_relevance(any_agree_hsh)
     any_ids = any_agree_hsh.keys
     return result_ids unless any_agree_ids_few?(all_ids, any_ids)
-    substring_agree_hsh = parent_distribution(substring_agree_ids_for_find params, all_ids, any_ids)
+    substring_ids = all_agree_ids_for_find(params, true) - all_ids - any_ids
+    return result_ids unless substring_ids.any?
+    substring_agree_hsh = parent_distribution(substring_ids)
     result_ids + ids_by_relevance(substring_agree_hsh)
   end
 

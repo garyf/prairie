@@ -76,44 +76,89 @@ describe Search do
       bld
       @params = {'these' => 'params'}
     end
-    describe 'w #column_all_gather_ids empty?' do
-      before { @o.should_receive(:column_all_gather_ids).with(@params) { [] } }
-      it { expect(@o.all_agree_ids_for_find @params).to eql [] }
-    end
-
-    context 'w/o #column_all_gather_ids' do
-      before { @o.should_receive(:column_all_gather_ids).with(@params) { nil } }
-      describe 'w #custom_all_gather_ids empty?' do
-        before { @o.should_receive(:custom_all_gather_ids).with(@params) { [] } }
+    context 'w/o substring_p' do
+      describe 'w #column_all_gather_ids empty?' do
+        before { @o.should_receive(:column_all_gather_ids).with(@params) { [] } }
         it { expect(@o.all_agree_ids_for_find @params).to eql [] }
       end
 
-      describe 'w #custom_all_gather_ids' do
-        before { @o.should_receive(:custom_all_gather_ids).with(@params) { [5, 8, 3] } }
-        it { expect(@o.all_agree_ids_for_find @params).to match_array [3, 5, 8] }
+      context 'w/o #column_all_gather_ids' do
+        before { @o.should_receive(:column_all_gather_ids).with(@params) { nil } }
+        describe 'w #custom_all_gather_ids empty?' do
+          before { @o.should_receive(:custom_all_gather_ids).with(@params) { [] } }
+          it { expect(@o.all_agree_ids_for_find @params).to eql [] }
+        end
+
+        describe 'w #custom_all_gather_ids' do
+          before { @o.should_receive(:custom_all_gather_ids).with(@params) { [5, 8, 3] } }
+          it { expect(@o.all_agree_ids_for_find @params).to match_array [3, 5, 8] }
+        end
+
+        describe 'w/o #custom_all_gather_ids' do
+          before { @o.should_receive(:custom_all_gather_ids).with(@params) { nil } }
+          it { expect(@o.all_agree_ids_for_find @params).to match_array [] }
+        end
       end
 
-      describe 'w/o #custom_all_gather_ids' do
-        before { @o.should_receive(:custom_all_gather_ids).with(@params) { nil } }
-        it { expect(@o.all_agree_ids_for_find @params).to match_array [] }
+      context 'w #column_all_gather_ids' do
+        before { @o.should_receive(:column_all_gather_ids).with(@params) { [8, 13, 5] } }
+        describe 'w #custom_all_gather_ids empty?' do
+          before { @o.should_receive(:custom_all_gather_ids).with(@params) { [] } }
+          it { expect(@o.all_agree_ids_for_find @params).to eql [] }
+        end
+
+        describe 'w #custom_all_gather_ids' do
+          before { @o.should_receive(:custom_all_gather_ids).with(@params) { [5, 8, 3] } }
+          it { expect(@o.all_agree_ids_for_find @params).to match_array [5, 8] }
+        end
+
+        describe 'w/o #custom_all_gather_ids' do
+          before { @o.should_receive(:custom_all_gather_ids).with(@params) { nil } }
+          it { expect(@o.all_agree_ids_for_find @params).to match_array [5, 8, 13] }
+        end
       end
     end
 
-    context 'w #column_all_gather_ids' do
-      before { @o.should_receive(:column_all_gather_ids).with(@params) { [8, 13, 5] } }
-      describe 'w #custom_all_gather_ids empty?' do
-        before { @o.should_receive(:custom_all_gather_ids).with(@params) { [] } }
-        it { expect(@o.all_agree_ids_for_find @params).to eql [] }
+    context 'w substring_p' do
+      describe 'w #column_substring_gather_ids empty?' do
+        before { @o.should_receive(:column_substring_gather_ids).with(@params) { [] } }
+        it { expect(@o.all_agree_ids_for_find @params, true).to eql [] }
       end
 
-      describe 'w #custom_all_gather_ids' do
-        before { @o.should_receive(:custom_all_gather_ids).with(@params) { [5, 8, 3] } }
-        it { expect(@o.all_agree_ids_for_find @params).to match_array [5, 8] }
+      context 'w/o #column_substring_gather_ids' do
+        before { @o.should_receive(:column_substring_gather_ids).with(@params) { nil } }
+        describe 'w #custom_substring_gather_ids empty?' do
+          before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [] } }
+          it { expect(@o.all_agree_ids_for_find @params, true).to eql [] }
+        end
+
+        describe 'w #custom_substring_gather_ids' do
+          before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [5, 8, 3] } }
+          it { expect(@o.all_agree_ids_for_find @params, true).to match_array [3, 5, 8] }
+        end
+
+        describe 'w/o #custom_substring_gather_ids' do
+          before { @o.should_receive(:custom_substring_gather_ids).with(@params) { nil } }
+          it { expect(@o.all_agree_ids_for_find @params, true).to match_array [] }
+        end
       end
 
-      describe 'w/o #custom_all_gather_ids' do
-        before { @o.should_receive(:custom_all_gather_ids).with(@params) { nil } }
-        it { expect(@o.all_agree_ids_for_find @params).to match_array [5, 8, 13] }
+      context 'w #column_substring_gather_ids' do
+        before { @o.should_receive(:column_substring_gather_ids).with(@params) { [8, 13, 5] } }
+        describe 'w #custom_substring_gather_ids empty?' do
+          before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [] } }
+          it { expect(@o.all_agree_ids_for_find @params, true).to eql [] }
+        end
+
+        describe 'w #custom_substring_gather_ids' do
+          before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [5, 8, 3] } }
+          it { expect(@o.all_agree_ids_for_find @params, true).to match_array [5, 8] }
+        end
+
+        describe 'w/o #custom_substring_gather_ids' do
+          before { @o.should_receive(:custom_substring_gather_ids).with(@params) { nil } }
+          it { expect(@o.all_agree_ids_for_find @params, true).to match_array [5, 8, 13] }
+        end
       end
     end
   end
@@ -170,40 +215,6 @@ describe Search do
     end
   end
 
-  context '#substring_agree_ids_for_find' do
-    before do
-      bld
-      @params = {'these' => 'params'}
-      @all_ids = [13]
-      @any_ids = [21]
-    end
-    context 'w #column_substring_gather_ids' do
-      before { @o.should_receive(:column_substring_gather_ids).with(@params) { [5, 8, 3, 21] } }
-      describe 'w #custom_substring_gather_ids' do
-        before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [8, 13, 5, 34] } }
-        it { expect(@o.substring_agree_ids_for_find @params, @all_ids, @any_ids).to eql [5, 8, 3, 8, 5, 34] }
-      end
-
-      describe 'w/o #custom_substring_gather_ids' do
-        before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [] } }
-        it { expect(@o.substring_agree_ids_for_find @params, @all_ids, @any_ids).to eql [5, 8, 3] }
-      end
-    end
-
-    context 'w/o #column_substring_gather_ids' do
-      before { @o.should_receive(:column_substring_gather_ids).with(@params) { [] } }
-      context 'w #custom_substring_gather_ids' do
-        before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [8, 13, 5, 34] } }
-        it { expect(@o.substring_agree_ids_for_find @params, @all_ids, @any_ids).to eql [8, 5, 34] }
-      end
-
-      describe 'w/o #custom_substring_gather_ids' do
-        before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [] } }
-        it { expect(@o.substring_agree_ids_for_find @params, @all_ids, @any_ids).to eql [] }
-      end
-    end
-  end
-
   describe '#ids_grouped_by_agree_frequency' do
     before do
       bld
@@ -248,20 +259,30 @@ describe Search do
         @o.should_receive(:parent_distribution).with(@any_ids_w_dupes) { @any_pd }
         @any_ids = @any_pd.keys
       end
-      describe 'w #any_agree_ids_few?' do
-        before do
-          @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { true }
-          @substring_ids = [89, 144, 89]
-          @o.should_receive(:substring_agree_ids_for_find).with(@params, @all_ids, @any_ids) { @substring_ids }
-          @o.should_receive(:parent_distribution).with(@substring_ids) { {89 => 2, 144 => 1} }
+      context 'w #any_agree_ids_few?' do
+        before { @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { true } }
+        describe 'w substring_ids' do
+          before do
+            @substring_ids = [89, 144, 89]
+            @o.should_receive(:all_agree_ids_for_find).with(@params, true) { @substring_ids }
+            @o.should_receive(:parent_distribution).with(@substring_ids) { {89 => 2, 144 => 1} }
+          end
+          it { expect(@o.result_ids_by_relevance @params).to eql [3, 5, 8, 13, 34, 21, 55, 89, 144] }
         end
-        it { expect(@o.result_ids_by_relevance @params).to eql [3, 5, 8, 13, 34, 21, 55, 89, 144] }
+
+        describe 'w/o substring_ids' do
+          before do
+            @o.should_receive(:all_agree_ids_for_find).with(@params, true) { [] }
+            @o.should_not_receive(:parent_distribution)
+          end
+          it { expect(@o.result_ids_by_relevance @params).to eql [3, 5, 8, 13, 34, 21, 55] }
+        end
       end
 
       describe 'w/o #any_agree_ids_few?' do
         before do
           @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { false }
-          @o.should_not_receive(:substring_agree_ids_for_find)
+          @o.should_not_receive(:all_agree_ids_for_find)
         end
         it { expect(@o.result_ids_by_relevance @params).to eql [3, 5, 8, 13, 34, 21, 55] }
       end
