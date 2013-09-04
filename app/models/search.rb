@@ -25,9 +25,9 @@ class Search
     column_all_agree(columns, params) unless columns.empty?
   end
 
-  def custom_all_gather_ids(params)
-    hsh = params_custom_w_values(params)
-    custom_all_agree(hsh) unless hsh.empty?
+  def custom_gather_ids(params, substring_p)
+    hsh = substring_p ? params_custom_w_substring_values(params) : params_custom_w_values(params)
+    custom_agree(hsh, substring_p) unless hsh.empty?
   end
 
   def column_substring_gather_ids(params)
@@ -35,15 +35,10 @@ class Search
     column_substring_agree(columns, params) unless columns.empty?
   end
 
-  def custom_substring_gather_ids(params)
-    hsh = params_custom_w_substring_values(params)
-    custom_substring_agree(hsh) unless hsh.empty?
-  end
-
   def all_agree_ids_for_find(params, substring_p = false)
     column_ids = substring_p ? column_substring_gather_ids(params) : column_all_gather_ids(params)
     return [] if column_ids.try(:empty?)
-    custom_ids = substring_p ? custom_substring_gather_ids(params) : custom_all_gather_ids(params)
+    custom_ids = custom_gather_ids(params, substring_p)
     return [] if custom_ids.try(:empty?)
     if custom_ids
       column_ids ? column_ids & custom_ids : custom_ids
@@ -133,11 +128,11 @@ private
     params.select { |k, v| k =~ FIELD_SUBSTRING_GIST_KEY unless substring_value_reject?(v) }
   end
 
-  def custom_all_agree(hsh)
+  def custom_agree(hsh, substring_p)
     ids = nil
     hsh.each do |k, v|
       o = CustomField.find(k.split('_')[1])
-      value_ids = o.parents_find_by_gist(v)
+      value_ids = substring_p ? o.parents_find_by_substring(v) : o.parents_find_by_gist(v)
       ids = ids ? value_ids & ids : value_ids
       return [] if ids.empty?
     end
@@ -149,17 +144,6 @@ private
     hsh.each do |k, v|
       o = CustomField.find(k.split('_')[1])
       ids = ids + o.parents_find_by_gist(v)
-    end
-    ids
-  end
-
-  def custom_substring_agree(hsh)
-    ids = nil
-    hsh.each do |k, v|
-      o = CustomField.find(k.split('_')[1])
-      value_ids = o.parents_find_by_substring(v)
-      ids = ids ? value_ids & ids : value_ids
-      return [] if ids.empty?
     end
     ids
   end

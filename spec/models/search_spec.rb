@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Search do
-  context '#custom_all_gather_ids, #custom_any_gather_ids' do
+  context '#custom_gather_ids w/o substring_p, #custom_any_gather_ids' do
     before { bld }
     context 'w 3 custom fields' do
       before do
@@ -16,7 +16,7 @@ describe Search do
             "field_#{@select_field.id}_gist" => '',
             "field_#{@string_field.id}_substring_gist" => ''}
         end
-        it { expect(@o.custom_all_gather_ids @params).to be nil }
+        it { expect(@o.custom_gather_ids @params, false).to be nil }
         it { expect(@o.custom_any_gather_ids @params).to eql [] }
       end
 
@@ -30,13 +30,13 @@ describe Search do
         end
         describe 'w/o any matching' do
           before { @numeric_field.should_receive(:parents_find_by_gist).with('89') { [] } }
-          it { expect(@o.custom_all_gather_ids @params).to eql [] }
+          it { expect(@o.custom_gather_ids @params, false).to eql [] }
           it { expect(@o.custom_any_gather_ids @params).to eql [] }
         end
 
         describe 'w 1 matching' do
           before { @numeric_field.should_receive(:parents_find_by_gist).with('89') { [1, 2] } }
-          it { expect(@o.custom_all_gather_ids @params).to eql [1, 2] }
+          it { expect(@o.custom_gather_ids @params, false).to eql [1, 2] }
           it { expect(@o.custom_any_gather_ids @params).to eql [1, 2] }
         end
       end
@@ -55,7 +55,7 @@ describe Search do
             @select_field.should_receive(:parents_find_by_gist).with('8') { [3, 4] }
             @string_field.should_receive(:parents_find_by_gist).with('foo') { [4, 5] }
           end
-          it { expect(@o.custom_all_gather_ids @params).to eql [4] }
+          it { expect(@o.custom_gather_ids @params, false).to eql [4] }
           it { expect(@o.custom_any_gather_ids @params).to eql [3, 4, 4, 5] }
         end
 
@@ -64,14 +64,14 @@ describe Search do
             @select_field.should_receive(:parents_find_by_gist).with('8') { [3, 4] }
             @string_field.should_receive(:parents_find_by_gist).with('foo') { [5, 6] }
           end
-          it { expect(@o.custom_all_gather_ids @params).to eql [] }
+          it { expect(@o.custom_gather_ids @params, false).to eql [] }
           it { expect(@o.custom_any_gather_ids @params).to eql [3, 4, 5, 6] }
         end
       end
     end
   end
 
-  context '#custom_substring_gather_ids' do
+  context '#custom_gather_ids w substring_p' do
     before { bld }
     context 'w 3 custom fields' do
       before do
@@ -86,7 +86,7 @@ describe Search do
             "field_#{@string_field1.id}_substring_gist" => 'cd',
             "field_#{@string_field2.id}_substring_gist" => 'ef'}
         end
-        it { expect(@o.custom_substring_gather_ids @params).to be nil }
+        it { expect(@o.custom_gather_ids @params, true).to be nil }
       end
 
       context 'w 1 search term' do
@@ -99,12 +99,12 @@ describe Search do
         end
         describe 'w/o any matching' do
           before { @string_field0.should_receive(:parents_find_by_substring).with('foo') { [] } }
-          it { expect(@o.custom_substring_gather_ids @params).to eql [] }
+          it { expect(@o.custom_gather_ids @params, true).to eql [] }
         end
 
         describe 'w 1 matching' do
           before { @string_field0.should_receive(:parents_find_by_substring).with('foo') { [3, 5] } }
-          it { expect(@o.custom_substring_gather_ids @params).to eql [3, 5] }
+          it { expect(@o.custom_gather_ids @params, true).to eql [3, 5] }
         end
       end
 
@@ -122,7 +122,7 @@ describe Search do
             @string_field1.should_receive(:parents_find_by_substring).with('foo') { [3, 5] }
             @string_field2.should_receive(:parents_find_by_substring).with('bar') { [5, 8] }
           end
-          it { expect(@o.custom_substring_gather_ids @params). to eql [5] }
+          it { expect(@o.custom_gather_ids @params, true). to eql [5] }
         end
 
         describe 'w both substrings by different parents' do
@@ -131,7 +131,7 @@ describe Search do
             @string_field1.should_receive(:parents_find_by_substring).with('foo') { [3, 5] }
             @string_field2.should_receive(:parents_find_by_substring).with('bar') { [8, 13] }
           end
-          it { expect(@o.custom_substring_gather_ids @params). to eql [] }
+          it { expect(@o.custom_gather_ids @params, true). to eql [] }
         end
 
         describe 'w/o matching term' do
@@ -139,7 +139,7 @@ describe Search do
             @string_field1.should_receive(:parents_find_by_substring).with('foo') { [] }
             @string_field2.should_not_receive(:parents_find_by_substring)
           end
-          it { expect(@o.custom_substring_gather_ids @params).to eql [] }
+          it { expect(@o.custom_gather_ids @params, true).to eql [] }
         end
       end
     end
@@ -153,42 +153,42 @@ describe Search do
     context 'w/o substring_p' do
       describe 'w #column_all_gather_ids empty?' do
         before { @o.should_receive(:column_all_gather_ids).with(@params) { [] } }
-        it { expect(@o.all_agree_ids_for_find @params).to eql [] }
+        it { expect(@o.all_agree_ids_for_find @params, false).to eql [] }
       end
 
       context 'w/o #column_all_gather_ids' do
         before { @o.should_receive(:column_all_gather_ids).with(@params) { nil } }
-        describe 'w #custom_all_gather_ids empty?' do
-          before { @o.should_receive(:custom_all_gather_ids).with(@params) { [] } }
-          it { expect(@o.all_agree_ids_for_find @params).to eql [] }
+        describe 'w #custom_gather_ids empty?' do
+          before { @o.should_receive(:custom_gather_ids).with(@params, false) { [] } }
+          it { expect(@o.all_agree_ids_for_find @params, false).to eql [] }
         end
 
-        describe 'w #custom_all_gather_ids' do
-          before { @o.should_receive(:custom_all_gather_ids).with(@params) { [5, 8, 3] } }
-          it { expect(@o.all_agree_ids_for_find @params).to match_array [3, 5, 8] }
+        describe 'w #custom_gather_ids' do
+          before { @o.should_receive(:custom_gather_ids).with(@params, false) { [5, 8, 3] } }
+          it { expect(@o.all_agree_ids_for_find @params, false).to match_array [3, 5, 8] }
         end
 
-        describe 'w/o #custom_all_gather_ids' do
-          before { @o.should_receive(:custom_all_gather_ids).with(@params) { nil } }
-          it { expect(@o.all_agree_ids_for_find @params).to match_array [] }
+        describe 'w/o #custom_gather_ids' do
+          before { @o.should_receive(:custom_gather_ids).with(@params, false) { nil } }
+          it { expect(@o.all_agree_ids_for_find @params, false).to match_array [] }
         end
       end
 
       context 'w #column_all_gather_ids' do
         before { @o.should_receive(:column_all_gather_ids).with(@params) { [8, 13, 5] } }
-        describe 'w #custom_all_gather_ids empty?' do
-          before { @o.should_receive(:custom_all_gather_ids).with(@params) { [] } }
-          it { expect(@o.all_agree_ids_for_find @params).to eql [] }
+        describe 'w #custom_gather_ids empty?' do
+          before { @o.should_receive(:custom_gather_ids).with(@params, false) { [] } }
+          it { expect(@o.all_agree_ids_for_find @params, false).to eql [] }
         end
 
-        describe 'w #custom_all_gather_ids' do
-          before { @o.should_receive(:custom_all_gather_ids).with(@params) { [5, 8, 3] } }
-          it { expect(@o.all_agree_ids_for_find @params).to match_array [5, 8] }
+        describe 'w #custom_gather_ids' do
+          before { @o.should_receive(:custom_gather_ids).with(@params, false) { [5, 8, 3] } }
+          it { expect(@o.all_agree_ids_for_find @params, false).to match_array [5, 8] }
         end
 
-        describe 'w/o #custom_all_gather_ids' do
-          before { @o.should_receive(:custom_all_gather_ids).with(@params) { nil } }
-          it { expect(@o.all_agree_ids_for_find @params).to match_array [5, 8, 13] }
+        describe 'w/o #custom_gather_ids' do
+          before { @o.should_receive(:custom_gather_ids).with(@params, false) { nil } }
+          it { expect(@o.all_agree_ids_for_find @params, false).to match_array [5, 8, 13] }
         end
       end
     end
@@ -201,36 +201,36 @@ describe Search do
 
       context 'w/o #column_substring_gather_ids' do
         before { @o.should_receive(:column_substring_gather_ids).with(@params) { nil } }
-        describe 'w #custom_substring_gather_ids empty?' do
-          before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [] } }
+        describe 'w #custom_gather_ids empty?' do
+          before { @o.should_receive(:custom_gather_ids).with(@params, true) { [] } }
           it { expect(@o.all_agree_ids_for_find @params, true).to eql [] }
         end
 
-        describe 'w #custom_substring_gather_ids' do
-          before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [5, 8, 3] } }
+        describe 'w #custom_gather_ids' do
+          before { @o.should_receive(:custom_gather_ids).with(@params, true) { [5, 8, 3] } }
           it { expect(@o.all_agree_ids_for_find @params, true).to match_array [3, 5, 8] }
         end
 
-        describe 'w/o #custom_substring_gather_ids' do
-          before { @o.should_receive(:custom_substring_gather_ids).with(@params) { nil } }
+        describe 'w/o #custom_gather_ids' do
+          before { @o.should_receive(:custom_gather_ids).with(@params, true) { nil } }
           it { expect(@o.all_agree_ids_for_find @params, true).to match_array [] }
         end
       end
 
       context 'w #column_substring_gather_ids' do
         before { @o.should_receive(:column_substring_gather_ids).with(@params) { [8, 13, 5] } }
-        describe 'w #custom_substring_gather_ids empty?' do
-          before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [] } }
+        describe 'w #custom_gather_ids empty?' do
+          before { @o.should_receive(:custom_gather_ids).with(@params, true) { [] } }
           it { expect(@o.all_agree_ids_for_find @params, true).to eql [] }
         end
 
-        describe 'w #custom_substring_gather_ids' do
-          before { @o.should_receive(:custom_substring_gather_ids).with(@params) { [5, 8, 3] } }
+        describe 'w #custom_gather_ids' do
+          before { @o.should_receive(:custom_gather_ids).with(@params, true) { [5, 8, 3] } }
           it { expect(@o.all_agree_ids_for_find @params, true).to match_array [5, 8] }
         end
 
-        describe 'w/o #custom_substring_gather_ids' do
-          before { @o.should_receive(:custom_substring_gather_ids).with(@params) { nil } }
+        describe 'w/o #custom_gather_ids' do
+          before { @o.should_receive(:custom_gather_ids).with(@params, true) { nil } }
           it { expect(@o.all_agree_ids_for_find @params, true).to match_array [5, 8, 13] }
         end
       end
