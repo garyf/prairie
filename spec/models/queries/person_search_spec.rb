@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe PersonSearch do
-  context '#column_all_gather_ids, #column_any_gather_ids' do
+  context '#column_gather_ids w/o substring_p, #column_any_gather_ids' do
     before do
       @person0 = c_person_cr(name_last: 'Anders', email: 'foo@example.com')
       @person1 = c_person_cr(name_last: 'Brady', email: 'bar@example.com')
@@ -14,7 +14,7 @@ describe PersonSearch do
           'email' => '',
           'name_last' => ''}
       end
-      it { expect(@o.column_all_gather_ids @params).to be nil }
+      it { expect(@o.column_gather_ids @params, false).to be nil }
       it { expect(@o.column_any_gather_ids @params).to eql [] }
     end
 
@@ -25,7 +25,7 @@ describe PersonSearch do
             'email' => '',
             'name_last' => 'Dixon'}
         end
-        it { expect(@o.column_all_gather_ids @params).to eql [] }
+        it { expect(@o.column_gather_ids @params, false).to eql [] }
         it { expect(@o.column_any_gather_ids @params).to eql [] }
       end
 
@@ -35,7 +35,7 @@ describe PersonSearch do
             'email' => '',
             'name_last' => 'Anders'}
         end
-        it { expect(@o.column_all_gather_ids @params).to eql [@person0.id] }
+        it { expect(@o.column_gather_ids @params, false).to eql [@person0.id] }
         it { expect(@o.column_any_gather_ids @params).to eql [@person0.id] }
       end
     end
@@ -47,7 +47,7 @@ describe PersonSearch do
             'email' => 'foo@example.com',
             'name_last' => 'Carson'}
         end
-        it { expect(@o.column_all_gather_ids @params). to eql [@person2.id] }
+        it { expect(@o.column_gather_ids @params, false). to eql [@person2.id] }
         it 'note multiple appearances of @person2' do
           expect(@o.column_any_gather_ids @params).to match_array [@person0.id, @person2.id, @person2.id]
         end
@@ -59,7 +59,7 @@ describe PersonSearch do
             'email' => 'foo@example.com',
             'name_last' => 'Brady'}
         end
-        it { expect(@o.column_all_gather_ids @params).to eql [] }
+        it { expect(@o.column_gather_ids @params, false).to eql [] }
         it { expect(@o.column_any_gather_ids @params).to match_array [@person0.id, @person1.id, @person2.id] }
       end
 
@@ -69,26 +69,26 @@ describe PersonSearch do
             'email' => 'baz@example.com',
             'name_last' => 'Dixon'}
         end
-        it { expect(@o.column_all_gather_ids @params).to eql [] }
+        it { expect(@o.column_gather_ids @params, false).to eql [] }
         it { expect(@o.column_any_gather_ids @params).to eql [] }
       end
     end
   end
 
-  context '#column_substring_gather_ids' do
+  context '#column_gather_ids w substring_p' do
     before do
       @person0 = c_person_cr(name_last: 'Anders', email: 'foo@example.com')
       @person1 = c_person_cr(name_last: 'Brady', email: 'bar@example.com')
       @person2 = c_person_cr(name_last: 'Carson', email: 'foo@example.com')
       bld
     end
-    describe 'w/o any columns_w_substring_values' do
+    describe 'w/o any #columns_w_substring_values' do
       before do
         @params = {
           'email' => 'fo',
           'name_last' => 'An'}
       end
-      it { expect(@o.column_substring_gather_ids @params).to be nil }
+      it { expect(@o.column_gather_ids @params, true).to be nil }
     end
 
     context 'w 1 search term' do
@@ -98,7 +98,7 @@ describe PersonSearch do
             'email' => '',
             'name_last' => 'Anc'}
         end
-        it { expect(@o.column_substring_gather_ids @params).to eql [] }
+        it { expect(@o.column_gather_ids @params, true).to eql [] }
       end
 
       describe 'w 1 matching' do
@@ -107,7 +107,7 @@ describe PersonSearch do
             'email' => '',
             'name_last' => 'And'}
         end
-        it { expect(@o.column_substring_gather_ids @params).to eql [@person0.id] }
+        it { expect(@o.column_gather_ids @params, true).to eql [@person0.id] }
       end
     end
 
@@ -118,7 +118,7 @@ describe PersonSearch do
             'email' => 'foo',
             'name_last' => 'rso'}
         end
-        it { expect(@o.column_substring_gather_ids @params). to eql [@person2.id] }
+        it { expect(@o.column_gather_ids @params, true). to eql [@person2.id] }
       end
 
       describe 'w both substrings by different parents' do
@@ -127,7 +127,7 @@ describe PersonSearch do
             'email' => 'bar',
             'name_last' => 'Dixon'}
         end
-        it { expect(@o.column_substring_gather_ids @params). to eql [] }
+        it { expect(@o.column_gather_ids @params, true). to eql [] }
       end
 
       describe 'w/o matching term' do
@@ -136,7 +136,7 @@ describe PersonSearch do
             'email' => 'wherever',
             'name_last' => 'Dixon',}
         end
-        it { expect(@o.column_substring_gather_ids @params).to eql [] }
+        it { expect(@o.column_gather_ids @params, true).to eql [] }
       end
     end
   end

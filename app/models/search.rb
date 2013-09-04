@@ -20,9 +20,9 @@ class Search
     redis.lrange(key, page_begin(page), page_end(page))
   end
 
-  def column_all_gather_ids(params)
-    columns = columns_w_values(params)
-    column_all_agree(columns, params) unless columns.empty?
+  def column_gather_ids(params, substring_p)
+    columns = substring_p ? columns_w_substring_values(params) : columns_w_values(params)
+    column_agree(columns, params, substring_p) unless columns.empty?
   end
 
   def custom_gather_ids(params, substring_p)
@@ -30,13 +30,8 @@ class Search
     custom_agree(hsh, substring_p) unless hsh.empty?
   end
 
-  def column_substring_gather_ids(params)
-    columns = columns_w_substring_values(params)
-    column_substring_agree(columns, params) unless columns.empty?
-  end
-
   def all_agree_ids_for_find(params, substring_p = false)
-    column_ids = substring_p ? column_substring_gather_ids(params) : column_all_gather_ids(params)
+    column_ids = column_gather_ids(params, substring_p)
     return [] if column_ids.try(:empty?)
     custom_ids = custom_gather_ids(params, substring_p)
     return [] if custom_ids.try(:empty?)

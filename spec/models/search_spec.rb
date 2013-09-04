@@ -151,13 +151,13 @@ describe Search do
       @params = {'these' => 'params'}
     end
     context 'w/o substring_p' do
-      describe 'w #column_all_gather_ids empty?' do
-        before { @o.should_receive(:column_all_gather_ids).with(@params) { [] } }
+      describe 'w #column_gather_ids empty?' do
+        before { @o.should_receive(:column_gather_ids).with(@params, false) { [] } }
         it { expect(@o.all_agree_ids_for_find @params, false).to eql [] }
       end
 
-      context 'w/o #column_all_gather_ids' do
-        before { @o.should_receive(:column_all_gather_ids).with(@params) { nil } }
+      context 'w/o #column_gather_ids' do
+        before { @o.should_receive(:column_gather_ids).with(@params, false) { nil } }
         describe 'w #custom_gather_ids empty?' do
           before { @o.should_receive(:custom_gather_ids).with(@params, false) { [] } }
           it { expect(@o.all_agree_ids_for_find @params, false).to eql [] }
@@ -174,8 +174,8 @@ describe Search do
         end
       end
 
-      context 'w #column_all_gather_ids' do
-        before { @o.should_receive(:column_all_gather_ids).with(@params) { [8, 13, 5] } }
+      context 'w #column_gather_ids' do
+        before { @o.should_receive(:column_gather_ids).with(@params, false) { [8, 13, 5] } }
         describe 'w #custom_gather_ids empty?' do
           before { @o.should_receive(:custom_gather_ids).with(@params, false) { [] } }
           it { expect(@o.all_agree_ids_for_find @params, false).to eql [] }
@@ -194,13 +194,13 @@ describe Search do
     end
 
     context 'w substring_p' do
-      describe 'w #column_substring_gather_ids empty?' do
-        before { @o.should_receive(:column_substring_gather_ids).with(@params) { [] } }
+      describe 'w #column_gather_ids empty?' do
+        before { @o.should_receive(:column_gather_ids).with(@params, true) { [] } }
         it { expect(@o.all_agree_ids_for_find @params, true).to eql [] }
       end
 
-      context 'w/o #column_substring_gather_ids' do
-        before { @o.should_receive(:column_substring_gather_ids).with(@params) { nil } }
+      context 'w/o #column_gather_ids' do
+        before { @o.should_receive(:column_gather_ids).with(@params, true) { nil } }
         describe 'w #custom_gather_ids empty?' do
           before { @o.should_receive(:custom_gather_ids).with(@params, true) { [] } }
           it { expect(@o.all_agree_ids_for_find @params, true).to eql [] }
@@ -217,8 +217,8 @@ describe Search do
         end
       end
 
-      context 'w #column_substring_gather_ids' do
-        before { @o.should_receive(:column_substring_gather_ids).with(@params) { [8, 13, 5] } }
+      context 'w #column_gather_ids' do
+        before { @o.should_receive(:column_gather_ids).with(@params, true) { [8, 13, 5] } }
         describe 'w #custom_gather_ids empty?' do
           before { @o.should_receive(:custom_gather_ids).with(@params, true) { [] } }
           it { expect(@o.all_agree_ids_for_find @params, true).to eql [] }
