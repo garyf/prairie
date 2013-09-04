@@ -30,6 +30,16 @@ class Search
     custom_all_agree(hsh) unless hsh.empty?
   end
 
+  def column_substring_gather_ids(params)
+    columns = columns_w_substring_values(params)
+    column_substring_agree(columns, params) unless columns.empty?
+  end
+
+  def custom_substring_gather_ids(params)
+    hsh = params_custom_w_substring_values(params)
+    custom_substring_agree(hsh) unless hsh.empty?
+  end
+
   def all_agree_ids_for_find(params, substring_p = false)
     column_ids = substring_p ? column_substring_gather_ids(params) : column_all_gather_ids(params)
     return [] if column_ids.try(:empty?)
@@ -52,14 +62,8 @@ class Search
     hsh.empty? ? [] : custom_any_agree(hsh)
   end
 
-  def column_substring_gather_ids(params)
-    columns = columns_w_substring_values(params)
-    column_substring_agree(columns, params) unless columns.empty?
-  end
-
-  def custom_substring_gather_ids(params)
-    hsh = params_custom_w_values(params, true)
-    custom_substring_agree(hsh) unless hsh.empty?
+  def any_agree_ids_for_find(params, all_ids)
+    column_any_gather_ids(params) + custom_any_gather_ids(params) - all_ids
   end
 
   # return a hash of {parent_id: agree_frequency} pairs
@@ -69,10 +73,6 @@ class Search
       hsh[i] += 1
       hsh
     end
-  end
-
-  def any_agree_ids_for_find(params, all_ids)
-    column_any_gather_ids(params) + custom_any_gather_ids(params) - all_ids
   end
 
   # return an array of [agree_frequency, [parent_ids]] pairs, ordered by frequency descending
@@ -117,16 +117,20 @@ private
     columns_searchable.delete_if { |sym| params[sym.id2name].blank? }
   end
 
-  def columns_w_substring_values(params)
-    columns_searchable.delete_if do |sym|
-      v = params[sym.id2name]
-      v.blank? || v.length < SUBSTRING_MIN
-    end
+  def substring_value_reject?(value)
+    value.blank? || value.length < SUBSTRING_MIN
   end
 
-  def params_custom_w_values(params, substring_p = false)
-    regex = substring_p ? FIELD_SUBSTRING_GIST_KEY : FIELD_GIST_KEY
-    params.select { |k, v| k =~ regex unless v.blank? }
+  def columns_w_substring_values(params)
+    columns_searchable.delete_if { |sym| substring_value_reject?(params[sym.id2name]) }
+  end
+
+  def params_custom_w_values(params)
+    params.select { |k, v| k =~ FIELD_GIST_KEY unless v.blank? }
+  end
+
+  def params_custom_w_substring_values(params)
+    params.select { |k, v| k =~ FIELD_SUBSTRING_GIST_KEY unless substring_value_reject?(v) }
   end
 
   def custom_all_agree(hsh)

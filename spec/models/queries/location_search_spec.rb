@@ -121,7 +121,7 @@ describe LocationSearch do
         it { expect(@o.column_substring_gather_ids @params). to eql [@location2.id] }
       end
 
-      describe 'w 1 substring by 1 parent' do
+      describe 'w both substrings by different parents' do
         before do
           @params = {
             'description' => 'ndu',

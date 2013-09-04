@@ -14,7 +14,7 @@ describe Search do
           @params = {
             "field_#{@numeric_field.id}_gist" => '',
             "field_#{@select_field.id}_gist" => '',
-            "field_#{@string_field.id}_gist" => ''}
+            "field_#{@string_field.id}_substring_gist" => ''}
         end
         it { expect(@o.custom_all_gather_ids @params).to be nil }
         it { expect(@o.custom_any_gather_ids @params).to eql [] }
@@ -26,7 +26,7 @@ describe Search do
           @params = {
             "field_#{@numeric_field.id}_gist" => '89',
             "field_#{@select_field.id}_gist" => '',
-            "field_#{@string_field.id}_gist" => ''}
+            "field_#{@string_field.id}_substring_gist" => ''}
         end
         describe 'w/o any matching' do
           before { @numeric_field.should_receive(:parents_find_by_gist).with('89') { [] } }
@@ -48,7 +48,7 @@ describe Search do
           @params = {
             "field_#{@numeric_field.id}_gist" => '',
             "field_#{@select_field.id}_gist" => '8',
-            "field_#{@string_field.id}_gist" => 'foo'}
+            "field_#{@string_field.id}_substring_gist" => 'foo'}
         end
         describe 'w 1 all_agree parent' do
           before do
@@ -66,6 +66,80 @@ describe Search do
           end
           it { expect(@o.custom_all_gather_ids @params).to eql [] }
           it { expect(@o.custom_any_gather_ids @params).to eql [3, 4, 5, 6] }
+        end
+      end
+    end
+  end
+
+  context '#custom_substring_gather_ids' do
+    before { bld }
+    context 'w 3 custom fields' do
+      before do
+        @string_field0 = mock_model(StringField)
+        @string_field1 = mock_model(StringField)
+        @string_field2 = mock_model(StringField)
+      end
+      describe 'w/o any params_custom_w_substring_values' do
+        before do
+          @params = {
+            "field_#{@string_field0.id}_substring_gist" => 'ab',
+            "field_#{@string_field1.id}_substring_gist" => 'cd',
+            "field_#{@string_field2.id}_substring_gist" => 'ef'}
+        end
+        it { expect(@o.custom_substring_gather_ids @params).to be nil }
+      end
+
+      context 'w 1 search term' do
+        before do
+          CustomField.should_receive(:find).with("#{@string_field0.id}") { @string_field0 }
+          @params = {
+            "field_#{@string_field0.id}_substring_gist" => 'foo',
+            "field_#{@string_field1.id}_substring_gist" => '',
+            "field_#{@string_field2.id}_substring_gist" => ''}
+        end
+        describe 'w/o any matching' do
+          before { @string_field0.should_receive(:parents_find_by_substring).with('foo') { [] } }
+          it { expect(@o.custom_substring_gather_ids @params).to eql [] }
+        end
+
+        describe 'w 1 matching' do
+          before { @string_field0.should_receive(:parents_find_by_substring).with('foo') { [3, 5] } }
+          it { expect(@o.custom_substring_gather_ids @params).to eql [3, 5] }
+        end
+      end
+
+      context 'w 2 search terms' do
+        before do
+          CustomField.should_receive(:find).with("#{@string_field1.id}") { @string_field1 }
+          @params = {
+            "field_#{@string_field0.id}_substring_gist" => '',
+            "field_#{@string_field1.id}_substring_gist" => 'foo',
+            "field_#{@string_field2.id}_substring_gist" => 'bar'}
+        end
+        describe 'w both substrings by 1 parent' do
+          before do
+            CustomField.should_receive(:find).with("#{@string_field2.id}") { @string_field2 }
+            @string_field1.should_receive(:parents_find_by_substring).with('foo') { [3, 5] }
+            @string_field2.should_receive(:parents_find_by_substring).with('bar') { [5, 8] }
+          end
+          it { expect(@o.custom_substring_gather_ids @params). to eql [5] }
+        end
+
+        describe 'w both substrings by different parents' do
+          before do
+            CustomField.should_receive(:find).with("#{@string_field2.id}") { @string_field2 }
+            @string_field1.should_receive(:parents_find_by_substring).with('foo') { [3, 5] }
+            @string_field2.should_receive(:parents_find_by_substring).with('bar') { [8, 13] }
+          end
+          it { expect(@o.custom_substring_gather_ids @params). to eql [] }
+        end
+
+        describe 'w/o matching term' do
+          before do
+            @string_field1.should_receive(:parents_find_by_substring).with('foo') { [] }
+            @string_field2.should_not_receive(:parents_find_by_substring)
+          end
+          it { expect(@o.custom_substring_gather_ids @params).to eql [] }
         end
       end
     end
