@@ -3,32 +3,38 @@ require 'spec_helper'
 describe Location do
   context '::id_where_case_insensitive_value, ::id_where_ILIKE_value' do
     context 'w 1 location' do
-      before { @o0 = cr(name: 'Oxford', description: 'seaside') }
+      before do
+        @o0 = cr(name: 'Oxford', description: 'seaside')
+        @id0 = @o0.id
+      end
       it 'w search term length equal to value length' do
-        expect(Location.id_where_case_insensitive_value 'name', 'Oxford').to match_array [@o0]
-        expect(Location.id_where_case_insensitive_value 'name', 'oxford').to match_array [@o0]
-        expect(Location.id_where_ILIKE_value 'name', 'Oxford').to match_array [@o0]
-        expect(Location.id_where_ILIKE_value 'name', 'oxford').to match_array [@o0]
-        expect(Location.id_where_case_insensitive_value 'description', 'Seaside').to match_array [@o0]
+        expect(Location.id_where_case_insensitive_value 'name', 'Oxford').to match_array [@id0]
+        expect(Location.id_where_case_insensitive_value 'name', 'oxford').to match_array [@id0]
+        expect(Location.id_where_ILIKE_value 'name', 'Oxford').to match_array [@id0]
+        expect(Location.id_where_ILIKE_value 'name', 'oxford').to match_array [@id0]
+        expect(Location.id_where_case_insensitive_value 'description', 'Seaside').to match_array [@id0]
         expect(Location.id_where_case_insensitive_value 'description', 'Suburbs').to match_array []
-        expect(Location.id_where_ILIKE_value 'description', 'Seaside').to match_array [@o0]
+        expect(Location.id_where_ILIKE_value 'description', 'Seaside').to match_array [@id0]
         expect(Location.id_where_ILIKE_value 'description', 'Suburbs').to match_array []
       end
 
       it 'w substring search term' do
         expect(Location.id_where_case_insensitive_value 'name', 'xford').to match_array []
         expect(Location.id_where_case_insensitive_value 'name', 'Oxfor').to match_array []
-        expect(Location.id_where_ILIKE_value 'name', 'xford').to match_array [@o0]
-        expect(Location.id_where_ILIKE_value 'name', 'Oxfor').to match_array [@o0]
+        expect(Location.id_where_ILIKE_value 'name', 'xford').to match_array [@id0]
+        expect(Location.id_where_ILIKE_value 'name', 'Oxfor').to match_array [@id0]
       end
 
       describe 'w 2 locations' do
-        before { @o1 = cr(name: 'oxford', description: 'Seaside') }
+        before do
+          @o1 = cr(name: 'oxford', description: 'Seaside')
+          @id1 = @o1.id
+        end
         it do
-          expect(Location.id_where_case_insensitive_value 'name', 'Oxford').to match_array [@o0, @o1]
-          expect(Location.id_where_case_insensitive_value 'description', 'Seaside').to match_array [@o0, @o1]
-          expect(Location.id_where_ILIKE_value 'name', 'Oxford').to match_array [@o0, @o1]
-          expect(Location.id_where_ILIKE_value 'description', 'Seaside').to match_array [@o0, @o1]
+          expect(Location.id_where_case_insensitive_value 'name', 'Oxford').to match_array [@id0, @id1]
+          expect(Location.id_where_case_insensitive_value 'description', 'Seaside').to match_array [@id0, @id1]
+          expect(Location.id_where_ILIKE_value 'name', 'Oxford').to match_array [@id0, @id1]
+          expect(Location.id_where_ILIKE_value 'description', 'Seaside').to match_array [@id0, @id1]
         end
       end
     end
