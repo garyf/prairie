@@ -7,6 +7,9 @@ class CustomField < ActiveRecord::Base
   belongs_to :field_set
   has_many :choices, dependent: :destroy
 
+  after_save :fields_enabled_count
+  after_destroy :fields_enabled_count
+
   ranks :row, class_name: 'CustomField', with_same: :field_set_id # https://github.com/mixonic/ranked-model/pull/28
 
   paginates_per 8
@@ -40,5 +43,11 @@ class CustomField < ActiveRecord::Base
 
   def human_row
     field_set.custom_fields.position_above_count(row) + 1
+  end
+
+private
+
+  def fields_enabled_count
+    field_set.fields_enabled_count
   end
 end

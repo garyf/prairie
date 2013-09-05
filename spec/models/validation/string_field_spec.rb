@@ -107,7 +107,7 @@ describe StringField do
 private
 
   def bld(options = {})
-    @field_set ||= FactoryGirl.build_stubbed(:person_field_set)
+    @field_set ||= FactoryGirl.build(:person_field_set)
     @o = FactoryGirl.build(:string_field, {
       field_set: @field_set}.merge(options))
   end

@@ -4,6 +4,7 @@ class CreateFieldSets < ActiveRecord::Migration
       t.string :type, null: false
       t.string :name, null: false
       t.string :description
+      t.integer :fields_enabled_qty, null: false, default: 0
 
       t.timestamps
     end

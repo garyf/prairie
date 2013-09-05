@@ -73,23 +73,6 @@ describe FieldSet do
     end
   end
 
-  context '#enabled?' do
-    before { cr1 }
-    it 'w/o custom_field' do
-      expect(@o.enabled?).to be false
-    end
-
-    it 'w 1 !enabled custom_field' do
-      string_field_cr(enabled_p: false)
-      expect(@o.enabled?).to be false
-    end
-
-    it 'w 1 enabled custom_field' do
-      string_field_cr
-      expect(@o.enabled?).to be true
-    end
-  end
-
 private
 
   def cr(options = {})

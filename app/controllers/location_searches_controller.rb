@@ -9,7 +9,7 @@ class LocationSearchesController < ApplicationController
   end
 
   def new
-    @field_sets = LocationFieldSet.by_name
+    @field_sets = LocationFieldSet.enabled_by_name
   end
 
   def create

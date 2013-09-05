@@ -9,7 +9,7 @@ class PersonSearchesController < ApplicationController
   end
 
   def new
-    @field_sets = PersonFieldSet.by_name
+    @field_sets = PersonFieldSet.enabled_by_name
   end
 
   def create

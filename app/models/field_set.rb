@@ -14,7 +14,7 @@ class FieldSet < ActiveRecord::Base
   end
 
   def self.enabled_by_name
-    by_name.find_all { |o| o.enabled? }
+    where('fields_enabled_qty > 0').by_name
   end
 
   # each subklass may have 12 records
@@ -42,15 +42,18 @@ class FieldSet < ActiveRecord::Base
     custom_fields.count == 0
   end
 
-  def enabled?
-    custom_fields.enabled.count > 0
-  end
-
   def custom_field_new_able?
     custom_fields.count < 21
   end
 
   def custom_field_row_edit_able?
     custom_fields.count > 1
+  end
+
+  def fields_enabled_count
+    int = custom_fields.enabled.count
+    return if int == fields_enabled_qty
+    self.fields_enabled_qty = int
+    self.save
   end
 end
