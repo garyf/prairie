@@ -123,10 +123,14 @@ private
     params.select { |k, v| k =~ FIELD_SUBSTRING_GIST_KEY unless substring_value_reject?(v) }
   end
 
+  def custom_field_assign(key)
+    CustomField.find(key.split('_')[1])
+  end
+
   def custom_agree(hsh, substring_p)
     ids = nil
     hsh.each do |k, v|
-      o = CustomField.find(k.split('_')[1])
+      o = custom_field_assign(k)
       value_ids = substring_p ? o.parents_find_by_substring(v) : o.parents_find_by_gist(v)
       ids = ids ? value_ids & ids : value_ids
       return [] if ids.empty?
@@ -137,7 +141,7 @@ private
   def custom_any_agree(hsh)
     ids = []
     hsh.each do |k, v|
-      o = CustomField.find(k.split('_')[1])
+      o = custom_field_assign(k)
       ids = ids + o.parents_find_by_gist(v)
     end
     ids
