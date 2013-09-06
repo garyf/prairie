@@ -5,6 +5,7 @@ class Search
   FIELD_GIST_KEY = %r{^field_\d+_[gist]+}
   FIELD_SUBSTRING_GIST_KEY = %r{^field_\d+_substring_gist$}
   RESULTS_COUNT_MIN = 55
+  RESULT_IDS_EXPIRE_SECONDS = 3600
   RESULTS_PER_PAGE = 25
   SUBSTRING_MIN = 3
 
@@ -97,7 +98,7 @@ class Search
     return if ids.empty?
     key = result_ids_redis_key
     redis.rpush(key, ids)
-    redis.expire(key, 900)
+    redis.expire(key, RESULT_IDS_EXPIRE_SECONDS)
     key
   end
 
