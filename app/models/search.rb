@@ -17,6 +17,10 @@ class Search
     page.to_i * RESULTS_PER_PAGE - 1
   end
 
+  def self.results_count(key)
+    redis.llen(key)
+  end
+
   def self.result_ids_fetch(key, page)
     redis.lrange(key, page_begin(page), page_end(page))
   end

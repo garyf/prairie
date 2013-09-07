@@ -5,6 +5,7 @@ class PersonSearchesController < ApplicationController
   def index
     key = session[:person_search_key]
     redirect_to new_person_search_path and return unless key && params[:page]
+    @results_count = PersonSearch.results_count(key)
     @people = PersonSearch.people_fetch(key, params[:page])
   end
 

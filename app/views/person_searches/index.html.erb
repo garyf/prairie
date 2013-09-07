@@ -4,7 +4,7 @@
 </ul>
 
 <% if @people.any? %>
-  <h5>By relevance</h5>
+  <h5><%= search_results_info @results_count %></h5>
   <ul class=unstyled><%= render partial: 'person', collection: @people %></ul>
 
 <% else %>

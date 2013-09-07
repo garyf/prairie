@@ -5,6 +5,7 @@ class LocationSearchesController < ApplicationController
   def index
     key = session[:location_search_key]
     redirect_to new_location_search_path and return unless key && params[:page]
+    @results_count = LocationSearch.results_count(key)
     @locations = LocationSearch.locations_fetch(key, params[:page])
   end
 

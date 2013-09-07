@@ -34,3 +34,10 @@ en:
       update:
         failure: "Failed to update %{entity}"
         success: "%{entity} successfully updated"
+  helpers:
+    search_results:
+      single_page:
+        zero: "No %{entry_name} found"
+        one: "Displaying 1 %{entry_name}"
+        other: "Displaying all %{count} %{entry_name} by relevance"
+      multiple_pages: "Displaying %{entry_name} %{first} - %{last}, of %{total} total, by relevance"
