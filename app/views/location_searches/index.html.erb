@@ -6,6 +6,7 @@
 <% if @locations.any? %>
   <h5><%= search_results_info %></h5>
   <ul class=unstyled><%= render partial: 'location', collection: @locations %></ul>
+  <%= render partial: 'common/search_pagination_nav' %>
 
 <% else %>
   <h5>No results found</h5>

@@ -6,7 +6,7 @@ class Search
   FIELD_SUBSTRING_GIST_KEY = %r{^field_\d+_substring_gist$}
   RESULTS_COUNT_MIN = 55
   RESULT_IDS_EXPIRE_SECONDS = 3600
-  RESULTS_PER_PAGE = 25
+  RESULTS_PER_PAGE = 10
   SUBSTRING_MIN = 3
 
   def self.page_begin(page)

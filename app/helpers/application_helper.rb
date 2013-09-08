@@ -29,4 +29,15 @@ module ApplicationHelper
         last: last_search_page?(page, per_page) ? @results_count : page_offset + per_page)
     end.html_safe
   end
+
+  def search_pagination_nav
+    page = params[:page].to_i
+    last_page_p = last_search_page?(page, Search::RESULTS_PER_PAGE)
+    ary = []
+    return ary if page == 1 && last_page_p
+    ary << (page > 1 ? "<li>#{link_to 'First', url_for(params.merge page: 1)}</li>" : "<li class=disabled>#{link_to 'First', '#'}</li>").html_safe
+    ary << "<li>#{link_to 'Prev', url_for(params.merge page: page - 1)}</li>".html_safe if page > 2
+    ary << (last_page_p ? "<li class=disabled>#{link_to 'Last', '#'}</li>" : "<li>#{link_to 'Next', url_for(params.merge page: page + 1)}</li>").html_safe
+    ary
+  end
 end

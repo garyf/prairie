@@ -1,0 +1,9 @@
+<% links = search_pagination_nav %>
+
+<% if links.any? %>
+  <div class=pagination>
+    <ul><% links.each do |link| %>
+      <%= link %>
+    <% end %></ul>
+  </div>
+<% end %>
