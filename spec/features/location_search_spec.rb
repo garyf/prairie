@@ -10,8 +10,7 @@ feature 'Location search w/o custom field' do
     expect(page).to have_content 'New search for locations'
     fill_in 'name', with: 'Tysons'
     click_button 'Search'
-    expect(page).to have_content 'Search results'
-    expect(page).to have_content 'By relevance'
+    expect(page).to have_content '1 search result'
     click_link 'Tysons'
     expect(page).to have_content 'mall'
   end
@@ -38,7 +37,7 @@ feature 'Location search w custom field' do
   it 'w result' do
     fill_in "field_#{@numeric_field.id}_gist", with: 34
     click_button 'Search'
-    expect(page).to have_content 'Search results'
+    expect(page).to have_content '1 search result'
     expect(page).to have_content 'Tysons'
   end
 end

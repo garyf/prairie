@@ -1,10 +1,10 @@
 <ul class='nav  nav-pills'>
-  <li class='active'><a>Search results</a></li>
+  <li class='active'><a><%= search_results_count %></a></li>
   <li><%= link_to 'New search for people', new_person_search_path %></li>
 </ul>
 
 <% if @people.any? %>
-  <h5><%= search_results_info @results_count %></h5>
+  <h5><%= search_results_info %></h5>
   <ul class=unstyled><%= render partial: 'person', collection: @people %></ul>
 
 <% else %>

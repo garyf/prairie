@@ -10,8 +10,7 @@ feature 'Person search w/o custom field' do
     expect(page).to have_content 'New search for people'
     fill_in 'name_last', with: 'Edwards'
     click_button 'Search'
-    expect(page).to have_content 'Search results'
-    expect(page).to have_content 'By relevance'
+    expect(page).to have_content '1 search result'
     click_link 'Edwards'
     expect(page).to have_content 'mike@example.com'
   end
@@ -38,7 +37,7 @@ feature 'Person search w custom field' do
   it 'w result' do
     fill_in "field_#{@string_field.id}_substring_gist", with: 'Bicycle'
     click_button 'Search'
-    expect(page).to have_content 'Search results'
+    expect(page).to have_content '1 search result'
     expect(page).to have_content 'Edwards'
   end
 end

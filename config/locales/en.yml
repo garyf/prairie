@@ -36,8 +36,12 @@ en:
         success: "%{entity} successfully updated"
   helpers:
     search_results:
+      count:
+        zero: "Search results"
+        one: "1 search result"
+        other: "%{count} search results"
+      multiple_pages: "%{entry_name} %{first} - %{last}"
       single_page:
         zero: "No %{entry_name} found"
-        one: "Displaying 1 %{entry_name}"
-        other: "Displaying all %{count} %{entry_name} by relevance"
-      multiple_pages: "Displaying %{entry_name} %{first} - %{last}, of %{total} total, by relevance"
+        one: "1 %{entry_name} found"
+        other: "All %{count} %{entry_name} found"
