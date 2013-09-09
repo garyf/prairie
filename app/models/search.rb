@@ -89,7 +89,7 @@ class Search
     any_agree_hsh = parent_distribution(any_agree_ids_for_find params, all_ids)
     result_ids = all_ids + ids_by_relevance(any_agree_hsh)
     any_ids = any_agree_hsh.keys
-    return result_ids unless any_agree_ids_few?(all_ids, any_ids)
+    return result_ids unless any_agree_ids_few?(all_ids, any_ids) && Settings.search.substring_p
     substring_ids = all_agree_ids_for_find(params, true) - all_ids - any_ids
     return result_ids unless substring_ids.any?
     substring_agree_hsh = parent_distribution(substring_ids)

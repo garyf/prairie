@@ -1,0 +1,12 @@
+defaults: &defaults
+  search:
+    substring_p: true
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+  
+production:
+  <<: *defaults

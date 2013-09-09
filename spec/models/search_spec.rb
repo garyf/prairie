@@ -334,7 +334,10 @@ describe Search do
         @any_ids = @any_pd.keys
       end
       context 'w #any_agree_ids_few?' do
-        before { @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { true } }
+        before do
+          @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { true }
+          Settings.stub_chain(:search, :substring_p) { true }
+        end
         describe 'w substring_ids' do
           before do
             @substring_ids = [89, 144, 89]
