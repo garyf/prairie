@@ -60,6 +60,8 @@ ActiveRecord::Schema.define(version: 20130901165245) do
     t.string   "email",      null: false
     t.string   "name_first"
     t.string   "name_last",  null: false
+    t.integer  "birth_year"
+    t.float    "height"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -7,7 +7,11 @@ class Person < ActiveRecord::Base
 
   paginates_per 8
 
-  validates :email, :name_last, presence: true
+  validates :birth_year, numericality: {greater_than: 1899, less_than: 2014, only_integer: true}, allow_blank: true
+  validates :email, presence: true, length: 3..254, format: {with: /@/}
+  validates :height, numericality: {greater_than: 13, less_than: 89}, allow_blank: true
+  validates :name_first, length: {maximum: 55}
+  validates :name_last, presence: true, length: {maximum: 55}
 
   def self.by_name_last(page)
     order('name_last').page page

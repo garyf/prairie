@@ -13,6 +13,14 @@
     <%= f.label :email, class: 'control-label' %>
     <div class=controls><%= f.text_field :email %></div>
   </div>
+  <div class=control-group>
+    <%= f.label :birth_year, class: 'control-label' %>
+    <div class=controls><%= f.number_field :birth_year, class: 'input-mini' %></div>
+  </div>
+  <div class=control-group>
+    <%= f.label :height, class: 'control-label' %>
+    <div class=controls><%= f.number_field :height, class: 'input-mini' %></div>
+  </div>
   <div class=form-actions>
     <%= f.button 'Done', class: 'btn  btn-primary' %>
     <%= link_to 'Cancel', people_path, class: 'btn' %>

@@ -4,6 +4,8 @@ class CreatePeople < ActiveRecord::Migration
       t.string :email, null: false
       t.string :name_first
       t.string :name_last, null: false
+      t.integer :birth_year
+      t.float :height
 
       t.timestamps
     end
