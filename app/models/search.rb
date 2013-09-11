@@ -85,7 +85,7 @@ class Search
 
   def result_ids_by_relevance(params)
     all_ids = all_agree_ids_for_find(params)
-    return [all_ids] unless all_agree_ids_few?(all_ids)
+    return all_ids unless all_agree_ids_few?(all_ids)
     any_agree_hsh = parent_distribution(any_agree_ids_for_find params, all_ids)
     result_ids = all_ids + ids_by_relevance(any_agree_hsh)
     any_ids = any_agree_hsh.keys

@@ -7,7 +7,9 @@ class PersonSearch < Search
 private
 
   def columns_searchable() [
+    :birth_year,
     :email,
+    :height,
     :name_first,
     :name_last]
   end

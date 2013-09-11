@@ -42,7 +42,9 @@ private
 
   def params_white
     params.require(:person).permit(
+      :birth_year,
       :email,
+      :height,
       :name_first,
       :name_last)
   end

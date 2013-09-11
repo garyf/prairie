@@ -370,7 +370,7 @@ describe Search do
         @all_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN }
         @o.should_not_receive(:any_agree_ids_for_find)
       end
-      it { expect(@o.result_ids_by_relevance @params).to eql [@all_ids] }
+      it { expect(@o.result_ids_by_relevance @params).to eql @all_ids }
     end
   end
 

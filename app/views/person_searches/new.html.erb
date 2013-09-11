@@ -4,15 +4,23 @@
 
   <div class=control-group>
     <%= label_tag 'First name', nil, class: 'control-label' %>
-    <div class=controls><%= text_field_tag 'name_first' %></div>
+    <div class=controls><%= text_field_tag 'name_first', nil, placeholder: 'First name', max_length: 55 %></div>
   </div>
   <div class=control-group>
     <%= label_tag 'Last name', nil, class: 'control-label' %>
-    <div class=controls><%= text_field_tag 'name_last' %></div>
+    <div class=controls><%= text_field_tag 'name_last', nil, placeholder: 'Last name', max_length: 55 %></div>
   </div>
   <div class=control-group>
     <%= label_tag 'Email', nil, class: 'control-label' %>
-    <div class=controls><%= text_field_tag 'email' %></div>
+    <div class=controls><%= text_field_tag 'email', nil, placeholder: 'Email', max_length: 254 %></div>
+  </div>
+  <div class=control-group>
+    <%= label_tag 'Birth year', nil, class: 'control-label' %>
+    <div class=controls><%= number_field_tag 'birth_year', nil, class: 'input-mini', placeholder: 'YYYY', max_length: 4 %></div>
+  </div>
+  <div class=control-group>
+    <%= label_tag 'Height', nil, class: 'control-label' %>
+    <div class=controls><%= number_field_tag 'height', nil, class: 'input-mini', placeholder: 'Inches', max_length: 4 %></div>
   </div>
 
   <%= render partial: 'common/search_field_sets', locals: {field_sets: @field_sets} %>

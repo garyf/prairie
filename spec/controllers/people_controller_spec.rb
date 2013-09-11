@@ -110,7 +110,9 @@ describe PeopleController do
 private
 
   def valid_attributes() {
+    'birth_year' => '1685',
     'email' => 'leipzig@example.com',
+    'height' => '68',
     'name_first' => 'Johann',
     'name_last' => 'Bach'}
   end
