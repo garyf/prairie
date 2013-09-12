@@ -9,6 +9,8 @@ class Search
   RESULTS_PER_PAGE = 10
   SUBSTRING_MIN = 3
 
+  class ColumnTypeNotRecognized < StandardError ; end
+
   def self.page_begin(page)
     (page.to_i - 1) * RESULTS_PER_PAGE
   end

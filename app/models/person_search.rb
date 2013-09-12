@@ -14,11 +14,26 @@ private
     :name_last]
   end
 
+  def column_type(column)
+    Person.columns_hash["#{column.id2name}"].type
+  end
+
+  def column_type_query(col, val, near_p = false)
+    case column_type(col)
+    when :string
+      near_p ? Person.id_where_ILIKE_value(col, val) : Person.id_where_case_insensitive_value(col, val)
+    when :integer || :float
+      near_p ? Person.id_where_numeric_value(col, val) : Person.id_where_numeric_value(col, val)
+    else
+      raise ColumnTypeNotRecognized
+    end
+  end
+
   def column_agree(columns, params, substring_p)
     ids = nil
     columns.each do |c|
       v = params[c.id2name]
-      value_ids = substring_p ? Person.id_where_ILIKE_value(c, v) : Person.id_where_case_insensitive_value(c, v)
+      value_ids = column_type_query(c, v, substring_p)
       ids = ids ? value_ids & ids : value_ids
       return [] if ids.empty?
     end
@@ -27,7 +42,7 @@ private
 
   def column_any_agree(columns, params)
     ids = []
-    columns.each { |c| ids = ids + Person.id_where_case_insensitive_value(c, params[c.id2name]) }
+    columns.each { |c| ids = ids + column_type_query(c, params[c.id2name]) }
     ids
   end
 
