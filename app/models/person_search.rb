@@ -25,17 +25,17 @@ private
     when :string
       near_p ? Person.id_where_ILIKE_value(col, val) : Person.id_where_case_insensitive_value(col, val)
     when :number
-      near_p ? Person.id_where_numeric_value(col, val) : Person.id_where_numeric_value(col, val)
+      near_p ? Person.id_where_numeric_range(col, val) : Person.id_where_numeric_value(col, val)
     else
       raise ColumnTypeNotRecognized
     end
   end
 
-  def column_agree(columns, params, substring_p)
+  def column_agree(columns, params, near_p)
     ids = nil
     columns.each do |c|
       v = params[c.id2name]
-      value_ids = column_type_query(c, v, substring_p)
+      value_ids = column_type_query(c, v, near_p)
       ids = ids ? value_ids & ids : value_ids
       return [] if ids.empty?
     end

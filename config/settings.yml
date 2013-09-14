@@ -1,6 +1,6 @@
 defaults: &defaults
   search:
-    substring_p: true
+    near_p: true
 
 development:
   <<: *defaults

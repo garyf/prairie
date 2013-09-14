@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Search do
-  context '#custom_gather_ids w/o substring_p, #custom_any_gather_ids' do
+  context '#custom_gather_ids w/o near_p, #custom_any_gather_ids' do
     before { bld }
     context 'w 3 custom fields' do
       before do
@@ -71,7 +71,7 @@ describe Search do
     end
   end
 
-  context '#custom_gather_ids w substring_p' do
+  context '#custom_gather_ids w near_p' do
     before { bld }
     context 'w 3 custom fields' do
       before do
@@ -150,7 +150,7 @@ describe Search do
       bld
       @params = {'these' => 'params'}
     end
-    context 'w/o substring_p' do
+    context 'w/o near_p' do
       describe 'w #column_gather_ids empty?' do
         before { @o.should_receive(:column_gather_ids).with(@params, false) { [] } }
         it { expect(@o.all_agree_ids_for_find @params, false).to eql [] }
@@ -193,7 +193,7 @@ describe Search do
       end
     end
 
-    context 'w substring_p' do
+    context 'w near_p' do
       describe 'w #column_gather_ids empty?' do
         before { @o.should_receive(:column_gather_ids).with(@params, true) { [] } }
         it { expect(@o.all_agree_ids_for_find @params, true).to eql [] }
@@ -336,7 +336,7 @@ describe Search do
       context 'w #any_agree_ids_few?' do
         before do
           @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { true }
-          Settings.stub_chain(:search, :substring_p) { true }
+          Settings.stub_chain(:search, :near_p) { true }
         end
         describe 'w substring_ids' do
           before do

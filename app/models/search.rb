@@ -29,20 +29,20 @@ class Search
     redis.lrange(key, page_begin(page), page_end(page))
   end
 
-  def column_gather_ids(params, substring_p)
-    columns = substring_p ? columns_w_substring_values(params) : columns_w_values(params)
-    column_agree(columns, params, substring_p) unless columns.empty?
+  def column_gather_ids(params, near_p)
+    columns = near_p ? columns_w_near_values(params) : columns_w_values(params)
+    column_agree(columns, params, near_p) unless columns.empty?
   end
 
-  def custom_gather_ids(params, substring_p)
-    hsh = substring_p ? params_custom_w_substring_values(params) : params_custom_w_values(params)
-    custom_agree(hsh, substring_p) unless hsh.empty?
+  def custom_gather_ids(params, near_p)
+    hsh = near_p ? params_custom_w_substring_values(params) : params_custom_w_values(params)
+    custom_agree(hsh, near_p) unless hsh.empty?
   end
 
-  def all_agree_ids_for_find(params, substring_p = false)
-    column_ids = column_gather_ids(params, substring_p)
+  def all_agree_ids_for_find(params, near_p = false)
+    column_ids = column_gather_ids(params, near_p)
     return [] if column_ids.try(:empty?)
-    custom_ids = custom_gather_ids(params, substring_p)
+    custom_ids = custom_gather_ids(params, near_p)
     return [] if custom_ids.try(:empty?)
     if custom_ids
       column_ids ? column_ids & custom_ids : custom_ids
@@ -93,7 +93,7 @@ class Search
     any_agree_hsh = parent_distribution(any_agree_ids_for_find params, all_ids)
     result_ids = all_ids + ids_by_relevance(any_agree_hsh)
     any_ids = any_agree_hsh.keys
-    return result_ids unless any_agree_ids_few?(all_ids, any_ids) && Settings.search.substring_p
+    return result_ids unless any_agree_ids_few?(all_ids, any_ids) && Settings.search.near_p
     substring_ids = all_agree_ids_for_find(params, true) - all_ids - any_ids
     return result_ids unless substring_ids.any?
     substring_agree_hsh = parent_distribution(substring_ids)
@@ -133,8 +133,18 @@ private
     value.blank? || value.length < SUBSTRING_MIN
   end
 
-  def columns_w_substring_values(params)
-    columns_searchable.delete_if { |sym| substring_value_reject?(params[sym.id2name]) }
+  def columns_w_near_values(params)
+    columns_searchable.delete_if do |col|
+      val = params[col.id2name]
+      case column_type(col)
+      when :string
+        substring_value_reject?(val)
+      when :number
+        val.blank?
+      else
+        raise ColumnTypeNotRecognized
+      end
+    end
   end
 
   def params_custom_w_values(params)
@@ -149,11 +159,11 @@ private
     CustomField.find(key.split('_')[1])
   end
 
-  def custom_agree(hsh, substring_p)
+  def custom_agree(hsh, near_p)
     ids = nil
     hsh.each do |k, v|
       o = custom_field_assign(k)
-      value_ids = substring_p ? o.parents_find_by_substring(v) : o.parents_find_by_gist(v)
+      value_ids = near_p ? o.parents_find_by_substring(v) : o.parents_find_by_gist(v)
       ids = ids ? value_ids & ids : value_ids
       return [] if ids.empty?
     end

@@ -11,6 +11,12 @@ private
     :name]
   end
 
+  def column_type(column)
+    sym = Location.columns_hash["#{column.id2name}"].type
+    sym = :number if sym == :integer || sym == :float
+    sym
+  end
+
   def column_agree(columns, params, substring_p)
     ids = nil
     columns.each do |c|

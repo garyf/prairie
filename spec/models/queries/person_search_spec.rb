@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe PersonSearch do
-  context '#column_gather_ids w/o substring_p, #column_any_gather_ids' do
+  context '#column_gather_ids w/o near_p, #column_any_gather_ids' do
     before do
       @person0 = c_person_cr(name_last: 'Anders', email: 'foo@example.com')
       @person1 = c_person_cr(name_last: 'Brady', email: 'bar@example.com')
@@ -75,14 +75,14 @@ describe PersonSearch do
     end
   end
 
-  context '#column_gather_ids w substring_p' do
+  context '#column_gather_ids w near_p' do
     before do
       @person0 = c_person_cr(name_last: 'Anders', email: 'foo@example.com')
       @person1 = c_person_cr(name_last: 'Brady', email: 'bar@example.com')
       @person2 = c_person_cr(name_last: 'Carson', email: 'foo@example.com')
       bld
     end
-    describe 'w/o any #columns_w_substring_values' do
+    describe 'w/o any #columns_w_near_values' do
       before do
         @params = {
           'email' => 'fo',
