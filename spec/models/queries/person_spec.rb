@@ -8,21 +8,21 @@ describe Person do
         @id0 = @o0.id
       end
       it 'w search term length equal to value length' do
-        expect(Person.id_where_case_insensitive_value 'name_last', 'George').to match_array [@id0]
-        expect(Person.id_where_case_insensitive_value 'name_last', 'george').to match_array [@id0]
-        expect(Person.id_where_ILIKE_value 'name_last', 'George').to match_array [@id0]
-        expect(Person.id_where_ILIKE_value 'name_last', 'george').to match_array [@id0]
-        expect(Person.id_where_case_insensitive_value 'email', 'Vienna@example.com').to match_array [@id0]
-        expect(Person.id_where_case_insensitive_value 'email', 'Viento@example.com').to match_array []
-        expect(Person.id_where_ILIKE_value 'email', 'Vienna@example.com').to match_array [@id0]
-        expect(Person.id_where_ILIKE_value 'email', 'Viento@example.com').to match_array []
+        expect(Person.id_where_case_insensitive_value :name_last, 'George').to match_array [@id0]
+        expect(Person.id_where_case_insensitive_value :name_last, 'george').to match_array [@id0]
+        expect(Person.id_where_ILIKE_value :name_last, 'George').to match_array [@id0]
+        expect(Person.id_where_ILIKE_value :name_last, 'george').to match_array [@id0]
+        expect(Person.id_where_case_insensitive_value :email, 'Vienna@example.com').to match_array [@id0]
+        expect(Person.id_where_case_insensitive_value :email, 'Viento@example.com').to match_array []
+        expect(Person.id_where_ILIKE_value :email, 'Vienna@example.com').to match_array [@id0]
+        expect(Person.id_where_ILIKE_value :email, 'Viento@example.com').to match_array []
       end
 
       it 'w substring search term' do
-        expect(Person.id_where_case_insensitive_value 'name_last', 'eorge').to match_array []
-        expect(Person.id_where_case_insensitive_value 'name_last', 'Georg').to match_array []
-        expect(Person.id_where_ILIKE_value 'name_last', 'eorge').to match_array [@id0]
-        expect(Person.id_where_ILIKE_value 'name_last', 'Georg').to match_array [@id0]
+        expect(Person.id_where_case_insensitive_value :name_last, 'eorge').to match_array []
+        expect(Person.id_where_case_insensitive_value :name_last, 'Georg').to match_array []
+        expect(Person.id_where_ILIKE_value :name_last, 'eorge').to match_array [@id0]
+        expect(Person.id_where_ILIKE_value :name_last, 'Georg').to match_array [@id0]
       end
 
       describe 'w 2 people' do
@@ -31,10 +31,45 @@ describe Person do
           @id1 = @o1.id
         end
         it do
-          expect(Person.id_where_case_insensitive_value 'name_last', 'George').to match_array [@id0, @id1]
-          expect(Person.id_where_case_insensitive_value 'email', 'Vienna@example.com').to match_array [@id0, @id1]
-          expect(Person.id_where_ILIKE_value 'name_last', 'George').to match_array [@id0, @id1]
-          expect(Person.id_where_ILIKE_value 'email', 'Vienna@example.com').to match_array [@id0, @id1]
+          expect(Person.id_where_case_insensitive_value :name_last, 'George').to match_array [@id0, @id1]
+          expect(Person.id_where_case_insensitive_value :email, 'Vienna@example.com').to match_array [@id0, @id1]
+          expect(Person.id_where_ILIKE_value :name_last, 'George').to match_array [@id0, @id1]
+          expect(Person.id_where_ILIKE_value :email, 'Vienna@example.com').to match_array [@id0, @id1]
+        end
+      end
+    end
+  end
+
+  context '::id_where_numeric_value, ::id_where_numeric_range' do
+    context 'w 1 person' do
+      before do
+        @o0 = cr(birth_year: 1980, height: 70)
+        @id0 = @o0.id
+      end
+      it 'w search term == value' do
+        expect(Person.id_where_numeric_value :birth_year, 1980).to match_array [@id0]
+        expect(Person.id_where_numeric_range :birth_year, 1980).to match_array [@id0]
+        expect(Person.id_where_numeric_value :height, 70).to match_array [@id0]
+        expect(Person.id_where_numeric_range :height, 70).to match_array [@id0]
+      end
+
+      it 'w search term near value' do
+        expect(Person.id_where_numeric_value :birth_year, 1979).to match_array []
+        expect(Person.id_where_numeric_value :birth_year, 1981).to match_array []
+        expect(Person.id_where_numeric_range :birth_year, 2201).to match_array [@id0]
+        expect(Person.id_where_numeric_range :birth_year, 1782).to match_array [@id0]
+      end
+
+      describe 'w 2 people' do
+        before do
+          @o1 = cr(birth_year: 1980, height: 68)
+          @id1 = @o1.id
+        end
+        it do
+          expect(Person.id_where_numeric_value :birth_year, 1980).to match_array [@id0, @id1]
+          expect(Person.id_where_numeric_value :height, 68).to match_array [@id1]
+          expect(Person.id_where_numeric_range :birth_year, 1999).to match_array [@id0, @id1]
+          expect(Person.id_where_numeric_range :height, 69).to match_array [@id0, @id1]
         end
       end
     end

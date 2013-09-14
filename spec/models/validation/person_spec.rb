@@ -3,17 +3,10 @@ require 'spec_helper'
 describe Person do
   context '::validates w' do
     context '#birth_year' do
-      describe 'out of range' do
-        it 'low' do
-          bld birth_year: 1899
-          expect(@o.error_on :birth_year).to include 'must be greater than 1899'
-        end
-        it 'high' do
-          bld birth_year: 2014
-          expect(@o.error_on :birth_year).to include 'must be less than 2014'
-        end
+      it 'out of range high' do
+        bld birth_year: 2015
+        expect(@o.error_on :birth_year).to include 'must be less than 2015'
       end
-
       it 'w/o integer' do
         bld birth_year: 2013.5
         expect(@o.error_on :birth_year).to include 'must be an integer'
