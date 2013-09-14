@@ -15,14 +15,16 @@ private
   end
 
   def column_type(column)
-    Person.columns_hash["#{column.id2name}"].type
+    sym = Person.columns_hash["#{column.id2name}"].type
+    sym = :number if sym == :integer || sym == :float
+    sym
   end
 
   def column_type_query(col, val, near_p = false)
     case column_type(col)
     when :string
       near_p ? Person.id_where_ILIKE_value(col, val) : Person.id_where_case_insensitive_value(col, val)
-    when :integer || :float
+    when :number
       near_p ? Person.id_where_numeric_value(col, val) : Person.id_where_numeric_value(col, val)
     else
       raise ColumnTypeNotRecognized

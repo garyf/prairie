@@ -25,6 +25,10 @@ class Person < ActiveRecord::Base
     where(Person.arel_table[column].matches "%#{value}%").pluck(:id)
   end
 
+  def self.id_where_numeric_range(column, value)
+    where("#{column}" => Search::value_range_near(value)).pluck(:id)
+  end
+
   def self.id_where_numeric_value(column, value)
     where("#{column}" => value).pluck(:id)
   end

@@ -4,6 +4,8 @@ class Search
 
   FIELD_GIST_KEY = %r{^field_\d+_[gist]+}
   FIELD_SUBSTRING_GIST_KEY = %r{^field_\d+_substring_gist$}
+  RANGE_NEAR_ADD = 15.0
+  RANGE_NEAR_PCT = 0.9
   RESULTS_COUNT_MIN = 55
   RESULT_IDS_EXPIRE_SECONDS = 3600
   RESULTS_PER_PAGE = 10
@@ -106,6 +108,19 @@ class Search
     redis.rpush(key, ids)
     redis.expire(key, RESULT_IDS_EXPIRE_SECONDS)
     key
+  end
+
+  def self.value_range_near(value)
+    flt = value.to_f
+    return (flt - 1.0)..(flt + 1.0) if flt.abs < RANGE_NEAR_ADD
+    if flt > 0 
+      s = (flt * RANGE_NEAR_PCT).floor
+      e = (flt / RANGE_NEAR_PCT).ceil
+    else
+      s = (flt / RANGE_NEAR_PCT).floor
+      e = (flt * RANGE_NEAR_PCT).ceil
+    end
+    s..e
   end
 
 private
