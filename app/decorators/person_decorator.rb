@@ -5,6 +5,10 @@ module PersonDecorator
     male_p == true ? 'Male' : 'Female'
   end
 
+  def education_level_name
+    education_level ? education_level.name : 'Unspecifed'
+  end
+
   def kind
     'Person'
   end

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'spec_helper' 
 
 describe PeopleController do
   describe 'GET index' do
@@ -15,10 +15,12 @@ describe PeopleController do
   describe 'GET new' do
     before do
       Person.should_receive(:new) { person_mk }
+      EducationLevel.should_receive(:by_row) { ['o1','o2'] }
       get :new
     end
     it do
       expect(assigns :person).to be @person_mock
+      expect(assigns :education_levels).to eql ['o1','o2']
       expect(response).to render_template :new
     end
   end
@@ -38,8 +40,8 @@ describe PeopleController do
 
     describe 'w/o #save' do
       before do
-        with_errors_double
-        Person.should_receive(:new).with(valid_attributes) { person_mk(save: false, errors: @errors) }
+        Person.should_receive(:new).with(valid_attributes) { person_mk(save: false) }
+        EducationLevel.should_receive(:by_row) { ['o1','o2'] }
         post :create, person: valid_attributes.merge('some' => 'attribute')
       end
       it { expect(response).to render_template :new }
@@ -62,9 +64,13 @@ describe PeopleController do
     end
 
     describe 'GET edit' do
-      before { get :edit, id: '21' }
+      before do
+        EducationLevel.should_receive(:by_row) { ['o1','o2'] }
+        get :edit, id: '21'
+      end
       it do
         expect(assigns :person).to be @person_mock
+        expect(assigns :education_levels).to eql ['o1','o2']
         expect(response).to render_template :edit
       end
     end
@@ -98,9 +104,9 @@ describe PeopleController do
 
     describe 'w/o #update' do
       before do
-        with_errors_double
-        Person.should_receive(:find).with('21') { person_mk(errors: @errors) }
+        Person.should_receive(:find).with('21') { person_mk }
         person_mk.should_receive(:update).with(valid_attributes) { false }
+        EducationLevel.should_receive(:by_row) { ['o1','o2'] }
         put :update, id: '21', person: valid_attributes.merge('some' => 'attribute')
       end
       it { expect(response).to render_template :edit }

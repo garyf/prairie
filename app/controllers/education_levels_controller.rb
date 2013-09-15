@@ -17,21 +17,15 @@ class EducationLevelsController < ApplicationController
 
   def create
     @education_level = EducationLevel.new(params_white)
-    if @education_level.save
-      redirect_to education_levels_path, notice: 'Education level successfully created'
-    else
-      flash[:alert] = 'Failed to create education level'
-      render :new
-    end
+    redirect_to(education_levels_path, notice: 'Education level successfully created') and return if @education_level.save
+    flash[:alert] = 'Failed to create education level'
+    render :new
   end
 
   def update
-    if @education_level.update(params_white_w_human_row)
-      redirect_to education_levels_path, notice: 'Education level successfully updated'
-    else
-      flash[:alert] = 'Failed to update education level'
-      render :edit
-    end
+    redirect_to(education_levels_path, notice: 'Education level successfully updated') and return if @education_level.update(params_white_w_human_row)
+    flash[:alert] = 'Failed to update education level'
+    render :edit
   end
 
   def destroy

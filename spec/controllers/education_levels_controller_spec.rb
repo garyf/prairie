@@ -38,8 +38,7 @@ describe EducationLevelsController do
 
     describe 'w/o #save' do
       before do
-        with_errors_double
-        EducationLevel.should_receive(:new).with(valid_attributes) { education_level_mk(save: false, errors: @errors) }
+        EducationLevel.should_receive(:new).with(valid_attributes) { education_level_mk(save: false) }
         post :create, education_level: valid_attributes.merge('some' => 'attribute')
       end
       it { expect(response).to render_template :new }
@@ -97,8 +96,7 @@ describe EducationLevelsController do
 
     describe 'w/o #update' do
       before do
-        with_errors_double
-        EducationLevel.should_receive(:find).with('3') { education_level_mk(errors: @errors) }
+        EducationLevel.should_receive(:find).with('3') { education_level_mk }
         education_level_mk.should_receive(:update).with(valid_attributes_human) { false }
         put :update, id: '3', education_level: valid_attributes.merge('some' => 'attribute')
       end

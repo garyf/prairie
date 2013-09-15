@@ -1,6 +1,7 @@
 class PeopleController < ApplicationController
 
   before_action :person_assign, only: [:show, :edit, :update, :destroy]
+  before_action :education_levels_assign, only: [:new, :edit]
   respond_to :html
 
   def index
@@ -13,22 +14,24 @@ class PeopleController < ApplicationController
 
   def new
     @person = Person.new
-    education_levels_assign
   end
 
   def edit
-    education_levels_assign
   end
 
   def create
     @person = Person.new(params_white)
-    flash[:notice] = 'Person successfully created' if @person.save
-    respond_with @person
+    redirect_to(@person, notice: 'Person successfully created') and return if @person.save
+    education_levels_assign
+    flash[:alert] = 'Failed to create person'
+    render :new
   end
 
   def update
-    flash[:notice] = 'Person successfully updated' if @person.update(params_white)
-    respond_with @person
+    redirect_to(@person, notice: 'Person successfully updated') and return if @person.update(params_white)
+    education_levels_assign
+    flash[:alert] = 'Failed to update person'
+    render :edit
   end
 
   def destroy
