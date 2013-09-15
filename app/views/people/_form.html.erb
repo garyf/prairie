@@ -21,6 +21,10 @@
     <%= f.label :height, class: 'control-label' %>
     <div class=controls><%= f.number_field :height, class: 'input-mini' %></div>
   </div>
+  <div class=control-group>
+    <%= f.label 'Male?', class: 'control-label' %>
+    <div class=controls><%= f.check_box :male_p %></div>
+  </div>
   <div class=form-actions>
     <%= f.button 'Done', class: 'btn  btn-primary' %>
     <%= link_to 'Cancel', people_path, class: 'btn' %>

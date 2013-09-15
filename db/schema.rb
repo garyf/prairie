@@ -57,14 +57,18 @@ ActiveRecord::Schema.define(version: 20130901165245) do
   end
 
   create_table "people", force: true do |t|
-    t.string   "email",      null: false
+    t.string   "email",              null: false
     t.string   "name_first"
-    t.string   "name_last",  null: false
+    t.string   "name_last",          null: false
     t.integer  "birth_year"
+    t.integer  "education_level_id"
     t.float    "height"
+    t.boolean  "male_p",             null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "people", ["education_level_id"], name: "index_people_on_education_level_id", using: :btree
 
   create_table "string_gists", force: true do |t|
     t.string  "type",            null: false

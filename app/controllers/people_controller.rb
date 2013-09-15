@@ -45,6 +45,7 @@ private
       :birth_year,
       :email,
       :height,
+      :male_p,
       :name_first,
       :name_last)
   end
