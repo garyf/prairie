@@ -11,6 +11,10 @@ def choice_mk(stubs = {})
   (@choice_mock ||= mock_model(Choice).as_null_object).tap { |m| m.stub(stubs) unless stubs.empty? }
 end
 
+def education_level_mk(stubs = {})
+  (@education_level_mock ||= mock_model(EducationLevel).as_null_object).tap { |m| m.stub(stubs) unless stubs.empty? }
+end
+
 def location_field_set_mk(stubs = {})
   (@location_field_set_mock ||= mock_model(LocationFieldSet).as_null_object).tap { |m| m.stub(stubs) unless stubs.empty? }
 end

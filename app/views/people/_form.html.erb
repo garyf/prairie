@@ -18,6 +18,10 @@
     <div class=controls><%= f.number_field :birth_year, class: 'input-mini' %></div>
   </div>
   <div class=control-group>
+    <%= f.label :education_level_id, class: 'control-label' %>
+    <div class=controls><%= f.collection_select :education_level_id, @education_levels, :id, :name %></div>
+  </div>
+  <div class=control-group>
     <%= f.label :height, class: 'control-label' %>
     <div class=controls><%= f.number_field :height, class: 'input-mini' %></div>
   </div>

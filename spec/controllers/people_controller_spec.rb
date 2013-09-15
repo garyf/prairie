@@ -111,6 +111,7 @@ private
 
   def valid_attributes() {
     'birth_year' => '1685',
+    'education_level_id' => '2',
     'email' => 'leipzig@example.com',
     'height' => '68',
     'male_p' => '1',

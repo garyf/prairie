@@ -1,7 +1,5 @@
 Prairie0::Application.routes.draw do
 
-  resources :education_levels
-
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -19,6 +17,7 @@ Prairie0::Application.routes.draw do
   #   resources :products
   resources :checkbox_boolean_fields, only: [:edit, :update]
   resources :choices, except: [:index, :show]
+  resources :education_levels, except: :show
   resources :field_sets
   resources :field_values, only: :index
   resources :location_searches, only: [:index, :new, :create]

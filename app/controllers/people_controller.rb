@@ -13,9 +13,11 @@ class PeopleController < ApplicationController
 
   def new
     @person = Person.new
+    education_levels_assign
   end
 
   def edit
+    education_levels_assign
   end
 
   def create
@@ -40,9 +42,14 @@ private
     @person = Person.find(params[:id])
   end
 
+  def education_levels_assign
+    @education_levels = EducationLevel.by_row
+  end
+
   def params_white
     params.require(:person).permit(
       :birth_year,
+      :education_level_id,
       :email,
       :height,
       :male_p,

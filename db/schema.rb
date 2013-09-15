@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130901165245) do
+ActiveRecord::Schema.define(version: 20130915120159) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,14 @@ ActiveRecord::Schema.define(version: 20130901165245) do
   end
 
   add_index "custom_fields", ["field_set_id"], name: "index_custom_fields_on_field_set_id", using: :btree
+
+  create_table "education_levels", force: true do |t|
+    t.string   "name",        null: false
+    t.string   "description"
+    t.integer  "row",         null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "field_sets", force: true do |t|
     t.string   "type",                           null: false
