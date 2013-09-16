@@ -19,7 +19,7 @@
   </div>
   <div class=control-group>
     <%= f.label :education_level_id, class: 'control-label' %>
-    <div class=controls><%= f.collection_select :education_level_id, @education_levels, :id, :name %></div>
+    <div class=controls><%= f.collection_select :education_level_id, @education_levels, :id, :name, prompt: true %></div>
   </div>
   <div class=control-group>
     <%= f.label 'Male?', class: 'control-label' %>
