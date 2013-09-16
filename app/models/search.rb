@@ -11,8 +11,6 @@ class Search
   RESULTS_PER_PAGE = 10
   SUBSTRING_MIN = 3
 
-  class ColumnTypeNotRecognized < StandardError ; end
-
   def self.page_begin(page)
     (page.to_i - 1) * RESULTS_PER_PAGE
   end
@@ -133,8 +131,12 @@ private
     value.blank? || value.length < SUBSTRING_MIN
   end
 
+  def columns_near_able
+    columns_searchable - columns_categorical
+  end
+
   def columns_w_near_values(params)
-    columns_searchable.delete_if do |col|
+    columns_near_able.delete_if do |col|
       val = params[col.id2name]
       case column_type(col)
       when :string

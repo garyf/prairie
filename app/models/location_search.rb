@@ -11,6 +11,10 @@ private
     :name]
   end
 
+  def columns_categorical
+    []
+  end
+
   def column_type(column)
     sym = Location.columns_hash["#{column.id2name}"].type
     sym = :number if sym == :integer || sym == :float

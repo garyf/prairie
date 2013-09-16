@@ -30,7 +30,7 @@ class Person < ActiveRecord::Base
     where("#{column}" => Search::value_range_near(value)).pluck(:id)
   end
 
-  def self.id_where_numeric_value(column, value)
+  def self.id_where_value(column, value)
     where("#{column}" => value).pluck(:id)
   end
 

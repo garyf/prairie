@@ -16,6 +16,11 @@ private
     :name_last]
   end
 
+  def columns_categorical() [
+    :education_level_id,
+    :male_p]
+  end
+
   def column_type(column)
     sym = Person.columns_hash["#{column.id2name}"].type
     sym = :number if sym == :integer || sym == :float
@@ -27,9 +32,9 @@ private
     when :string
       near_p ? Person.id_where_ILIKE_value(col, val) : Person.id_where_case_insensitive_value(col, val)
     when :number
-      near_p ? Person.id_where_numeric_range(col, val) : Person.id_where_numeric_value(col, val)
+      near_p ? Person.id_where_numeric_range(col, val) : Person.id_where_value(col, val)
     else
-      raise ColumnTypeNotRecognized
+      Person.id_where_value(col, val)
     end
   end
 
