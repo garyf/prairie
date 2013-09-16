@@ -9,7 +9,7 @@ describe Choice do
       expect(Choice.name_pluck_by_row[0]).to eql 'Apple'
     end
 
-    describe 'w 2 choicees' do
+    describe 'w 2 choices' do
       before { @choice1 = choice_cr(name: 'Banana', row_position: 0) }
       it do
         expect(@choice1.human_row).to eql 1
@@ -21,7 +21,7 @@ describe Choice do
       end
     end
 
-    describe 'w 3 choicees' do
+    describe 'w 3 choices' do
       before do
         @choice1 = choice_cr(name: 'Banana', row_position: 0)
         @choice2 = choice_cr(name: 'Cherry', row_position: 0)

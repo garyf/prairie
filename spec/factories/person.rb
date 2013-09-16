@@ -4,4 +4,8 @@ FactoryGirl.define do
     name_last 'Spieth'
     male_p true
   end
+
+  factory :education_level do
+    sequence(:name) { |n| "school-#{n}" }
+  end
 end
