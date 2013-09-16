@@ -139,10 +139,8 @@ private
       case column_type(col)
       when :string
         substring_value_reject?(val)
-      when :number
-        val.blank?
       else
-        raise ColumnTypeNotRecognized
+        val.blank?
       end
     end
   end

@@ -10,6 +10,7 @@ class PersonSearchesController < ApplicationController
   end
 
   def new
+    @education_levels = EducationLevel.by_row
     @field_sets = PersonFieldSet.enabled_by_name
   end
 

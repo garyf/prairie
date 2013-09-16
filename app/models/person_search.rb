@@ -8,8 +8,10 @@ private
 
   def columns_searchable() [
     :birth_year,
+    :education_level_id,
     :email,
     :height,
+    :male_p,
     :name_first,
     :name_last]
   end

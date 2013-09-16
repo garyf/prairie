@@ -19,6 +19,14 @@
     <div class=controls><%= number_field_tag 'birth_year', nil, class: 'input-mini', placeholder: 'YYYY', max_length: 4 %></div>
   </div>
   <div class=control-group>
+    <%= label_tag 'Education level', nil, class: 'control-label' %>
+    <div class=controls><%= select_tag 'education_level_id', options_from_collection_for_select(@education_levels, :id, :name), prompt: 'Please select' %></div>
+  </div>
+  <div class=control-group>
+    <%= label_tag 'Gender', nil, class: 'control-label' %>
+    <div class=controls><%= select_tag 'male_p', options_for_select([['Please select', nil],['Male', '1'],['Female', '0']]), class: 'input-medium' %></div>
+  </div>
+  <div class=control-group>
     <%= label_tag 'Height', nil, class: 'control-label' %>
     <div class=controls><%= number_field_tag 'height', nil, class: 'input-mini', placeholder: 'Inches', max_length: 4 %></div>
   </div>
