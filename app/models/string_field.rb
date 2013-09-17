@@ -26,7 +26,7 @@ class StringField < CustomField
   end
 
   def index_on_gist_add(parent)
-    parent.index_on_gist_add(id, gist)
+    parent.string_gist_cr(id, gist)
   end
 
   def parents_find_by_gist(str)

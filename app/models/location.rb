@@ -30,7 +30,14 @@ class Location < ActiveRecord::Base
     ids.map { |k| hsh[k.to_i].first }
   end
 
-  def index_on_gist_add(custom_field_id, gist)
+  def numeric_gist_cr(custom_field_id, gist)
+    LocationNumericGist.create(
+      custom_field_id: custom_field_id,
+      gist: gist.downcase,
+      parent_id: id)
+  end
+
+  def string_gist_cr(custom_field_id, gist)
     LocationStringGist.create(
       custom_field_id: custom_field_id,
       gist: gist.downcase,
