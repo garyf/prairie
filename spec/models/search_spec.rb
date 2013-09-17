@@ -98,12 +98,12 @@ describe Search do
             "field_#{@string_field2.id}_substring_gist" => ''}
         end
         describe 'w/o any matching' do
-          before { @string_field0.should_receive(:parents_find_by_substring).with('foo') { [] } }
+          before { @string_field0.should_receive(:parents_find_near).with('foo') { [] } }
           it { expect(@o.custom_gather_ids @params, true).to eql [] }
         end
 
         describe 'w 1 matching' do
-          before { @string_field0.should_receive(:parents_find_by_substring).with('foo') { [3, 5] } }
+          before { @string_field0.should_receive(:parents_find_near).with('foo') { [3, 5] } }
           it { expect(@o.custom_gather_ids @params, true).to eql [3, 5] }
         end
       end
@@ -119,8 +119,8 @@ describe Search do
         describe 'w both substrings by 1 parent' do
           before do
             CustomField.should_receive(:find).with("#{@string_field2.id}") { @string_field2 }
-            @string_field1.should_receive(:parents_find_by_substring).with('foo') { [3, 5] }
-            @string_field2.should_receive(:parents_find_by_substring).with('bar') { [5, 8] }
+            @string_field1.should_receive(:parents_find_near).with('foo') { [3, 5] }
+            @string_field2.should_receive(:parents_find_near).with('bar') { [5, 8] }
           end
           it { expect(@o.custom_gather_ids @params, true). to eql [5] }
         end
@@ -128,16 +128,16 @@ describe Search do
         describe 'w both substrings by different parents' do
           before do
             CustomField.should_receive(:find).with("#{@string_field2.id}") { @string_field2 }
-            @string_field1.should_receive(:parents_find_by_substring).with('foo') { [3, 5] }
-            @string_field2.should_receive(:parents_find_by_substring).with('bar') { [8, 13] }
+            @string_field1.should_receive(:parents_find_near).with('foo') { [3, 5] }
+            @string_field2.should_receive(:parents_find_near).with('bar') { [8, 13] }
           end
           it { expect(@o.custom_gather_ids @params, true). to eql [] }
         end
 
         describe 'w/o matching term' do
           before do
-            @string_field1.should_receive(:parents_find_by_substring).with('foo') { [] }
-            @string_field2.should_not_receive(:parents_find_by_substring)
+            @string_field1.should_receive(:parents_find_near).with('foo') { [] }
+            @string_field2.should_not_receive(:parents_find_near)
           end
           it { expect(@o.custom_gather_ids @params, true).to eql [] }
         end

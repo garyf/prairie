@@ -13,7 +13,7 @@ module RedisCustomFields
   end
 
   def index_on_gist_update(parent_id)
-    true
+    true # a redis index is awaiting removal
   end
 
   def gist_store(parent, params_white)

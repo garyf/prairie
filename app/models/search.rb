@@ -163,7 +163,7 @@ private
     ids = nil
     hsh.each do |k, v|
       o = custom_field_assign(k)
-      value_ids = near_p ? o.parents_find_by_substring(v) : o.parents_find_by_gist(v)
+      value_ids = near_p ? o.parents_find_near(v) : o.parents_find_by_gist(v)
       ids = ids ? value_ids & ids : value_ids
       return [] if ids.empty?
     end

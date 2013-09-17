@@ -13,6 +13,8 @@ class StringField < CustomField
 
   CHARACTER_VARYING_255 = 255
 
+  class StringGistDuplicate < StandardError ; end
+
   def constraints_store(params_white)
     CONSTRAINTS.each { |k| constraint_store(k, params_white.delete(k)) } unless parent?
   end
@@ -28,18 +30,20 @@ class StringField < CustomField
   end
 
   def parents_find_by_gist(str)
-    StringGist.parent_ids_where_field_and_gist(id, str.downcase)
+    string_gists.parent_id_where_gist(str.downcase)
   end
 
-  def parents_find_by_substring(str)
-    string_gists.id_where_ILIKE_value(str)
+  def parents_find_near(str)
+    string_gists.parent_id_where_ILIKE_gist(str)
   end
 
   def index_on_gist_update(parent_id)
-    o = StringGist.where_field_and_parent(id, parent_id)[0]
+    rltn = string_gists.where_parent_id(parent_id)
+    raise StringGistDuplicate if rltn.count > 1
+    o = rltn[0]
     return unless o
     o.update_attributes(gist: gist)
-    false
+    false # no redis index is awaiting removal
   end
 
 private
