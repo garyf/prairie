@@ -1,5 +1,10 @@
 class NumericField < CustomField
 
+  has_many :numeric_gists, foreign_key: :custom_field_id, dependent: :destroy
+
+  validates :gist, :value_max, :value_min, numericality: true, allow_blank: true
+  validate :value_min_lte_value_max, :gist_only_integer, :gist_lte_value_max, :gist_gte_value_min
+
   attr_accessor :only_integer_p, :value_max, :value_min
 
   CONSTRAINTS = [
@@ -7,8 +12,7 @@ class NumericField < CustomField
     'value_max',
     'value_min']
 
-  validates :gist, :value_max, :value_min, numericality: true, allow_blank: true
-  validate :value_min_lte_value_max, :gist_only_integer, :gist_lte_value_max, :gist_gte_value_min
+  class NumericGistDuplicate < StandardError ; end
 
   def constraints_store(params_white)
     CONSTRAINTS.each { |k| constraint_store(k, params_white.delete(k)) } unless parent?
@@ -19,6 +23,27 @@ class NumericField < CustomField
     self.value_max = constraints['value_max']
     self.value_min = constraints['value_min']
     self
+  end
+
+  def index_on_gist_add(parent)
+    parent.numeric_gist_cr(id, gist)
+  end
+
+  def parents_find_by_gist(nbr)
+    numeric_gists.parent_id_where_gist(nbr)
+  end
+
+  def parents_find_near(nbr)
+    numeric_gists.parent_id_where_numeric_range(nbr)
+  end
+
+  def index_on_gist_update(parent_id)
+    rltn = numeric_gists.where_parent_id(parent_id)
+    raise NumericGistDuplicate if rltn.count > 1
+    o = rltn[0]
+    return unless o
+    o.update_attributes(gist: gist)
+    false # no redis index is awaiting removal
   end
 
 private

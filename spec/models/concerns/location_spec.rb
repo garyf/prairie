@@ -18,9 +18,9 @@ describe Location do
 
   context 'w 2 custom fields each w gist', :redis do
     before do
-      @numeric_field0 = c_location_numeric_field_bs
-      @numeric_field1 = c_location_numeric_field_bs
-      c_location_bs
+      @numeric_field0 = c_location_numeric_field_cr
+      @numeric_field1 = c_location_numeric_field_cr
+      @o = c_location_cr
       @numeric_field0.gist_store(@o, {'gist' => '34'})
       @numeric_field1.gist_store(@o, {'gist' => '89'})
     end
@@ -35,10 +35,7 @@ describe Location do
     end
 
     describe '#garbage_collect_and_self_destroy' do
-      before do
-        @o.should_receive(:destroy)
-        @o.garbage_collect_and_self_destroy
-      end
+      before { @o.garbage_collect_and_self_destroy }
       it '#remove_self_from_custom_field_parents' do
         expect(@numeric_field0.parents.empty?).to be true
         expect(@numeric_field1.parents.empty?).to be true

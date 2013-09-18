@@ -3,6 +3,7 @@ class Location < ActiveRecord::Base
   include Redis::Objects
   include RedisFieldValues
 
+  has_many :location_numeric_gists, foreign_key: :parent_id, dependent: :destroy
   has_many :location_string_gists, foreign_key: :parent_id, dependent: :destroy
 
   paginates_per 8

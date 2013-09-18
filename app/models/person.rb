@@ -4,6 +4,7 @@ class Person < ActiveRecord::Base
   include RedisFieldValues
 
   belongs_to :education_level
+  has_many :person_numeric_gists, foreign_key: :parent_id, dependent: :destroy
   has_many :person_string_gists, foreign_key: :parent_id, dependent: :destroy
 
   paginates_per 8
