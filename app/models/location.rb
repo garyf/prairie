@@ -1,5 +1,6 @@
 class Location < ActiveRecord::Base
 
+  extend ParentQuery
   include Redis::Objects
   include RedisFieldValues
 
@@ -14,16 +15,8 @@ class Location < ActiveRecord::Base
     order('name').page page
   end
 
-  def self.id_where_case_insensitive_value(column, value)
-    where("lower(#{column}) = ?", value.downcase).pluck(:id)
-  end
-
   def self.id_where_ILIKE_value(column, value)
     where(Location.arel_table[column].matches "%#{value}%").pluck(:id)
-  end
-
-  def self.id_where_id(ids)
-    select(:id).where(id: ids)
   end
 
   def self.name_where_ids_preserve_order(ids)

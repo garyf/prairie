@@ -1,5 +1,6 @@
 class Person < ActiveRecord::Base
 
+  extend ParentQuery
   include Redis::Objects
   include RedisFieldValues
 
@@ -19,24 +20,8 @@ class Person < ActiveRecord::Base
     order('name_last').page page
   end
 
-  def self.id_where_case_insensitive_value(column, value)
-    where("lower(#{column}) = ?", value.downcase).pluck(:id)
-  end
-
   def self.id_where_ILIKE_value(column, value)
     where(Person.arel_table[column].matches "%#{value}%").pluck(:id)
-  end
-
-  def self.id_where_numeric_range(column, value)
-    where("#{column}" => Search::value_range_near(value)).pluck(:id)
-  end
-
-  def self.id_where_value(column, value)
-    where("#{column}" => value).pluck(:id)
-  end
-
-  def self.id_where_id(ids)
-    select(:id).where(id: ids)
   end
 
   def self.name_last_where_ids_preserve_order(ids)
