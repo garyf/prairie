@@ -35,7 +35,7 @@ feature 'Person search w custom field' do
     click_link 'New search'
   end
   it 'w result' do
-    fill_in "field_#{@string_field.id}_substring_gist", with: 'Bicycle'
+    fill_in "field_#{@string_field.id}_str_gist", with: 'Bicycle'
     click_button 'Search'
     expect(page).to have_content '1 search result'
     expect(page).to have_content 'Edwards'

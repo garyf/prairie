@@ -18,7 +18,7 @@ describe Person do
         expect(Person.id_where_ILIKE_value :email, 'Viento@example.com').to match_array []
       end
 
-      it 'w substring search term' do
+      it 'w near search term' do
         expect(Person.id_where_case_insensitive_value :name_last, 'eorge').to match_array []
         expect(Person.id_where_case_insensitive_value :name_last, 'Georg').to match_array []
         expect(Person.id_where_ILIKE_value :name_last, 'eorge').to match_array [@id0]

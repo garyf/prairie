@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe LocationSearch do
-  context '#column_gather_ids w/o substring_p, #column_any_gather_ids' do
+  context '#column_gather_ids w/o near_p, #column_any_gather_ids' do
     before do
       @location0 = c_location_cr(name: 'Annapolis', description: 'seaport')
       @location1 = c_location_cr(name: 'Baltimore', description: 'industrial')
@@ -75,14 +75,14 @@ describe LocationSearch do
     end
   end
 
-  context '#column_gather_ids w substring_p' do
+  context '#column_gather_ids w near_p' do
     before do
       @location0 = c_location_cr(name: 'Annapolis', description: 'seaport')
       @location1 = c_location_cr(name: 'Baltimore', description: 'industrial')
       @location2 = c_location_cr(name: 'Camden', description: 'seaport')
       bld
     end
-    describe 'w/o any #columns_w_substring_values' do
+    describe 'w/o any #columns_w_near_values' do
       before do
         @params = {
           'description' => 'se',

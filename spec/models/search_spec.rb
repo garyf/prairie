@@ -14,7 +14,7 @@ describe Search do
           @params = {
             "field_#{@numeric_field.id}_gist" => '',
             "field_#{@select_field.id}_gist" => '',
-            "field_#{@string_field.id}_substring_gist" => ''}
+            "field_#{@string_field.id}_str_gist" => ''}
         end
         it { expect(@o.custom_gather_ids @params, false).to be nil }
         it { expect(@o.custom_any_gather_ids @params).to eql [] }
@@ -26,7 +26,7 @@ describe Search do
           @params = {
             "field_#{@numeric_field.id}_gist" => '89',
             "field_#{@select_field.id}_gist" => '',
-            "field_#{@string_field.id}_substring_gist" => ''}
+            "field_#{@string_field.id}_str_gist" => ''}
         end
         describe 'w/o any matching' do
           before { @numeric_field.should_receive(:parents_find_by_gist).with('89') { [] } }
@@ -48,7 +48,7 @@ describe Search do
           @params = {
             "field_#{@numeric_field.id}_gist" => '',
             "field_#{@select_field.id}_gist" => '8',
-            "field_#{@string_field.id}_substring_gist" => 'foo'}
+            "field_#{@string_field.id}_str_gist" => 'foo'}
         end
         describe 'w 1 all_agree parent' do
           before do
@@ -79,12 +79,12 @@ describe Search do
         @string_field1 = mock_model(StringField)
         @string_field2 = mock_model(StringField)
       end
-      describe 'w/o any params_custom_w_substring_values' do
+      describe 'w/o any params_custom_w_near_values' do
         before do
           @params = {
-            "field_#{@string_field0.id}_substring_gist" => 'ab',
-            "field_#{@string_field1.id}_substring_gist" => 'cd',
-            "field_#{@string_field2.id}_substring_gist" => 'ef'}
+            "field_#{@string_field0.id}_str_gist" => 'ab',
+            "field_#{@string_field1.id}_str_gist" => 'cd',
+            "field_#{@string_field2.id}_str_gist" => 'ef'}
         end
         it { expect(@o.custom_gather_ids @params, true).to be nil }
       end
@@ -93,9 +93,9 @@ describe Search do
         before do
           CustomField.should_receive(:find).with("#{@string_field0.id}") { @string_field0 }
           @params = {
-            "field_#{@string_field0.id}_substring_gist" => 'foo',
-            "field_#{@string_field1.id}_substring_gist" => '',
-            "field_#{@string_field2.id}_substring_gist" => ''}
+            "field_#{@string_field0.id}_str_gist" => 'foo',
+            "field_#{@string_field1.id}_str_gist" => '',
+            "field_#{@string_field2.id}_str_gist" => ''}
         end
         describe 'w/o any matching' do
           before { @string_field0.should_receive(:parents_find_near).with('foo') { [] } }
@@ -112,9 +112,9 @@ describe Search do
         before do
           CustomField.should_receive(:find).with("#{@string_field1.id}") { @string_field1 }
           @params = {
-            "field_#{@string_field0.id}_substring_gist" => '',
-            "field_#{@string_field1.id}_substring_gist" => 'foo',
-            "field_#{@string_field2.id}_substring_gist" => 'bar'}
+            "field_#{@string_field0.id}_str_gist" => '',
+            "field_#{@string_field1.id}_str_gist" => 'foo',
+            "field_#{@string_field2.id}_str_gist" => 'bar'}
         end
         describe 'w both substrings by 1 parent' do
           before do
@@ -338,16 +338,16 @@ describe Search do
           @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { true }
           Settings.stub_chain(:search, :near_p) { true }
         end
-        describe 'w substring_ids' do
+        describe 'w near_ids' do
           before do
-            @substring_ids = [89, 144, 89]
-            @o.should_receive(:all_agree_ids_for_find).with(@params, true) { @substring_ids }
-            @o.should_receive(:parent_distribution).with(@substring_ids) { {89 => 2, 144 => 1} }
+            @near_ids = [89, 144, 89]
+            @o.should_receive(:all_agree_ids_for_find).with(@params, true) { @near_ids }
+            @o.should_receive(:parent_distribution).with(@near_ids) { {89 => 2, 144 => 1} }
           end
           it { expect(@o.result_ids_by_relevance @params).to eql [3, 5, 8, 13, 34, 21, 55, 89, 144] }
         end
 
-        describe 'w/o substring_ids' do
+        describe 'w/o near_ids' do
           before do
             @o.should_receive(:all_agree_ids_for_find).with(@params, true) { [] }
             @o.should_not_receive(:parent_distribution)

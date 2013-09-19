@@ -18,7 +18,7 @@ describe Location do
         expect(Location.id_where_ILIKE_value 'description', 'Suburbs').to match_array []
       end
 
-      it 'w substring search term' do
+      it 'w near search term' do
         expect(Location.id_where_case_insensitive_value 'name', 'xford').to match_array []
         expect(Location.id_where_case_insensitive_value 'name', 'Oxfor').to match_array []
         expect(Location.id_where_ILIKE_value 'name', 'xford').to match_array [@id0]

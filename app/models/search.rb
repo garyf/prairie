@@ -3,7 +3,7 @@ class Search
   include Redis::Objects
 
   FIELD_GIST_KEY = %r{^field_\d+_[gist]+}
-  FIELD_SUBSTRING_GIST_KEY = %r{^field_\d+_substring_gist$}
+  FIELD_STR_GIST_KEY = %r{^field_\d+_str_gist$}
   RANGE_NEAR_ADD = 15.0
   RANGE_NEAR_PCT = 0.9
   RESULTS_COUNT_MIN = 55
@@ -33,7 +33,7 @@ class Search
   end
 
   def custom_gather_ids(params, near_p)
-    hsh = near_p ? params_custom_w_substring_values(params) : params_custom_w_values(params)
+    hsh = near_p ? params_custom_w_near_values(params) : params_custom_w_values(params)
     custom_agree(hsh, near_p) unless hsh.empty?
   end
 
@@ -92,10 +92,10 @@ class Search
     result_ids = all_ids + ids_by_relevance(any_agree_hsh)
     any_ids = any_agree_hsh.keys
     return result_ids unless any_agree_ids_few?(all_ids, any_ids) && Settings.search.near_p
-    substring_ids = all_agree_ids_for_find(params, true) - all_ids - any_ids
-    return result_ids unless substring_ids.any?
-    substring_agree_hsh = parent_distribution(substring_ids)
-    result_ids + ids_by_relevance(substring_agree_hsh)
+    near_ids = all_agree_ids_for_find(params, true) - all_ids - any_ids
+    return result_ids unless near_ids.any?
+    near_agree_hsh = parent_distribution(near_ids)
+    result_ids + ids_by_relevance(near_agree_hsh)
   end
 
   def result_ids_store(old_key, params)
@@ -151,8 +151,8 @@ private
     params.select { |k, v| k =~ FIELD_GIST_KEY unless v.blank? }
   end
 
-  def params_custom_w_substring_values(params)
-    params.select { |k, v| k =~ FIELD_SUBSTRING_GIST_KEY unless substring_value_reject?(v) }
+  def params_custom_w_near_values(params)
+    params.select { |k, v| k =~ FIELD_STR_GIST_KEY unless substring_value_reject?(v) }
   end
 
   def custom_field_assign(key)
