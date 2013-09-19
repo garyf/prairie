@@ -18,6 +18,11 @@ FactoryGirl.define do
     association :field_set, factory: :location_field_set, strategy: :build
   end
 
+  factory :person_numeric_field, parent: :custom_field, class: 'NumericField' do
+    type 'NumericField'
+    association :field_set, factory: :person_field_set, strategy: :build
+  end
+
   factory :string_field, parent: :custom_field, class: 'StringField' do
     type 'StringField'
   end
