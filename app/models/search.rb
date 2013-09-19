@@ -2,8 +2,9 @@ class Search
 
   include Redis::Objects
 
-  FIELD_GIST_KEY = %r{^field_\d+_[gist]+}
-  FIELD_STR_GIST_KEY = %r{^field_\d+_str_gist$}
+  FIELD_GIST_KEY = %r{^field_\d+_[nbr_gist]+}
+  FIELD_NUMBER_GIST_KEY = %r{^field_\d+_nbr_gist$}
+  FIELD_STRING_GIST_KEY = %r{^field_\d+_str_gist$}
   RANGE_NEAR_ADD = 15.0
   RANGE_NEAR_PCT = 0.9
   RESULTS_COUNT_MIN = 55
@@ -127,23 +128,19 @@ private
     columns_searchable.delete_if { |sym| params[sym.id2name].blank? }
   end
 
-  def substring_value_reject?(value)
-    value.blank? || value.length < SUBSTRING_MIN
-  end
-
   def columns_near_able
     columns_searchable - columns_categorical
+  end
+
+  def substring_value_reject?(col, val)
+    return unless column_type(col) == :string
+    val.length < SUBSTRING_MIN
   end
 
   def columns_w_near_values(params)
     columns_near_able.delete_if do |col|
       val = params[col.id2name]
-      case column_type(col)
-      when :string
-        substring_value_reject?(val)
-      else
-        val.blank?
-      end
+      val.blank? || substring_value_reject?(col, val)
     end
   end
 
@@ -152,7 +149,15 @@ private
   end
 
   def params_custom_w_near_values(params)
-    params.select { |k, v| k =~ FIELD_STR_GIST_KEY unless substring_value_reject?(v) }
+    params.select do |k, v|
+      unless v.blank?
+        if k =~ FIELD_STRING_GIST_KEY
+          v.length >= SUBSTRING_MIN
+        else
+          k =~ FIELD_NUMBER_GIST_KEY
+        end
+      end
+    end
   end
 
   def custom_field_assign(key)

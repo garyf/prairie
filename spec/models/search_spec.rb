@@ -12,7 +12,7 @@ describe Search do
       describe 'w/o any params_custom_w_values' do
         before do
           @params = {
-            "field_#{@numeric_field.id}_gist" => '',
+            "field_#{@numeric_field.id}_nbr_gist" => '',
             "field_#{@select_field.id}_gist" => '',
             "field_#{@string_field.id}_str_gist" => ''}
         end
@@ -24,7 +24,7 @@ describe Search do
         before do
           CustomField.should_receive(:find).with('55') { @numeric_field }
           @params = {
-            "field_#{@numeric_field.id}_gist" => '89',
+            "field_#{@numeric_field.id}_nbr_gist" => '89',
             "field_#{@select_field.id}_gist" => '',
             "field_#{@string_field.id}_str_gist" => ''}
         end
@@ -46,7 +46,7 @@ describe Search do
           CustomField.should_receive(:find).with('34') { @select_field }
           CustomField.should_receive(:find).with('21') { @string_field }
           @params = {
-            "field_#{@numeric_field.id}_gist" => '',
+            "field_#{@numeric_field.id}_nbr_gist" => '',
             "field_#{@select_field.id}_gist" => '8',
             "field_#{@string_field.id}_str_gist" => 'foo'}
         end
@@ -73,29 +73,34 @@ describe Search do
 
   context '#custom_gather_ids w near_p' do
     before { bld }
-    context 'w 3 custom fields' do
+    context 'w 5 custom fields' do
       before do
+        @numeric_field0 = mock_model(NumericField)
+        @numeric_field1 = mock_model(NumericField)
+        @select_field = mock_model(SelectField)
         @string_field0 = mock_model(StringField)
         @string_field1 = mock_model(StringField)
-        @string_field2 = mock_model(StringField)
+        @params_blank = {
+          "field_#{@numeric_field0.id}_nbr_gist" => '',
+          "field_#{@numeric_field1.id}_nbr_gist" => '',
+          "field_#{@select_field.id}_gist" => '',
+          "field_#{@string_field0.id}_str_gist" => '',
+          "field_#{@string_field1.id}_str_gist" => ''}
       end
       describe 'w/o any params_custom_w_near_values' do
         before do
-          @params = {
+          @params = @params_blank.merge(
+            "field_#{@select_field.id}_gist" => '8',
             "field_#{@string_field0.id}_str_gist" => 'ab',
-            "field_#{@string_field1.id}_str_gist" => 'cd',
-            "field_#{@string_field2.id}_str_gist" => 'ef'}
+            "field_#{@string_field1.id}_str_gist" => 'cd')
         end
         it { expect(@o.custom_gather_ids @params, true).to be nil }
       end
 
-      context 'w 1 search term' do
+      context 'w 1 string field search term' do
         before do
           CustomField.should_receive(:find).with("#{@string_field0.id}") { @string_field0 }
-          @params = {
-            "field_#{@string_field0.id}_str_gist" => 'foo',
-            "field_#{@string_field1.id}_str_gist" => '',
-            "field_#{@string_field2.id}_str_gist" => ''}
+          @params = @params_blank.merge("field_#{@string_field0.id}_str_gist" => 'foo')
         end
         describe 'w/o any matching' do
           before { @string_field0.should_receive(:parents_find_near).with('foo') { [] } }
@@ -108,38 +113,111 @@ describe Search do
         end
       end
 
-      context 'w 2 search terms' do
+      context 'w 2 string field search terms' do
         before do
-          CustomField.should_receive(:find).with("#{@string_field1.id}") { @string_field1 }
-          @params = {
-            "field_#{@string_field0.id}_str_gist" => '',
-            "field_#{@string_field1.id}_str_gist" => 'foo',
-            "field_#{@string_field2.id}_str_gist" => 'bar'}
+          CustomField.should_receive(:find).with("#{@string_field0.id}") { @string_field0 }
+          @params = @params_blank.merge(
+            "field_#{@string_field0.id}_str_gist" => 'foo',
+            "field_#{@string_field1.id}_str_gist" => 'bar')
         end
-        describe 'w both substrings by 1 parent' do
+        describe 'w both substrings found for 1 parent' do
           before do
-            CustomField.should_receive(:find).with("#{@string_field2.id}") { @string_field2 }
-            @string_field1.should_receive(:parents_find_near).with('foo') { [3, 5] }
-            @string_field2.should_receive(:parents_find_near).with('bar') { [5, 8] }
+            @string_field0.should_receive(:parents_find_near).with('foo') { [3, 5] }
+            CustomField.should_receive(:find).with("#{@string_field1.id}") { @string_field1 }
+            @string_field1.should_receive(:parents_find_near).with('bar') { [5, 8] }
           end
           it { expect(@o.custom_gather_ids @params, true). to eql [5] }
         end
 
-        describe 'w both substrings by different parents' do
+        describe 'w both substrings found, but by different parents' do
           before do
-            CustomField.should_receive(:find).with("#{@string_field2.id}") { @string_field2 }
-            @string_field1.should_receive(:parents_find_near).with('foo') { [3, 5] }
-            @string_field2.should_receive(:parents_find_near).with('bar') { [8, 13] }
+            @string_field0.should_receive(:parents_find_near).with('foo') { [3, 5] }
+            CustomField.should_receive(:find).with("#{@string_field1.id}") { @string_field1 }
+            @string_field1.should_receive(:parents_find_near).with('bar') { [8, 13] }
           end
           it { expect(@o.custom_gather_ids @params, true). to eql [] }
         end
 
-        describe 'w/o matching term' do
-          before do
-            @string_field1.should_receive(:parents_find_near).with('foo') { [] }
-            @string_field2.should_not_receive(:parents_find_near)
+        context 'w/o matching term' do
+          describe 'w/o first term found' do
+            before do
+              @string_field0.should_receive(:parents_find_near).with('foo') { [] }
+              CustomField.should_not_receive(:find).with("#{@string_field1.id}") { @string_field1 }
+              @string_field1.should_not_receive(:parents_find_near)
+            end
+            it { expect(@o.custom_gather_ids @params, true).to eql [] }
           end
+
+          describe 'w/o second term found' do
+            before do
+              @string_field0.should_receive(:parents_find_near).with('foo') { [3, 5] }
+              CustomField.should_receive(:find).with("#{@string_field1.id}") { @string_field1 }
+              @string_field1.should_receive(:parents_find_near).with('bar') { [] }
+            end
+            it { expect(@o.custom_gather_ids @params, true).to eql [] }
+          end
+        end
+      end
+
+      context 'w 1 numeric field search term' do
+        before do
+          CustomField.should_receive(:find).with("#{@numeric_field0.id}") { @numeric_field0 }
+          @params = @params_blank.merge("field_#{@numeric_field0.id}_nbr_gist" => '144')
+        end
+        describe 'w/o any matching' do
+          before { @numeric_field0.should_receive(:parents_find_near).with('144') { [] } }
           it { expect(@o.custom_gather_ids @params, true).to eql [] }
+        end
+
+        describe 'w 1 matching' do
+          before { @numeric_field0.should_receive(:parents_find_near).with('144') { [3, 5] } }
+          it { expect(@o.custom_gather_ids @params, true).to eql [3, 5] }
+        end
+      end
+
+      context 'w 2 numeric field search terms' do
+        before do
+          CustomField.should_receive(:find).with("#{@numeric_field0.id}") { @numeric_field0 }
+          @params = @params_blank.merge(
+            "field_#{@numeric_field0.id}_nbr_gist" => '144',
+            "field_#{@numeric_field1.id}_nbr_gist" => '233')
+        end
+        describe 'w both values found for 1 parent' do
+          before do
+            @numeric_field0.should_receive(:parents_find_near).with('144') { [3, 5] }
+            CustomField.should_receive(:find).with("#{@numeric_field1.id}") { @numeric_field1 }
+            @numeric_field1.should_receive(:parents_find_near).with('233') { [5, 8] }
+          end
+          it { expect(@o.custom_gather_ids @params, true). to eql [5] }
+        end
+
+        describe 'w both values found, but by different parents' do
+          before do
+            @numeric_field0.should_receive(:parents_find_near).with('144') { [3, 5] }
+            CustomField.should_receive(:find).with("#{@numeric_field1.id}") { @numeric_field1 }
+            @numeric_field1.should_receive(:parents_find_near).with('233') { [8, 13] }
+          end
+          it { expect(@o.custom_gather_ids @params, true). to eql [] }
+        end
+
+        context 'w/o matching term' do
+          describe 'w/o first term found' do
+            before do
+              @numeric_field0.should_receive(:parents_find_near).with('144') { [] }
+              CustomField.should_not_receive(:find).with("#{@numeric_field1.id}") { @numeric_field1 }
+              @numeric_field1.should_not_receive(:parents_find_near)
+            end
+            it { expect(@o.custom_gather_ids @params, true).to eql [] }
+          end
+
+          describe 'w/o second term found' do
+            before do
+              @numeric_field0.should_receive(:parents_find_near).with('144') { [3, 5] }
+              CustomField.should_receive(:find).with("#{@numeric_field1.id}") { @numeric_field1 }
+              @numeric_field1.should_receive(:parents_find_near).with('233') { [] }
+            end
+            it { expect(@o.custom_gather_ids @params, true).to eql [] }
+          end
         end
       end
     end
