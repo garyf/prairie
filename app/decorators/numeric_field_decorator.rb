@@ -11,7 +11,7 @@ module NumericFieldDecorator
   end
 
   def search_input
-    text_field_tag "field_#{id}_gist", nil, class: 'input-mini'
+    text_field_tag "field_#{id}_nbr_gist", nil, class: 'input-mini'
   end
 
   def only_integer?

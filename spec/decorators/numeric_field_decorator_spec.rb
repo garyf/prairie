@@ -22,8 +22,8 @@ describe NumericFieldDecorator do
     subject { @o.search_input }
     it do
       expect(subject).to match /class="input-mini"/
-      expect(subject).to match /id="field_21_gist"/
-      expect(subject).to match /name="field_21_gist"/
+      expect(subject).to match /id="field_21_nbr_gist"/
+      expect(subject).to match /name="field_21_nbr_gist"/
       expect(subject).to match /type="text"/
     end
   end

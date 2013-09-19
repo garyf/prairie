@@ -35,7 +35,7 @@ feature 'Location search w custom field' do
     click_link 'New search'
   end
   it 'w result' do
-    fill_in "field_#{@numeric_field.id}_gist", with: 34
+    fill_in "field_#{@numeric_field.id}_nbr_gist", with: 34
     click_button 'Search'
     expect(page).to have_content '1 search result'
     expect(page).to have_content 'Tysons'
