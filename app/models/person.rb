@@ -1,5 +1,6 @@
 class Person < ActiveRecord::Base
 
+  extend Nearby
   extend ParentQuery
   include Redis::Objects
   include RedisFieldValues

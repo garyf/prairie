@@ -5,7 +5,7 @@ module ParentQuery
   end
 
   def id_where_numeric_range(column, value)
-    where("#{column}" => Search::value_range_near(value)).pluck(:id)
+    where("#{column}" => range_near(value)).pluck(:id)
   end
 
   def id_where_value(column, value)
