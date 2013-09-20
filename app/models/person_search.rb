@@ -38,23 +38,6 @@ private
     end
   end
 
-  def column_agree(columns, params, near_p)
-    ids = nil
-    columns.each do |c|
-      v = params[c.id2name]
-      value_ids = column_type_query(c, v, near_p)
-      ids = ids ? value_ids & ids : value_ids
-      return [] if ids.empty?
-    end
-    ids
-  end
-
-  def column_any_agree(columns, params)
-    ids = []
-    columns.each { |c| ids = ids + column_type_query(c, params[c.id2name]) }
-    ids
-  end
-
   def result_ids_redis_key
     unique_redis_key_generate('person')
   end

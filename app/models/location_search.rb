@@ -21,21 +21,15 @@ private
     sym
   end
 
-  def column_agree(columns, params, substring_p)
-    ids = nil
-    columns.each do |c|
-      v = params[c.id2name]
-      value_ids = substring_p ? Location.id_where_ILIKE_value(c, v) : Location.id_where_case_insensitive_value(c, v)
-      ids = ids ? value_ids & ids : value_ids
-      return [] if ids.empty?
+  def column_type_query(col, val, near_p = false)
+    case column_type(col)
+    when :string
+      near_p ? Location.id_where_ILIKE_value(col, val) : Location.id_where_case_insensitive_value(col, val)
+    when :number
+      near_p ? Location.id_where_numeric_range(col, val) : Location.id_where_value(col, val)
+    else
+      Location.id_where_value(col, val)
     end
-    ids
-  end
-
-  def column_any_agree(columns, params)
-    ids = []
-    columns.each { |c| ids = ids + Location.id_where_case_insensitive_value(c, params[c.id2name]) }
-    ids
   end
 
   def result_ids_redis_key
