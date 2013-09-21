@@ -399,6 +399,7 @@ describe Search do
     before do
       bld
       @params = {'these' => 'params'}
+      Settings.stub_chain(:search, :results_count_min) { 55 }
     end
     context 'w #all_agree_ids_for_find' do
       before do
@@ -407,7 +408,7 @@ describe Search do
       end
       context 'w #all_agree_ids_few?' do
         before do
-          @all_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN - 1 }
+          @all_ids.should_receive(:length) { Settings.search.results_count_min - 1 }
           @any_ids_w_dupes = [21, 21, 21, 34, 34, 34, 34, 34, 55, 55, 55]
           @o.should_receive(:any_agree_ids_for_find).with(@params, @all_ids) { @any_ids_w_dupes }
           @any_pd = {21 => 3, 34 => 5, 55 => 3}
@@ -448,7 +449,7 @@ describe Search do
 
       describe 'w/o #all_agree_ids_few?' do
         before do
-          @all_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN }
+          @all_ids.should_receive(:length) { Settings.search.results_count_min }
           @o.should_not_receive(:any_agree_ids_for_find)
         end
         it { expect(@o.result_ids_by_relevance @params).to eql @all_ids }

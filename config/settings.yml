@@ -1,6 +1,10 @@
 defaults: &defaults
   search:
+    any_p: true
     near_p: true
+    results_count_min: 55
+    cache_expire_seconds: 3600
+    substring_min: 3
 
 development:
   <<: *defaults

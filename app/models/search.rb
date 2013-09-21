@@ -5,9 +5,6 @@ class Search
   FIELD_GIST_KEY = %r{^field_\d+_[nbr_gist]+}
   FIELD_NUMBER_GIST_KEY = %r{^field_\d+_nbr_gist$}
   FIELD_STRING_GIST_KEY = %r{^field_\d+_str_gist$}
-  RESULTS_COUNT_MIN = 55
-  RESULT_IDS_EXPIRE_SECONDS = 3600
-  SUBSTRING_MIN = 3
 
   def column_gather_ids(params, near_p)
     columns = near_p ? columns_w_near_values(params) : columns_w_values(params)
@@ -86,7 +83,7 @@ class Search
     return if ids.empty?
     key = result_ids_redis_key
     redis.rpush(key, ids)
-    redis.expire(key, RESULT_IDS_EXPIRE_SECONDS)
+    redis.expire(key, Settings.search.cache_expire_seconds)
     key
   end
 
@@ -102,7 +99,7 @@ private
 
   def substring_value_reject?(col, val)
     return unless column_type(col) == :string
-    val.length < SUBSTRING_MIN
+    val.length < Settings.search.substring_min
   end
 
   def columns_w_near_values(params)
@@ -131,7 +128,7 @@ private
     params.select do |k, v|
       unless v.blank?
         if k =~ FIELD_STRING_GIST_KEY
-          v.length >= SUBSTRING_MIN
+          v.length >= Settings.search.substring_min
         else
           k =~ FIELD_NUMBER_GIST_KEY
         end
@@ -170,11 +167,11 @@ private
   end
 
   def all_agree_ids_few?(all_ids)
-    all_ids.length < RESULTS_COUNT_MIN
+    all_ids.length < Settings.search.results_count_min
   end
 
   def any_agree_ids_few?(all_ids, any_ids)
-    all_ids.length + any_ids.length < RESULTS_COUNT_MIN
+    all_ids.length + any_ids.length < Settings.search.results_count_min
   end
 
   def ids_by_relevance(parent_distribution_hsh)
