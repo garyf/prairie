@@ -4,11 +4,14 @@ private
 
   def columns_searchable() [
     :description,
-    :name]
+    :elevation_feet,
+    :lot_acres,
+    :name,
+    :public_p]
   end
 
   def columns_categorical
-    []
+    [:public_p]
   end
 
   def column_type(column)

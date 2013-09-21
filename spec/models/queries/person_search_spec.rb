@@ -84,9 +84,9 @@ describe PersonSearch do
 
   context '#column_gather_ids w near_p' do
     before do
-      @person0 = c_person_cr(name_last: 'Anders', email: 'foo@example.com', height: 20)
-      @person1 = c_person_cr(name_last: 'Brady', email: 'bar@example.com', height: 30)
-      @person2 = c_person_cr(name_last: 'Carson', email: 'foo@example.com', height: 40)
+      @person0 = c_person_cr(name_last: 'Anders', email: 'foo@example.com', height: 20, male_p: false)
+      @person1 = c_person_cr(name_last: 'Brady', email: 'bar@example.com', height: 30, male_p: true)
+      @person2 = c_person_cr(name_last: 'Carson', email: 'foo@example.com', height: 40, male_p: false)
       bld
       @params_blank = {
         'email' => '',
@@ -119,6 +119,18 @@ describe PersonSearch do
       describe 'w 1 matching' do
         before { @params = @params_blank.merge('height' => '19') }
         it { expect(@o.column_gather_ids @params, true).to eql [@person0.id] }
+      end
+    end
+
+    context 'w 1 boolean term' do
+      describe 'w 1 matching' do
+        before { @params = @params_blank.merge('public_p' => '1') }
+        it { expect(@o.column_gather_ids @params, true).to be nil }
+      end
+
+      describe 'w 2 matching' do
+        before { @params = @params_blank.merge('public_p' => '0') }
+        it { expect(@o.column_gather_ids @params, true).to be nil }
       end
     end
 
