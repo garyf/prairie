@@ -4,14 +4,34 @@ describe PersonSearchesController do
   context 'GET index' do
     context 'w key' do
       before { session[:person_search_key] = 'redis_key' }
-      describe 'w params[:page]' do
+      context 'w params[:page]' do
         before do
-          PersonSearch.should_receive(:people_fetch).with('redis_key', '1') { ['o1','o2'] }
-          get :index, page: '1'
+          @search_result = double('search_result')
+          SearchCache.should_receive(:new).with('redis_key') { @search_result }
         end
-        it do
-          expect(assigns :people).to eql ['o1','o2']
-          expect(response).to render_template :index
+        describe 'w/o @people.empty?' do
+          before do
+            PersonSearch.should_receive(:people_fetch).with( @search_result, '1') { ['o1','o2'] }
+            @search_result.should_receive(:result_ids_count) { 2 }
+            get :index, page: '1'
+          end
+          it do
+            expect(assigns :results_count).to eql 2
+            expect(assigns :people).to eql ['o1','o2']
+            expect(response).to render_template :index
+          end
+        end
+
+        describe 'w @people.empty?' do
+          before do
+            PersonSearch.should_receive(:people_fetch).with( @search_result, '1') { [] }
+            @search_result.should_not_receive(:result_ids_count) { 0 }
+            get :index, page: '1'
+          end
+          it do
+            expect(assigns :people).to eql []
+            expect(response).to redirect_to new_person_search_path
+          end
         end
       end
 

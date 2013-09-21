@@ -1,7 +1,7 @@
 class PersonSearch < Search
 
-  def self.people_fetch(key, page)
-    Person.name_last_where_ids_preserve_order(result_ids_fetch key, page)
+  def self.people_fetch(search_cache, page)
+    Person.name_last_where_ids_preserve_order(search_cache.result_ids_fetch page)
   end
 
 private

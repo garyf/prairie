@@ -1,7 +1,7 @@
 class LocationSearch < Search
 
-  def self.locations_fetch(key, page)
-    Location.name_where_ids_preserve_order(result_ids_fetch key, page)
+  def self.locations_fetch(search_cache, page)
+    Location.name_where_ids_preserve_order(search_cache.result_ids_fetch page)
   end
 
 private

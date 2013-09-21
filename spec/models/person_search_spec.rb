@@ -1,28 +1,46 @@
 require 'spec_helper'
 
 describe PersonSearch do
-  context '::result_ids_fetch', :redis do
+  context '#result_ids_store' do
     before do
       bld
-      @params = {'these' => 'params'}
-      @result_ids = %w{ 1 3 5 7 9 11 13 15 17 }
-      @o.should_receive(:result_ids_by_relevance).with(@params) { @result_ids }
-      @key = @o.result_ids_store(nil, @params)
+      @params0 = {'this' => 'foo'}
     end
-    it { expect(@key).to match /^person:search:ids:[0-9a-f]{16}$/ }
+    context 'w result_ids', :redis do
+      before do
+        @result_ids0 = %w{ 1 3 5 7 9 11 13 15 }
+        @o.should_receive(:result_ids_by_relevance).with(@params0) { @result_ids0 }
+        @key0 = @o.result_ids_store(nil, @params0)
+        @search_cache0 = SearchCache.new(@key0)
+        stub_const("SearchCache::RESULTS_PER_PAGE", 3)
+      end
+      it do
+        expect(@key0).to match /^person:search:ids:[0-9a-f]{16}$/
+        expect(@search_cache0.result_ids_count).to eql 8
+        expect(@search_cache0.result_ids_fetch 1).to eql %w{ 1 3 5 }
+      end
 
-    describe 'w per_page == 3' do
-      before { stub_const("Search::RESULTS_PER_PAGE", 3) }
-      it { expect(PersonSearch.result_ids_fetch @key, 1).to eql %w{ 1 3 5 } }
-      it { expect(PersonSearch.result_ids_fetch @key, 2).to eql %w{ 7 9 11 } }
-      it { expect(PersonSearch.result_ids_fetch @key, 3).to eql %w{ 13 15 17 } }
+      describe 'a second search updates the cache' do
+        before do
+          @params1 = {'this' => 'bar'}
+          @result_ids1 = %w{ 2 4 6 8 10 }
+          @o.should_receive(:result_ids_by_relevance).with(@params1) { @result_ids1 }
+          @key1 = @o.result_ids_store(@key0, @params1)
+          @search_cache1 = SearchCache.new(@key1)
+        end
+        it do
+          expect(@search_cache0.result_ids_count).to eql 0
+          expect(@search_cache0.result_ids_fetch 1).to eql []
+          expect(@key1).to match /^person:search:ids:[0-9a-f]{16}$/
+          expect(@search_cache1.result_ids_count).to eql 5
+          expect(@search_cache1.result_ids_fetch 1).to eql %w{ 2 4 6 }
+        end
+      end
     end
 
-    describe 'w per_page == 4' do
-      before { stub_const("Search::RESULTS_PER_PAGE", 4) }
-      it { expect(PersonSearch.result_ids_fetch @key, 1).to eql %w{ 1 3 5 7 } }
-      it { expect(PersonSearch.result_ids_fetch @key, 2).to eql %w{ 9 11 13 15 } }
-      it { expect(PersonSearch.result_ids_fetch @key, 3).to eql %w{ 17 } }
+    describe 'w/o result_ids' do
+      before { @o.should_receive(:result_ids_by_relevance).with(@params0) { [] } }
+      it { expect(@o.result_ids_store nil, @params0).to be nil }
     end
   end
 

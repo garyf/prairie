@@ -7,24 +7,7 @@ class Search
   FIELD_STRING_GIST_KEY = %r{^field_\d+_str_gist$}
   RESULTS_COUNT_MIN = 55
   RESULT_IDS_EXPIRE_SECONDS = 3600
-  RESULTS_PER_PAGE = 10
   SUBSTRING_MIN = 3
-
-  def self.page_begin(page)
-    (page.to_i - 1) * RESULTS_PER_PAGE
-  end
-
-  def self.page_end(page)
-    page.to_i * RESULTS_PER_PAGE - 1
-  end
-
-  def self.results_count(key)
-    redis.llen(key)
-  end
-
-  def self.result_ids_fetch(key, page)
-    redis.lrange(key, page_begin(page), page_end(page))
-  end
 
   def column_gather_ids(params, near_p)
     columns = near_p ? columns_w_near_values(params) : columns_w_values(params)

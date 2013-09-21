@@ -11,7 +11,7 @@ module SearchHelper
   def search_results_info(results_count, params = params)
     entry_name = params[:controller].split('_')[0]
     entry_name = entry_name.pluralize unless results_count == 1
-    per_page = Search::RESULTS_PER_PAGE
+    per_page = SearchCache::RESULTS_PER_PAGE
     if results_count < per_page + 1
       t('helpers.search_results.single_page',
         entry_name: entry_name,
@@ -28,7 +28,7 @@ module SearchHelper
 
   def search_pagination_nav(results_count, params = params)
     page = params[:page].to_i
-    last_page_p = last_search_page?(results_count, page, Search::RESULTS_PER_PAGE)
+    last_page_p = last_search_page?(results_count, page, SearchCache::RESULTS_PER_PAGE)
     ary = []
     return ary if page == 1 && last_page_p
     ary << (page > 1 ? "<li>#{link_to 'First', url_for(params.merge page: 1)}</li>" : "<li class=disabled>#{link_to 'First', '#'}</li>").html_safe
