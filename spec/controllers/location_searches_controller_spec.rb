@@ -6,26 +6,26 @@ describe LocationSearchesController do
       before { session[:location_search_key] = 'redis_key' }
       context 'w params[:page]' do
         before do
-          @search_result = double('search_result')
-          SearchCache.should_receive(:new).with('redis_key') { @search_result }
+          @search_cache = double('search_cache')
+          SearchCache.should_receive(:new).with('redis_key') { @search_cache }
         end
         describe 'w/o @locations.empty?' do
           before do
-            LocationSearch.should_receive(:locations_fetch).with( @search_result, '1') { ['o1','o2'] }
-            @search_result.should_receive(:result_ids_count) { 2 }
+            Location.should_receive(:search_results_fetch).with(@search_cache, '1') { ['o1','o2'] }
+            @search_cache.should_receive(:result_ids_count) { 2 }
             get :index, page: '1'
           end
           it do
-            expect(assigns :results_count).to eql 2
             expect(assigns :locations).to eql ['o1','o2']
+            expect(assigns :results_count).to eql 2
             expect(response).to render_template :index
           end
         end
 
         describe 'w @locations.empty?' do
           before do
-            LocationSearch.should_receive(:locations_fetch).with( @search_result, '1') { [] }
-            @search_result.should_not_receive(:result_ids_count) { 0 }
+            Location.should_receive(:search_results_fetch).with(@search_cache, '1') { [] }
+            @search_cache.should_not_receive(:result_ids_count) { 0 }
             get :index, page: '1'
           end
           it do

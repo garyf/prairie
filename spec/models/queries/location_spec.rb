@@ -69,6 +69,10 @@ describe Location do
         expect(subject[2].name).to eql 'Baltimore'
       end
     end
+
+    it 'passing []' do
+      expect(Location.name_where_ids_preserve_order []).to eql []
+    end
   end
 
 private

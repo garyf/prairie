@@ -30,6 +30,10 @@ class Person < ActiveRecord::Base
     ids.map { |k| hsh[k.to_i].first }
   end
 
+  def self.search_results_fetch(search_cache, page)
+    name_last_where_ids_preserve_order(search_cache.result_ids_fetch page)
+  end
+
   def numeric_gist_cr(custom_field_id, gist)
     PersonNumericGist.create(
       custom_field_id: custom_field_id,

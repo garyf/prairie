@@ -6,7 +6,7 @@ class LocationSearchesController < ApplicationController
     key = session[:location_search_key]
     redirect_to new_location_search_path and return unless key && params[:page]
     @search_cache = SearchCache.new(key)
-    @locations = LocationSearch.locations_fetch(@search_cache, params[:page])
+    @locations = Location.search_results_fetch(@search_cache, params[:page])
     redirect_to new_location_search_path and return if @locations.empty?
     @results_count = @search_cache.result_ids_count
   end

@@ -6,7 +6,7 @@ class PersonSearchesController < ApplicationController
     key = session[:person_search_key]
     redirect_to new_person_search_path and return unless key && params[:page]
     @search_cache = SearchCache.new(key)
-    @people = PersonSearch.people_fetch(@search_cache, params[:page])
+    @people = Person.search_results_fetch(@search_cache, params[:page])
     redirect_to new_person_search_path and return if @people.empty?
     @results_count = @search_cache.result_ids_count
   end

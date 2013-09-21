@@ -104,6 +104,10 @@ describe Person do
         expect(subject[2].name_last).to eql 'Brady'
       end
     end
+
+    it 'passing []' do
+      expect(Person.name_last_where_ids_preserve_order []).to eql []
+    end
   end
 
 private
