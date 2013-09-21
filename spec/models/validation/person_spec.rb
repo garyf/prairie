@@ -49,6 +49,11 @@ describe Person do
       end
     end
 
+    it '#male_p nil' do
+      bld male_p: nil
+      expect(@o.error_on :male_p).to include 'must be true or false'
+    end
+
     it '#name_first length too long' do
       bld name_first: STR_56
       expect(@o.error_on :name_first).to include "is too long (maximum is 55 characters)"
@@ -69,6 +74,10 @@ describe Person do
   context 'db constraints w' do
     it '#email nil' do
       expect_db_error { svf(bld email: nil) }
+    end
+
+    it '#male_p nil' do
+      expect_db_error { svf(bld male_p: nil) }
     end
 
     it '#name_last nil' do

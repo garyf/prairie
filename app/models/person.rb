@@ -14,6 +14,7 @@ class Person < ActiveRecord::Base
   validates :birth_year, numericality: {less_than: 2015, only_integer: true}, allow_blank: true
   validates :email, presence: true, length: 3..254, format: {with: /@/}
   validates :height, numericality: {greater_than: 13, less_than: 89}, allow_blank: true
+  validates :male_p, inclusion: {in: [true, false], message: 'must be true or false'}
   validates :name_first, length: {maximum: 55}
   validates :name_last, presence: true, length: {maximum: 55}
 

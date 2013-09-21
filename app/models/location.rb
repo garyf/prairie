@@ -10,7 +10,11 @@ class Location < ActiveRecord::Base
 
   paginates_per 8
 
-  validates :name, presence: true
+  validates :description, length: {maximum: 255}
+  validates :elevation_feet, numericality: {greater_than: -1, less_than: 30000, only_integer: true}, allow_blank: true
+  validates :lot_acres, numericality: {greater_than: 0, less_than: 9999999}, allow_blank: true
+  validates :name, presence: true, length: {maximum: 55}
+  validates :public_p, inclusion: {in: [true, false], message: 'must be true or false'}
 
   def self.by_name(page)
     order('name').page page

@@ -12,6 +12,18 @@
   <dt>Description</dt>
   <dd><%= @location.description %></dd>
 </dl>
+<dl class=dl-horizontal>
+  <dt>Elevation</dt>
+  <dd><%= @location.elevation_feet %></dd>
+</dl>
+<dl class=dl-horizontal>
+  <dt>Lot size</dt>
+  <dd><%= @location.lot_acres %></dd>
+</dl>
+<dl class=dl-horizontal>
+  <dt>Ownership</dt>
+  <dd><%= @location.ownership %></dd>
+</dl>
 
 <% if @field_sets.any? %>
   <h4>Custom field sets</h4>

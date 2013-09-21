@@ -111,6 +111,9 @@ private
 
   def valid_attributes() {
     'description' => 'edge city in Northern Virginia',
-    'name' => 'Tysons Corner'}
+    'elevation_feet' => '486',
+    'lot_acres' => '3136',
+    'name' => 'Tysons Corner',
+    'public_p' => '0'}
   end
 end

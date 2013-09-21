@@ -9,6 +9,18 @@
     <%= f.label :description, class: 'control-label' %>
     <div class=controls><%= f.text_field :description %></div>
   </div>
+  <div class=control-group>
+    <%= f.label :elevation_feet, class: 'control-label' %>
+    <div class=controls><%= f.number_field :elevation_feet, class: 'input-mini' %></div>
+  </div>
+  <div class=control-group>
+    <%= f.label :lot_acres, class: 'control-label' %>
+    <div class=controls><%= f.number_field :lot_acres, class: 'input-mini' %></div>
+  </div>
+  <div class=control-group>
+    <%= f.label 'Public property?', class: 'control-label' %>
+    <div class=controls><%= f.check_box :public_p %></div>
+  </div>
   <div class=form-actions>
     <%= f.button 'Done', class: 'btn  btn-primary' %>
     <%= link_to 'Cancel', locations_path, class: 'btn' %>

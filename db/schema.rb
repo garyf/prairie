@@ -58,11 +58,17 @@ ActiveRecord::Schema.define(version: 20130917111641) do
   end
 
   create_table "locations", force: true do |t|
-    t.string   "name",        null: false
+    t.string   "name",           null: false
+    t.integer  "county_id"
     t.string   "description"
+    t.integer  "elevation_feet"
+    t.float    "lot_acres"
+    t.boolean  "public_p",       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "locations", ["county_id"], name: "index_locations_on_county_id", using: :btree
 
   create_table "numeric_gists", force: true do |t|
     t.string  "type",            null: false

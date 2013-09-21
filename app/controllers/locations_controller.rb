@@ -43,6 +43,9 @@ private
   def params_white
     params.require(:location).permit(
       :description,
-      :name)
+      :elevation_feet,
+      :lot_acres,
+      :name,
+      :public_p)
   end
 end
