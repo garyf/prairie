@@ -399,56 +399,139 @@ describe Search do
     before do
       bld
       @params = {'these' => 'params'}
-      @all_ids = [3, 5, 8, 13]
-      @o.should_receive(:all_agree_ids_for_find).with(@params) { @all_ids }
     end
-    context 'w #all_agree_ids_few?' do
+    context 'w #all_agree_ids_for_find' do
       before do
-        @all_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN - 1 }
-        @any_ids_w_dupes = [21, 21, 21, 34, 34, 34, 34, 34, 55, 55, 55]
-        @o.should_receive(:any_agree_ids_for_find).with(@params, @all_ids) { @any_ids_w_dupes }
-        @any_pd = {21 => 3, 34 => 5, 55 => 3}
-        @o.should_receive(:parent_distribution).with(@any_ids_w_dupes) { @any_pd }
-        @any_ids = @any_pd.keys
+        @all_ids = [3, 5, 8, 13]
+        @o.should_receive(:all_agree_ids_for_find).with(@params) { @all_ids }
       end
-      context 'w #any_agree_ids_few?' do
+      context 'w #all_agree_ids_few?' do
         before do
-          @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { true }
-          Settings.stub_chain(:search, :near_p) { true }
+          @all_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN - 1 }
+          @any_ids_w_dupes = [21, 21, 21, 34, 34, 34, 34, 34, 55, 55, 55]
+          @o.should_receive(:any_agree_ids_for_find).with(@params, @all_ids) { @any_ids_w_dupes }
+          @any_pd = {21 => 3, 34 => 5, 55 => 3}
+          @o.should_receive(:parent_distribution).with(@any_ids_w_dupes) { @any_pd }
+          @any_ids = @any_pd.keys
         end
-        describe 'w near_ids' do
+        context 'w #any_agree_ids_few?' do
           before do
-            @near_ids = [89, 144, 89]
-            @o.should_receive(:all_agree_ids_for_find).with(@params, true) { @near_ids }
-            @o.should_receive(:parent_distribution).with(@near_ids) { {89 => 2, 144 => 1} }
+            @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { true }
+            Settings.stub_chain(:search, :near_p) { true }
           end
-          it { expect(@o.result_ids_by_relevance @params).to eql [3, 5, 8, 13, 34, 21, 55, 89, 144] }
+          describe 'w near_ids' do
+            before do
+              @near_ids = [89, 144, 89]
+              @o.should_receive(:all_agree_ids_for_find).with(@params, true) { @near_ids }
+              @o.should_receive(:parent_distribution).with(@near_ids) { {89 => 2, 144 => 1} }
+            end
+            it { expect(@o.result_ids_by_relevance @params).to eql [3, 5, 8, 13, 34, 21, 55, 89, 144] }
+          end
+
+          describe 'w/o near_ids' do
+            before do
+              @o.should_receive(:all_agree_ids_for_find).with(@params, true) { [] }
+              @o.should_not_receive(:parent_distribution)
+            end
+            it { expect(@o.result_ids_by_relevance @params).to eql [3, 5, 8, 13, 34, 21, 55] }
+          end
         end
 
-        describe 'w/o near_ids' do
+        describe 'w/o #any_agree_ids_few?' do
           before do
-            @o.should_receive(:all_agree_ids_for_find).with(@params, true) { [] }
-            @o.should_not_receive(:parent_distribution)
+            @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { false }
+            @o.should_not_receive(:all_agree_ids_for_find)
           end
           it { expect(@o.result_ids_by_relevance @params).to eql [3, 5, 8, 13, 34, 21, 55] }
         end
       end
 
-      describe 'w/o #any_agree_ids_few?' do
+      describe 'w/o #all_agree_ids_few?' do
         before do
-          @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { false }
-          @o.should_not_receive(:all_agree_ids_for_find)
+          @all_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN }
+          @o.should_not_receive(:any_agree_ids_for_find)
         end
-        it { expect(@o.result_ids_by_relevance @params).to eql [3, 5, 8, 13, 34, 21, 55] }
+        it { expect(@o.result_ids_by_relevance @params).to eql @all_ids }
       end
     end
 
-    describe 'w/o #all_agree_ids_few?' do
+    context 'w/o #all_agree_ids_for_find' do
       before do
-        @all_ids.should_receive(:length) { Search::RESULTS_COUNT_MIN }
-        @o.should_not_receive(:any_agree_ids_for_find)
+        @all_ids = []
+        @o.should_receive(:all_agree_ids_for_find).with(@params) { @all_ids }
       end
-      it { expect(@o.result_ids_by_relevance @params).to eql @all_ids }
+      context 'w #all_agree_ids_few?' do
+        context 'w #any_agree_ids_for_find' do
+          before do
+            @any_ids_w_dupes = [21, 21, 21, 34, 34, 34, 34, 34, 55, 55, 55]
+            @o.should_receive(:any_agree_ids_for_find).with(@params, @all_ids) { @any_ids_w_dupes }
+            @any_pd = {21 => 3, 34 => 5, 55 => 3}
+            @o.should_receive(:parent_distribution).with(@any_ids_w_dupes) { @any_pd }
+            @any_ids = @any_pd.keys
+          end
+          context 'w #any_agree_ids_few?' do
+            before do
+              @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { true }
+              Settings.stub_chain(:search, :near_p) { true }
+            end
+            describe 'w near_ids' do
+              before do
+                @near_ids = [89, 144, 89]
+                @o.should_receive(:all_agree_ids_for_find).with(@params, true) { @near_ids }
+                @o.should_receive(:parent_distribution).with(@near_ids) { {89 => 2, 144 => 1} }
+              end
+              it { expect(@o.result_ids_by_relevance @params).to eql [34, 21, 55, 89, 144] }
+            end
+
+            describe 'w/o near_ids' do
+              before do
+                @o.should_receive(:all_agree_ids_for_find).with(@params, true) { [] }
+                @o.should_not_receive(:parent_distribution)
+              end
+              it { expect(@o.result_ids_by_relevance @params).to eql [34, 21, 55] }
+            end
+          end
+
+          describe 'w/o #any_agree_ids_few?' do
+            before do
+              @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { false }
+              @o.should_not_receive(:all_agree_ids_for_find)
+            end
+            it { expect(@o.result_ids_by_relevance @params).to eql [34, 21, 55] }
+          end
+        end
+
+        context 'w/o #any_agree_ids_for_find' do
+          before do
+            @any_ids = []
+            @o.should_receive(:any_agree_ids_for_find).with(@params, @all_ids) { @any_ids }
+            @any_pd = {}
+            @o.should_receive(:parent_distribution).with(@any_ids) { @any_pd }
+          end
+          context 'w #any_agree_ids_few?' do
+            before do
+              @o.should_receive(:any_agree_ids_few?).with(@all_ids, @any_ids) { true }
+              Settings.stub_chain(:search, :near_p) { true }
+            end
+            describe 'w near_ids' do
+              before do
+                @near_ids = [89, 144, 89]
+                @o.should_receive(:all_agree_ids_for_find).with(@params, true) { @near_ids }
+                @o.should_receive(:parent_distribution).with(@near_ids) { {89 => 2, 144 => 1} }
+              end
+              it { expect(@o.result_ids_by_relevance @params).to eql [89, 144] }
+            end
+
+            describe 'w/o near_ids' do
+              before do
+                @o.should_receive(:all_agree_ids_for_find).with(@params, true) { [] }
+                @o.should_not_receive(:parent_distribution)
+              end
+              it { expect(@o.result_ids_by_relevance @params).to eql [] }
+            end
+          end
+        end
+      end
     end
   end
 
