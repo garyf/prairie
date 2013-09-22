@@ -29,7 +29,7 @@ rails s
 
 ### Redis configuration
 
-See dvlp_6379.conf or test_9212.conf
+See dvlp_9212.conf or test_6379.conf
 
 ## Why 'Prairie'
 

@@ -30,10 +30,10 @@ end
 
 Redis.current = Redis.new(
   host: '127.0.0.1',
-  port: 6379)
+  port: 9212)
 begin
   Redis.current.get('foo')
-  puts '~~ Redis listening on port 6379'
+  puts '~~ Redis listening on port 9212'
 rescue
-  puts "\n* ALERT *  Redis is not listening on port 6379; stand in root and run: rds-dvlp\n\n"
+  puts "\n* ALERT *  Redis is not listening on port 9212; stand in root and run: rds-dvlp\n\n"
 end
