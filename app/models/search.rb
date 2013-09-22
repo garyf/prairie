@@ -64,17 +64,24 @@ class Search
     grouped_ids.inject([]) { |ary, pair| ary + pair[1] }
   end
 
-  def result_ids_by_relevance(params)
-    all_ids = all_agree_ids_for_find(params)
-    return all_ids unless all_agree_ids_few?(all_ids)
-    any_agree_hsh = parent_distribution(any_agree_ids_for_find params, all_ids)
-    result_ids = all_ids + ids_by_relevance(any_agree_hsh)
-    any_ids = any_agree_hsh.keys
-    return result_ids unless any_agree_ids_few?(all_ids, any_ids) && Settings.search.near_p
-    near_ids = all_agree_ids_for_find(params, true) - all_ids - any_ids
+  def near_ids_by_relevance(params, result_ids)
+    return result_ids unless Settings.search.near_p
+    near_ids = all_agree_ids_for_find(params, true) - result_ids
     return result_ids unless near_ids.any?
     near_agree_hsh = parent_distribution(near_ids)
     result_ids + ids_by_relevance(near_agree_hsh)
+  end
+
+  def any_ids_by_relevance(params, all_ids)
+    return near_ids_by_relevance(params, all_ids) unless Settings.search.any_p
+    any_agree_hsh = parent_distribution(any_agree_ids_for_find params, all_ids)
+    result_ids = all_ids + ids_by_relevance(any_agree_hsh)
+    result_ids_few?(result_ids) ? near_ids_by_relevance(params, result_ids) : result_ids
+  end
+
+  def result_ids_by_relevance(params)
+    all_ids = all_agree_ids_for_find(params)
+    result_ids_few?(all_ids) ? any_ids_by_relevance(params, all_ids) : all_ids
   end
 
   def result_ids_store(old_key, params)
@@ -166,12 +173,8 @@ private
     ids
   end
 
-  def all_agree_ids_few?(all_ids)
-    all_ids.length < Settings.search.results_count_min
-  end
-
-  def any_agree_ids_few?(all_ids, any_ids)
-    all_ids.length + any_ids.length < Settings.search.results_count_min
+  def result_ids_few?(result_ids)
+    result_ids.length < Settings.search.results_count_min
   end
 
   def ids_by_relevance(parent_distribution_hsh)
