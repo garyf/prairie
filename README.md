@@ -1,5 +1,8 @@
 # Prairie
 
+[![Build Status](https://travis-ci.org/garyf/prairie.png?branch=master)](https://travis-ci.org/garyf/prairie)
+[![Code Climate](https://codeclimate.com/github/garyf/prairie.png)](https://codeclimate.com/github/garyf/prairie)
+
 Prairie is a Rails 4.0 app that demonstrates the use of the [Redis](http://redis.io/) key value store
 to implement dynamic custom fields. Prairie relies on the [redis-objects](https://github.com/nateware/redis-objects)
 gem for much of the interaction with Redis. Its architecture addresses potential situations
