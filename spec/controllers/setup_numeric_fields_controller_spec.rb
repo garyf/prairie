@@ -21,6 +21,7 @@ describe SetupNumericFieldsController do
           before do
             person_field_set_mk.stub_chain(:numeric_fields, :new).with(valid_attributes) { numeric_field_mk(save: true) }
             numeric_field_mk.should_receive(:constraints_store).with(valid_attributes)
+            numeric_field_mk.should_receive(:type_human) { 'Numeric field' }
             post :create, numeric_field: valid_attributes.merge('some' => 'attribute')
           end
           it do
@@ -35,6 +36,7 @@ describe SetupNumericFieldsController do
           before do
             person_field_set_mk.stub_chain(:numeric_fields, :new).with(valid_attributes) { numeric_field_mk(save: false) }
             numeric_field_mk.should_not_receive(:constraints_store)
+            numeric_field_mk.should_receive(:type_human).with(true) { 'numeric field' }
             post :create, numeric_field: valid_attributes.merge('some' => 'attribute')
           end
           it do

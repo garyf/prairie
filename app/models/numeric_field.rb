@@ -39,6 +39,11 @@ class NumericField < CustomField
     postgres_index_on_gist_update(numeric_gists.where_parent_id parent_id)
   end
 
+  def type_human(downcase_p = false)
+    str = 'Numeric field'
+    downcase_p ? str.downcase : str
+  end
+
 private
 
   def value_min_lte_value_max

@@ -1,4 +1,4 @@
-class SetupStringFieldsController < ApplicationController
+class SetupStringFieldsController < SetupTextFieldsController
 
   before_action :field_set_assign, :new_allow?, only: [:new, :create]
   before_action :string_field_assign, :from_assn_field_set_assign, only: [:edit, :update, :destroy]
@@ -13,14 +13,8 @@ class SetupStringFieldsController < ApplicationController
   end
 
   def create
-    @string_field = @field_set.string_fields.new(params_white)
-    if @string_field.save
-      @string_field.constraints_store(params_white)
-      redirect_to field_set_path(@field_set), notice: 'String field successfully created'
-    else
-      flash[:alert] = 'Failed to create string field'
-      render :new
-    end
+    @text_field = @string_field = @field_set.string_fields.new(params_white)
+    constraints_store_or_new
   end
 
   def update

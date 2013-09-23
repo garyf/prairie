@@ -39,6 +39,11 @@ class StringField < CustomField
     postgres_index_on_gist_update(string_gists.where_parent_id parent_id)
   end
 
+  def type_human(downcase_p = false)
+    str = 'String field'
+    downcase_p ? str.downcase : str
+  end
+
 private
 
   def length_min_lte_length_max
