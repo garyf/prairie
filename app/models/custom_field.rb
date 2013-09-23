@@ -57,6 +57,11 @@ class CustomField < ActiveRecord::Base
 
 private
 
+  def validate_min_lte_max(attribute, max, min, str)
+    return if max.blank? || min.blank?
+    errors.add(attribute, "must be less than or equal to #{max} (#{str} max)") if min.to_i > max.to_i
+  end
+
   def fields_enabled_count
     field_set.fields_enabled_count
   end

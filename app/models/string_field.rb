@@ -42,8 +42,7 @@ class StringField < CustomField
 private
 
   def length_min_lte_length_max
-    return if length_max.blank? || length_min.blank?
-    errors.add(:length_min, "must be less than or equal to #{length_max} (Length max)") if length_min.to_i > length_max.to_i
+    validate_min_lte_max(:length_min, length_max, length_min, 'Length')
   end
 
   def gist_lte_length_max

@@ -42,8 +42,7 @@ class NumericField < CustomField
 private
 
   def value_min_lte_value_max
-    return if value_max.blank? || value_min.blank?
-    errors.add(:value_min, "must be less than or equal to #{value_max} (Value max)") if value_min.to_i > value_max.to_i
+    validate_min_lte_max(:value_min, value_max, value_min, 'Value')
   end
 
   def gist_only_integer
