@@ -16,7 +16,7 @@ describe PersonSearchesController do
             get :index, page: '1'
           end
           it do
-            expect(assigns :people).to eql ['o1','o2']
+            expect(assigns :search_results_for_page).to eql ['o1','o2']
             expect(assigns :results_count).to eql 2
             expect(response).to render_template :index
           end
@@ -29,7 +29,7 @@ describe PersonSearchesController do
             get :index, page: '1'
           end
           it do
-            expect(assigns :people).to eql []
+            expect(assigns :search_results_for_page).to eql []
             expect(response).to redirect_to new_person_search_path
           end
         end
@@ -89,7 +89,7 @@ describe PersonSearchesController do
       end
       it do
         expect(session[:person_search_key]).to be nil
-        expect(assigns :people).to eql []
+        expect(assigns :search_results_for_page).to eql []
         expect(response).to render_template :index
       end
     end

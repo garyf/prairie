@@ -3,9 +3,9 @@
   <li><%= link_to 'New search for locations', new_location_search_path %></li>
 </ul>
 
-<% if @locations.any? %>
+<% if @search_results_for_page.any? %>
   <h5><%= search_results_info @results_count %></h5>
-  <ul class=unstyled><%= render partial: 'location', collection: @locations %></ul>
+  <ul class=unstyled><%= render partial: 'location', collection: @search_results_for_page %></ul>
   <%= render partial: 'common/search_pagination_nav' %>
 
 <% else %>

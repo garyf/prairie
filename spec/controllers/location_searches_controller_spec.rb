@@ -16,7 +16,7 @@ describe LocationSearchesController do
             get :index, page: '1'
           end
           it do
-            expect(assigns :locations).to eql ['o1','o2']
+            expect(assigns :search_results_for_page).to eql ['o1','o2']
             expect(assigns :results_count).to eql 2
             expect(response).to render_template :index
           end
@@ -29,7 +29,7 @@ describe LocationSearchesController do
             get :index, page: '1'
           end
           it do
-            expect(assigns :locations).to eql []
+            expect(assigns :search_results_for_page).to eql []
             expect(response).to redirect_to new_location_search_path
           end
         end
@@ -89,7 +89,7 @@ describe LocationSearchesController do
       end
       it do
         expect(session[:location_search_key]).to be nil
-        expect(assigns :locations).to eql []
+        expect(assigns :search_results_for_page).to eql []
         expect(response).to render_template :index
       end
     end

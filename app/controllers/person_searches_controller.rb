@@ -1,14 +1,9 @@
-class PersonSearchesController < ApplicationController
+class PersonSearchesController < SearchesController
 
   respond_to :html
 
   def index
-    key = session[:person_search_key]
-    redirect_to new_person_search_path and return unless key && params[:page]
-    @search_cache = SearchCache.new(key)
-    @people = Person.search_results_fetch(@search_cache, params[:page])
-    redirect_to new_person_search_path and return if @people.empty?
-    @results_count = @search_cache.result_ids_count
+    cache_read(session[:person_search_key], new_person_search_path, Person)
   end
 
   def new
@@ -23,7 +18,7 @@ class PersonSearchesController < ApplicationController
       redirect_to person_searches_path(page: '1')
     else
       session[:person_search_key] = nil
-      @people = []
+      @search_results_for_page = []
       render :index
     end
   end
