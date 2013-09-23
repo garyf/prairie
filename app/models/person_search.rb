@@ -18,20 +18,11 @@ private
   end
 
   def column_type(column)
-    sym = Person.columns_hash["#{column.id2name}"].type
-    sym = :number if sym == :integer || sym == :float
-    sym
+    column_type_for(Person, column)
   end
 
   def column_type_query(col, val, near_p = false)
-    case column_type(col)
-    when :string
-      near_p ? Person.id_where_ILIKE_value(col, val) : Person.id_where_case_insensitive_value(col, val)
-    when :number
-      near_p ? Person.id_where_numeric_range(col, val) : Person.id_where_value(col, val)
-    else
-      Person.id_where_value(col, val)
-    end
+    column_type_query_for(Person, col, val, near_p)
   end
 
   def result_ids_redis_key

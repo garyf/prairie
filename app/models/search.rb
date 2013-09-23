@@ -104,6 +104,12 @@ private
     columns_searchable - columns_categorical
   end
 
+  def column_type_for(klass, column)
+    sym = klass.columns_hash["#{column.id2name}"].type
+    sym = :number if sym == :integer || sym == :float
+    sym
+  end
+
   def substring_value_reject?(col, val)
     return unless column_type(col) == :string
     val.length < Settings.search.substring_min
@@ -113,6 +119,17 @@ private
     columns_near_able.delete_if do |col|
       val = params[col.id2name]
       val.blank? || substring_value_reject?(col, val)
+    end
+  end
+
+  def column_type_query_for(klass, col, val, near_p = false)
+    case column_type(col)
+    when :string
+      near_p ? klass.id_where_ILIKE_value(col, val) : klass.id_where_case_insensitive_value(col, val)
+    when :number
+      near_p ? klass.id_where_numeric_range(col, val) : klass.id_where_value(col, val)
+    else
+      klass.id_where_value(col, val)
     end
   end
 
