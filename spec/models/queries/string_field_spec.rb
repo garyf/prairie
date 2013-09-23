@@ -42,7 +42,7 @@ describe StringField do
 
     describe 'w string_gist duplicate' do
       before { person_string_gist_cr(gist: 'baz', parent_id: 1) }
-      it { expect { @o.index_on_gist_update 1 }.to raise_error StringField::StringGistDuplicate }
+      it { expect { @o.index_on_gist_update 1 }.to raise_error CustomField::GistDuplicate }
     end
 
     it 'w/o string_gist' do

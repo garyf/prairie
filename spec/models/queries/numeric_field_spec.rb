@@ -43,7 +43,7 @@ describe NumericField do
 
     describe 'w numeric_gist duplicate' do
       before { person_numeric_gist_cr(gist: 8, parent_id: 1) }
-      it { expect { @o.index_on_gist_update 1 }.to raise_error NumericField::NumericGistDuplicate }
+      it { expect { @o.index_on_gist_update 1 }.to raise_error CustomField::GistDuplicate }
     end
 
     it 'w/o numeric_gist' do

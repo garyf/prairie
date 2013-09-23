@@ -21,6 +21,8 @@ class CustomField < ActiveRecord::Base
 
   delegate :parent, to: :field_set
 
+  class GistDuplicate < StandardError ; end
+
   def self.by_row
     order('row')
   end
@@ -43,6 +45,14 @@ class CustomField < ActiveRecord::Base
 
   def human_row
     field_set.custom_fields.position_above_count(row) + 1
+  end
+
+  def postgres_index_on_gist_update(relation)
+    raise GistDuplicate if relation.count > 1
+    o = relation[0]
+    return unless o
+    o.update_attributes(gist: gist)
+    false # no redis index is awaiting removal
   end
 
 private

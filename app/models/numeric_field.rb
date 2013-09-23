@@ -12,8 +12,6 @@ class NumericField < CustomField
     'value_max',
     'value_min']
 
-  class NumericGistDuplicate < StandardError ; end
-
   def constraints_store(params_white)
     CONSTRAINTS.each { |k| constraint_store(k, params_white.delete(k)) } unless parent?
   end
@@ -38,12 +36,7 @@ class NumericField < CustomField
   end
 
   def index_on_gist_update(parent_id)
-    rltn = numeric_gists.where_parent_id(parent_id)
-    raise NumericGistDuplicate if rltn.count > 1
-    o = rltn[0]
-    return unless o
-    o.update_attributes(gist: gist)
-    false # no redis index is awaiting removal
+    postgres_index_on_gist_update(numeric_gists.where_parent_id parent_id)
   end
 
 private
