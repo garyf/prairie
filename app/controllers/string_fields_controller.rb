@@ -1,4 +1,4 @@
-class StringFieldsController < ApplicationController
+class StringFieldsController < TextFieldsController
 
   before_action :string_field_assign, :field_set_assign, :parent_assign
   respond_to :html
@@ -8,24 +8,13 @@ class StringFieldsController < ApplicationController
   end
 
   def update
-    if @string_field.gist_store(@parent, params_white)
-      redirect_to(field_values_path(field_set_id: @field_set.id, parent_id: @parent.id),
-        notice: 'String field successfully updated')
-    else
-      @string_field.parent_id = @parent.id
-      flash[:alert] = 'Failed to update string field'
-      render :edit
-    end
+    gist_store_or_edit
   end
 
 private
 
   def string_field_assign
-    @string_field = StringField.find(params[:id])
-  end
-
-  def field_set_assign
-    @field_set = @string_field.field_set
+    @text_field = @string_field = StringField.find(params[:id])
   end
 
   def parent_assign

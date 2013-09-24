@@ -29,6 +29,7 @@ describe StringFieldsController do
       describe 'w #gist_store' do
         before do
           string_field_mk.should_receive(:gist_store).with(@person_mock, valid_attributes) { true }
+          string_field_mk.should_receive(:type_human) { 'String field' }
           put :update, id: '21', string_field: valid_attributes
         end
         it do
@@ -41,6 +42,7 @@ describe StringFieldsController do
       describe 'w/o #gist_store' do
         before do
           string_field_mk.should_receive(:gist_store).with(@person_mock, valid_attributes) { false }
+          string_field_mk.should_receive(:type_human).with(true) { 'string field' }
           put :update, id: '21', string_field: valid_attributes
         end
         it do

@@ -1,4 +1,4 @@
-class NumericFieldsController < ApplicationController
+class NumericFieldsController < TextFieldsController
 
   before_action :numeric_field_assign, :field_set_assign, :parent_assign
   respond_to :html
@@ -8,24 +8,13 @@ class NumericFieldsController < ApplicationController
   end
 
   def update
-    if @numeric_field.gist_store(@parent, params_white)
-      redirect_to(field_values_path(field_set_id: @field_set.id, parent_id: @parent.id),
-        notice: 'Numeric field successfully updated')
-    else
-      @numeric_field.parent_id = @parent.id
-      flash[:alert] = 'Failed to update numeric field'
-      render :edit
-    end
+    gist_store_or_edit
   end
 
 private
 
   def numeric_field_assign
-    @numeric_field = NumericField.find(params[:id])
-  end
-
-  def field_set_assign
-    @field_set = @numeric_field.field_set
+    @text_field = @numeric_field = NumericField.find(params[:id])
   end
 
   def parent_assign

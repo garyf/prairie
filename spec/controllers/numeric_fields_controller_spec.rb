@@ -29,6 +29,7 @@ describe NumericFieldsController do
       describe 'w #gist_store' do
         before do
           numeric_field_mk.should_receive(:gist_store).with(@location_mock, valid_attributes) { true }
+          numeric_field_mk.should_receive(:type_human) { 'Numeric field' }
           put :update, id: '21', numeric_field: valid_attributes
         end
         it do
@@ -41,6 +42,7 @@ describe NumericFieldsController do
       describe 'w/o #gist_store' do
         before do
           numeric_field_mk.should_receive(:gist_store).with(@location_mock, valid_attributes) { false }
+          numeric_field_mk.should_receive(:type_human).with(true) { 'numeric field' }
           put :update, id: '21', numeric_field: valid_attributes
         end
         it do
