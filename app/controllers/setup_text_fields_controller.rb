@@ -11,4 +11,15 @@ class SetupTextFieldsController < ApplicationController
       render :new
     end
   end
+
+  def constraints_store_or_edit
+    if @text_field.update(params_white_w_human_row)
+      @text_field.constraints_store(params_white)
+      redirect_to field_set_path(@field_set), notice: t('controllers.flash.update.success', entity: @text_field.type_human)
+    else
+      edit_assigns
+      flash[:alert] = t('controllers.flash.update.failure', entity: @text_field.type_human(true))
+      render :edit
+    end
+  end
 end

@@ -18,14 +18,7 @@ class SetupStringFieldsController < SetupTextFieldsController
   end
 
   def update
-    if @string_field.update(params_white_w_human_row)
-      @string_field.constraints_store(params_white)
-      redirect_to field_set_path(@field_set), notice: 'String field successfully updated'
-    else
-      edit_assigns
-      flash[:alert] = 'Failed to update string field'
-      render :edit
-    end
+    constraints_store_or_edit
   end
 
   def destroy
@@ -45,7 +38,7 @@ private
   end
 
   def string_field_assign
-    @string_field = StringField.find(params[:id])
+    @text_field = @string_field = StringField.find(params[:id])
   end
 
   def from_assn_field_set_assign

@@ -18,14 +18,7 @@ class SetupNumericFieldsController < SetupTextFieldsController
   end
 
   def update
-    if @numeric_field.update(params_white_w_human_row)
-      @numeric_field.constraints_store(params_white)
-      redirect_to field_set_path(@field_set), notice: 'Numeric field successfully updated'
-    else
-      edit_assigns
-      flash[:alert] = 'Failed to update numeric field'
-      render :edit
-    end
+    constraints_store_or_edit
   end
 
   def destroy
@@ -45,7 +38,7 @@ private
   end
 
   def numeric_field_assign
-    @numeric_field = NumericField.find(params[:id])
+    @text_field = @numeric_field = NumericField.find(params[:id])
   end
 
   def from_assn_field_set_assign

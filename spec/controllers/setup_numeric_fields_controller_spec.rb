@@ -21,7 +21,7 @@ describe SetupNumericFieldsController do
           before do
             person_field_set_mk.stub_chain(:numeric_fields, :new).with(valid_attributes) { numeric_field_mk(save: true) }
             numeric_field_mk.should_receive(:constraints_store).with(valid_attributes)
-            numeric_field_mk.should_receive(:type_human) { 'Numeric field' }
+            @numeric_field_mock.should_receive(:type_human) { 'Numeric field' }
             post :create, numeric_field: valid_attributes.merge('some' => 'attribute')
           end
           it do
@@ -36,7 +36,7 @@ describe SetupNumericFieldsController do
           before do
             person_field_set_mk.stub_chain(:numeric_fields, :new).with(valid_attributes) { numeric_field_mk(save: false) }
             numeric_field_mk.should_not_receive(:constraints_store)
-            numeric_field_mk.should_receive(:type_human).with(true) { 'numeric field' }
+            @numeric_field_mock.should_receive(:type_human).with(true) { 'numeric field' }
             post :create, numeric_field: valid_attributes.merge('some' => 'attribute')
           end
           it do
@@ -91,6 +91,7 @@ describe SetupNumericFieldsController do
           before do
             numeric_field_mk.should_receive(:update).with(valid_attributes_human) { true }
             @numeric_field_mock.should_receive(:constraints_store).with(valid_attributes)
+            @numeric_field_mock.should_receive(:type_human) { 'Numeric field' }
             put :update, id: '21', numeric_field: valid_attributes.merge('some' => 'attribute')
           end
           it do
@@ -106,6 +107,7 @@ describe SetupNumericFieldsController do
             @numeric_field_mock.should_not_receive(:constraints_store)
             @numeric_field_mock.should_receive(:constraints_fetch)
             @numeric_field_mock.should_receive(:human_row)
+            @numeric_field_mock.should_receive(:type_human).with(true) { 'numeric field' }
             put :update, id: '21', numeric_field: valid_attributes.merge('some' => 'attribute')
           end
           it do
