@@ -3,7 +3,7 @@ class NumericField < CustomField
   has_many :numeric_gists, foreign_key: :custom_field_id, dependent: :destroy
 
   validates :gist, :value_max, :value_min, numericality: true, allow_blank: true
-  validate :value_min_lte_value_max, :gist_only_integer, :gist_lte_value_max, :gist_gte_value_min
+  validate :value_min_lte_value_max, :gist_only_integer, :gist_within_range
 
   attr_accessor :only_integer_p, :value_max, :value_min
 
@@ -56,19 +56,18 @@ private
     errors.add(:gist, 'value must be an integer') unless gist =~ /\A[+-]?\d+\Z/
   end
 
-  def gist_lte_value_max
-    return if gist.blank?
-    str = constraints['value_max']
-    return if str.blank?
-    self.value_max = str.to_f
-    errors.add(:gist, "value must be less than or equal to #{value_max}") if gist.to_f > value_max
-  end
-
   def gist_gte_value_min
-    return if gist.blank?
     str = constraints['value_min']
     return if str.blank?
     self.value_min = str.to_f
     errors.add(:gist, "value must be greater than or equal to #{value_min}") if gist.to_f < value_min
+  end
+
+  def gist_within_range
+    return if gist.blank?
+    str = constraints['value_max']
+    return gist_gte_value_min if str.blank?
+    self.value_max = str.to_f
+    gist.to_f > value_max ? errors.add(:gist, "value must be less than or equal to #{value_max}") : gist_gte_value_min
   end
 end
