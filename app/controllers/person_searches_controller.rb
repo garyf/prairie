@@ -3,7 +3,7 @@ class PersonSearchesController < SearchesController
   respond_to :html
 
   def index
-    cache_read(session[:person_search_key], new_person_search_path, Person)
+    cache_read(Person, session[:person_search_key], new_person_search_path)
   end
 
   def new
@@ -12,14 +12,6 @@ class PersonSearchesController < SearchesController
   end
 
   def create
-    key = PersonSearch.new.result_ids_store(session[:person_search_key], params)
-    if key
-      session[:person_search_key] = key
-      redirect_to person_searches_path(page: '1')
-    else
-      session[:person_search_key] = nil
-      @search_results_for_page = []
-      render :index
-    end
+    cache_write(PersonSearch, :person_search_key, person_searches_path(page: '1'))
   end
 end
