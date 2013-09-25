@@ -25,8 +25,7 @@ class Location < ActiveRecord::Base
   end
 
   def self.name_where_ids_preserve_order(ids)
-    hsh = select(:id, :name).where(id: ids).group_by(&:id)
-    ids.map { |k| hsh[k.to_i].first }
+    column_where_ids_preserve_order(:name, ids)
   end
 
   def self.search_results_fetch(search_cache, page)

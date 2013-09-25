@@ -27,8 +27,7 @@ class Person < ActiveRecord::Base
   end
 
   def self.name_last_where_ids_preserve_order(ids)
-    hsh = select(:id, :name_last).where(id: ids).group_by(&:id)
-    ids.map { |k| hsh[k.to_i].first }
+    column_where_ids_preserve_order(:name_last, ids)
   end
 
   def self.search_results_fetch(search_cache, page)
