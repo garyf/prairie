@@ -28,6 +28,7 @@ end
 
 group :test do
   gem 'capybara', '>= 2.1.0'
+  gem 'coveralls', require: false
   gem 'factory_girl_rails', '>= 4.2.1'
   gem 'simplecov', '>= 0.7.1', require: false
 end
