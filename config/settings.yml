@@ -1,4 +1,8 @@
 defaults: &defaults
+  location:
+    paginates_per: 8
+  person:
+    paginates_per: 8
   search:
     any_p: true
     near_p: true

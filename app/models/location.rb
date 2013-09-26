@@ -8,7 +8,7 @@ class Location < ActiveRecord::Base
   has_many :location_numeric_gists, foreign_key: :parent_id, dependent: :destroy
   has_many :location_string_gists, foreign_key: :parent_id, dependent: :destroy
 
-  paginates_per 8
+  paginates_per Settings.location.paginates_per
 
   validates :description, length: {maximum: 255}
   validates :elevation_feet, numericality: {greater_than: -1, less_than: 30000, only_integer: true}, allow_blank: true

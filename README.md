@@ -9,7 +9,7 @@ to implement dynamic custom fields. Prairie relies on the [redis-objects](https:
 gem for much of the interaction with Redis. Its architecture addresses potential situations
 where a user might want to create dozens, or perhaps hundreds, of custom fields.
 
-## Custom field features
+## Dynamic custom fields
 
 - **Multiple field types** including string, numeric, select list, radio button and checkbox
 - **Custom field grouping and sequencing:** within groups, custom fields are sequenced using the Ranked-Model gem

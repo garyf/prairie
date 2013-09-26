@@ -9,7 +9,7 @@ class Person < ActiveRecord::Base
   has_many :person_numeric_gists, foreign_key: :parent_id, dependent: :destroy
   has_many :person_string_gists, foreign_key: :parent_id, dependent: :destroy
 
-  paginates_per 8
+  paginates_per Settings.person.paginates_per
 
   validates :birth_year, numericality: {less_than: 2015, only_integer: true}, allow_blank: true
   validates :email, presence: true, length: 3..254, format: {with: /@/}
