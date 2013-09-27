@@ -157,6 +157,7 @@ private
     'length_max' => '144',
     'length_min' => '3',
     'name' => 'Size',
+    'required_p' => '0',
     'row_position' => '5'}
   end
 

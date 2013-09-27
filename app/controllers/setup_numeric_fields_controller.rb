@@ -58,6 +58,7 @@ private
       :field_set_id,
       :name,
       :only_integer_p,
+      :required_p,
       :row_position,
       :value_max,
       :value_min)

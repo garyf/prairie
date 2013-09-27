@@ -190,6 +190,7 @@ private
     'enabled_p' => '1',
     'field_set_id' => '34',
     'name' => 'Size',
+    'required_p' => '0',
     'row_position' => '8',
     'type' => 'SelectField'}
   end

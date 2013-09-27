@@ -59,6 +59,7 @@ private
       :length_max,
       :length_min,
       :name,
+      :required_p,
       :row_position)
   end
 end

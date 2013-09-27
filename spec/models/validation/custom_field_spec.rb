@@ -1,6 +1,39 @@
 require 'spec_helper'
 
-describe StringField do
+describe CustomField do
+  context '::validates' do
+    it '#enabled_p nil' do
+      bld enabled_p: nil
+      expect(@o.error_on :enabled_p).to include 'must be true or false'
+    end
+
+    it '#field_set nil' do
+      bld field_set: nil
+      expect(@o.error_on :field_set).to include "can't be blank"
+    end
+
+    it '#name nil' do
+      bld name: nil
+      expect(@o.error_on :name).to include "can't be blank"
+    end
+
+    it 'w/o unique #name' do
+      cr name: 'Colors'
+      bld name: 'Colors'
+      expect(@o.error_on :name).to include 'has already been taken'
+    end
+
+    it '#required_p nil' do
+      bld required_p: nil
+      expect(@o.error_on :required_p).to include 'must be true or false'
+    end
+
+    it '#type nil' do
+      bld type: nil
+      expect(@o.error_on :type).to include "can't be blank"
+    end
+  end
+
   context 'constraints' do
     it 'w/o numerical #length_max' do
       bld length_max: 'foo'
@@ -64,6 +97,28 @@ describe StringField do
     it '#gist_gte_length_min w #gist length < length_min' do
       @o.gist = 'ab'
       expect(@o.error_on :gist).to include 'length must be greater than 2'
+    end
+  end
+
+  context 'db constraints w' do
+    it '#enabled_p nil' do
+      expect_db_error { svf(bld enabled_p: nil) }
+    end
+
+    it '#field_set nil' do
+      expect_db_error { svf(bld field_set: nil) }
+    end
+
+    it '#name nil' do
+      expect_db_error { svf(bld name: nil) }
+    end
+
+    it '#required_p nil' do
+      expect_db_error { svf(bld required_p: nil) }
+    end
+
+    it '#type nil' do
+      expect_db_error { svf(bld type: nil) }
     end
   end
 

@@ -72,6 +72,7 @@ private
       :enabled_p,
       :field_set_id,
       :name,
+      :required_p,
       :row_position,
       :type)
   end

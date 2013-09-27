@@ -156,6 +156,7 @@ private
     'field_set_id' => '21',
     'name' => 'Size',
     'only_integer_p' => '1',
+    'required_p' => '0',
     'row_position' => '5',
     'value_max' => '377',
     'value_min' => '-89'}

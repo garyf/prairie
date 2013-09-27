@@ -6,6 +6,7 @@ class CreateCustomFields < ActiveRecord::Migration
       t.string :name, null: false
       t.integer :row, null: false
       t.boolean :enabled_p, null: false, default: true
+      t.boolean :required_p, null: false, default: false
 
       t.timestamps
     end

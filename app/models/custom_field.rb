@@ -14,6 +14,7 @@ class CustomField < ActiveRecord::Base
 
   paginates_per 8
 
+  validates :enabled_p, :required_p, inclusion: {in: [true, false], message: 'must be true or false'}
   validates :field_set, :type, presence: true
   validates :name, presence: true, uniqueness: {scope: :field_set}
 
