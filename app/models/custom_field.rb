@@ -43,6 +43,11 @@ class CustomField < ActiveRecord::Base
     where('row < ?', row).count
   end
 
+  # active_decorator does not support single table inheritance
+  def disabled_state
+    'Disabled' unless enabled_p
+  end
+
   def human_row
     field_set.custom_fields.position_above_count(row) + 1
   end
