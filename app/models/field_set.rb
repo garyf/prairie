@@ -4,6 +4,7 @@ class FieldSet < ActiveRecord::Base
   has_many :numeric_fields, dependent: :destroy
   has_many :string_fields, dependent: :destroy
 
+  validates :fields_enabled_qty, numericality: {greater_than: -1, less_than: 22, only_integer: true}
   validates :name, presence: true, uniqueness: true
   validates :type, presence: true
 
