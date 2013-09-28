@@ -11,7 +11,10 @@
 
   <div class=control-group>
     <%= f.label @choice_field.name, class: 'control-label' %>
-    <div class=controls><%= f.collection_radio_buttons(:gist, @choices, :name, :name) { |b| b.label(class: 'radio') { b.radio_button + b.text } } %></div>
+    <div class=controls>
+      <%= f.collection_radio_buttons(:gist, @choices, :name, :name) { |b| b.label(class: 'radio') { b.radio_button + b.text } } %>
+      <%= required_field @choice_field %>
+    </div>
   </div>
   <div class=form-actions>
     <%= f.button 'Done', class: 'btn  btn-primary' %>

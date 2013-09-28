@@ -8,7 +8,10 @@
 
   <div class=control-group>
     <%= f.label @numeric_field.name, class: 'control-label' %>
-    <div class=controls><%= f.number_field :gist %></div>
+    <div class=controls>
+      <%= f.number_field :gist, required: @numeric_field.required_p %>
+      <%= required_field @numeric_field %>
+    </div>
   </div>
   <div class=form-actions>
     <%= f.button 'Done', class: 'btn  btn-primary' %>

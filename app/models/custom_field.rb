@@ -44,6 +44,10 @@ class CustomField < ActiveRecord::Base
     where('row < ?', row).count
   end
 
+  def self.required_any?
+    where(required_p: true).any?
+  end
+
   # active_decorator does not support single table inheritance
   def disabled_state
     'Disabled' unless enabled_p

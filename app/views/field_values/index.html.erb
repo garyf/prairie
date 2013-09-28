@@ -14,6 +14,10 @@
     <% end %>
   </dl>
 
+  <% if @required_any_p %>
+    <i>* Required field</i>
+  <% end %>
+
 <% else %>
   <h5>No custom fields</h5>
 <% end %>

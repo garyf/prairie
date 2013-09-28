@@ -8,7 +8,10 @@
 
   <div class=control-group>
     <%= f.label @string_field.name, class: 'control-label' %>
-    <div class=controls><%= f.text_field :gist %></div>
+    <div class=controls>
+      <%= f.text_field :gist, required: @string_field.required_p %>
+      <%= required_field @string_field %>
+    </div>
   </div>
   <div class=form-actions>
     <%= f.button 'Done', class: 'btn  btn-primary' %>

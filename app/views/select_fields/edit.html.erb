@@ -11,7 +11,10 @@
 
   <div class=control-group>
     <%= f.label @choice_field.name, class: 'control-label' %>
-    <div class=controls><%= f.collection_select :gist, @choices, :name, :name %></div>
+    <div class=controls>
+      <%= f.collection_select :gist, @choices, :name, :name, prompt: true, required: @choice_field.required_p %>
+      <%= required_field @choice_field %>
+    </div>
   </div>
   <div class=form-actions>
     <%= f.button 'Done', class: 'btn  btn-primary' %>
