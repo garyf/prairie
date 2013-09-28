@@ -5,7 +5,7 @@ class SetupStringFieldsController < SetupTextFieldsController
   respond_to :html
 
   def new
-    @string_field = @field_set.string_fields.new
+    @string_field = @field_set.string_field_new
   end
 
   def edit
@@ -13,7 +13,7 @@ class SetupStringFieldsController < SetupTextFieldsController
   end
 
   def create
-    @text_field = @string_field = @field_set.string_fields.new(params_white)
+    @text_field = @string_field = @field_set.string_field_new(params_white)
     constraints_store_or_new
   end
 

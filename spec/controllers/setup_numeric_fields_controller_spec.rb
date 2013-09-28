@@ -6,7 +6,7 @@ describe SetupNumericFieldsController do
       before { FieldSet.should_receive(:find).with('21') { person_field_set_mk(custom_field_new_able?: true) } }
       describe 'GET new' do
         before do
-          person_field_set_mk.stub_chain(:numeric_fields, :new) { numeric_field_mk }
+          person_field_set_mk.should_receive(:numeric_field_new) { numeric_field_mk }
           get :new, field_set_id: '21'
         end
         it do
@@ -19,7 +19,7 @@ describe SetupNumericFieldsController do
       context 'POST create' do
         describe 'w #save' do
           before do
-            person_field_set_mk.stub_chain(:numeric_fields, :new).with(valid_attributes) { numeric_field_mk(save: true) }
+            person_field_set_mk.should_receive(:numeric_field_new).with(valid_attributes) { numeric_field_mk(save: true) }
             numeric_field_mk.should_receive(:constraints_store).with(valid_attributes)
             @numeric_field_mock.should_receive(:type_human) { 'Numeric field' }
             post :create, numeric_field: valid_attributes.merge('some' => 'attribute')
@@ -34,7 +34,7 @@ describe SetupNumericFieldsController do
 
         describe 'w/o #save' do
           before do
-            person_field_set_mk.stub_chain(:numeric_fields, :new).with(valid_attributes) { numeric_field_mk(save: false) }
+            person_field_set_mk.should_receive(:numeric_field_new).with(valid_attributes) { numeric_field_mk(save: false) }
             numeric_field_mk.should_not_receive(:constraints_store)
             @numeric_field_mock.should_receive(:type_human).with(true) { 'numeric field' }
             post :create, numeric_field: valid_attributes.merge('some' => 'attribute')
@@ -163,6 +163,8 @@ private
   end
 
   def valid_attributes_human
-    valid_attributes.merge('row_position' => '4')
+    valid_attributes.merge(
+      'row_position' => '4',
+      'setup_p' => true)
   end
 end

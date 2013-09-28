@@ -39,6 +39,14 @@ class FieldSet < ActiveRecord::Base
     raise SubklassNotRecognized
   end
 
+  def numeric_field_new(params_white = nil)
+    numeric_fields.new params_w_setup(params_white)
+  end
+
+  def string_field_new(params_white = nil)
+    string_fields.new params_w_setup(params_white)
+  end
+
   def destroyable?
     custom_fields.count == 0
   end
@@ -56,5 +64,11 @@ class FieldSet < ActiveRecord::Base
     return if int == fields_enabled_qty
     self.fields_enabled_qty = int
     self.save
+  end
+
+private
+
+  def params_w_setup(params_white)
+    params_white ? params_white.merge(setup_p: true) : {}
   end
 end

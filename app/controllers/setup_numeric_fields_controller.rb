@@ -5,7 +5,7 @@ class SetupNumericFieldsController < SetupTextFieldsController
   respond_to :html
 
   def new
-    @numeric_field = @field_set.numeric_fields.new
+    @numeric_field = @field_set.numeric_field_new
   end
 
   def edit
@@ -13,7 +13,7 @@ class SetupNumericFieldsController < SetupTextFieldsController
   end
 
   def create
-    @text_field = @numeric_field = @field_set.numeric_fields.new(params_white)
+    @text_field = @numeric_field = @field_set.numeric_field_new(params_white)
     constraints_store_or_new
   end
 

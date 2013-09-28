@@ -23,7 +23,7 @@ class EducationLevelsController < ApplicationController
   end
 
   def update
-    redirect_to(education_levels_path, notice: 'Education level successfully updated') and return if @education_level.update(params_white_w_human_row)
+    redirect_to(education_levels_path, notice: 'Education level successfully updated') and return if @education_level.update(params_white_w_human_row false)
     flash[:alert] = 'Failed to update education level'
     render :edit
   end

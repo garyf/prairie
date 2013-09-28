@@ -192,6 +192,7 @@ private
     'name' => 'Size',
     'required_p' => '0',
     'row_position' => '8',
+    'setup_p' => true, # via ChoiceField::subklass_with
     'type' => 'SelectField'}
   end
 

@@ -7,7 +7,8 @@ class ApplicationController < ActionController::Base
 private
 
   # display 1-indexed row_position; gem ranked-model is 0-indexed
-  def params_white_w_human_row(hsh = params_white)
+  def params_white_w_human_row(custom_field_p = true)
+    hsh = custom_field_p ? params_white.merge(setup_p: true) : params_white
     str = hsh['row_position']
     return hsh if str.blank?
     hsh['row_position'] = (str.to_i - 1).to_s

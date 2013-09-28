@@ -6,7 +6,7 @@ describe SetupStringFieldsController do
       before { FieldSet.should_receive(:find).with('55') { location_field_set_mk(custom_field_new_able?: true) } }
       describe 'GET new' do
         before do
-          location_field_set_mk.stub_chain(:string_fields, :new) { string_field_mk }
+          location_field_set_mk.should_receive(:string_field_new) { string_field_mk }
           get :new, field_set_id: '55'
         end
         it do
@@ -19,7 +19,7 @@ describe SetupStringFieldsController do
       context 'POST create' do
         describe 'w #save' do
           before do
-            location_field_set_mk.stub_chain(:string_fields, :new).with(valid_attributes) { string_field_mk(save: true) }
+            location_field_set_mk.should_receive(:string_field_new).with(valid_attributes) { string_field_mk(save: true) }
             string_field_mk.should_receive(:constraints_store).with(valid_attributes)
             @string_field_mock.should_receive(:type_human) { 'String field' }
             post :create, string_field: valid_attributes.merge('some' => 'attribute')
@@ -34,7 +34,7 @@ describe SetupStringFieldsController do
 
         describe 'w/o #save' do
           before do
-            location_field_set_mk.stub_chain(:string_fields, :new).with(valid_attributes) { string_field_mk(save: false) }
+            location_field_set_mk.should_receive(:string_field_new).with(valid_attributes) { string_field_mk(save: false) }
             string_field_mk.should_not_receive(:constraints_store)
             @string_field_mock.should_receive(:type_human).with(true) { 'string field' }
             post :create, string_field: valid_attributes.merge('some' => 'attribute')
@@ -162,6 +162,8 @@ private
   end
 
   def valid_attributes_human
-    valid_attributes.merge('row_position' => '4')
+    valid_attributes.merge(
+      'row_position' => '4',
+      'setup_p' => true)
   end
 end

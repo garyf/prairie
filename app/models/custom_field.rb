@@ -19,7 +19,7 @@ class CustomField < ActiveRecord::Base
   validates :name, presence: true, uniqueness: {scope: :field_set}
   validate :gist_required_present
 
-  attr_accessor :gist, :parent_id
+  attr_accessor :gist, :parent_id, :setup_p
 
   delegate :fields_enabled_count, :parent, to: :field_set
 
@@ -69,6 +69,7 @@ class CustomField < ActiveRecord::Base
 private
 
   def gist_required_present
+    return if setup_p
     errors.add(:gist, "of a required field can't be blank") if required_p && gist.blank?
   end
 

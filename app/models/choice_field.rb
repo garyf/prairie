@@ -11,9 +11,10 @@ class ChoiceField < CustomField
   end
 
   def self.subklass_with(params_white)
-    return CheckboxBooleanField.new(params_white) if params_white[:type] == 'CheckboxBooleanField'
-    return RadioButtonField.new(params_white) if params_white[:type] == 'RadioButtonField'
-    return SelectField.new(params_white) if params_white[:type] == 'SelectField'
+    hsh = params_white.merge setup_p: true
+    return CheckboxBooleanField.new(hsh) if params_white[:type] == 'CheckboxBooleanField'
+    return RadioButtonField.new(hsh) if params_white[:type] == 'RadioButtonField'
+    return SelectField.new(hsh) if params_white[:type] == 'SelectField'
     raise SubklassNotRecognized
   end
 

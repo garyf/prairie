@@ -26,7 +26,7 @@ class ChoicesController < ApplicationController
   end
 
   def update
-    if @choice.update(params_white_w_human_row)
+    if @choice.update(params_white_w_human_row false)
       redirect_to setup_choice_field_path(@choice_field), notice: 'Choice successfully updated'
     else
       edit_assigns
