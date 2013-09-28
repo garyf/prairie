@@ -17,6 +17,7 @@ class CustomField < ActiveRecord::Base
   validates :enabled_p, :required_p, inclusion: {in: [true, false], message: 'must be true or false'}
   validates :field_set, :type, presence: true
   validates :name, presence: true, uniqueness: {scope: :field_set}
+  validate :gist_required_present
 
   attr_accessor :gist, :parent_id
 
@@ -66,6 +67,10 @@ class CustomField < ActiveRecord::Base
   end
 
 private
+
+  def gist_required_present
+    errors.add(:gist, "of a required field can't be blank") if required_p && gist.blank?
+  end
 
   def validate_min_lte_max(attribute, max, min, str)
     return if max.blank? || min.blank?

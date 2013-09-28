@@ -12,6 +12,11 @@ describe CustomField do
       expect(@o.error_on :field_set).to include "can't be blank"
     end
 
+    it '#gist_required_present w required_p' do
+      bld required_p: true
+      expect(@o.error_on :gist).to include "of a required field can't be blank"
+    end
+
     it '#name nil' do
       bld name: nil
       expect(@o.error_on :name).to include "can't be blank"
