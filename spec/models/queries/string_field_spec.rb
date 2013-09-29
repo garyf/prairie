@@ -35,7 +35,7 @@ describe StringField do
     describe 'w string_gist' do
       subject { @o.index_on_gist_update 1 }
       it 'updates .gist' do
-        expect(subject).to be false
+        expect(subject).to be true
         expect(@o.string_gists.where_parent_id(1)[0].gist).to eql 'bar'
       end
     end

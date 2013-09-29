@@ -7,11 +7,11 @@ describe Location do
       @field_id = '3'
     end
     context 'w gist, relies on custom field caller for validation' do
-      before { @o.gist_store(@field_id, 'invalid_value') }
+      before { @o.gist_store(@field_id, 'invalid_value', false) }
       it { expect(@o.gist_fetch @field_id).to eql 'invalid_value'}
     end
     context 'w/o gist' do
-      before { @o.gist_store(@field_id, '') }
+      before { @o.gist_store(@field_id, '', false) }
       it { expect(@o.gist_fetch @field_id).to be nil }
     end
   end

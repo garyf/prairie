@@ -7,11 +7,11 @@ describe Person do
       @field_id = '3'
     end
     context 'w gist, relies on custom field caller for validation' do
-      before { @o.gist_store(@field_id, 'invalid_value') }
+      before { @o.gist_store(@field_id, 'invalid_value', false) }
       it { expect(@o.gist_fetch @field_id).to eql 'invalid_value'}
     end
     context 'w/o gist' do
-      before { @o.gist_store(@field_id, '') }
+      before { @o.gist_store(@field_id, '', false) }
       it { expect(@o.gist_fetch @field_id).to be nil }
     end
   end
@@ -20,7 +20,6 @@ describe Person do
     before do
       @string_field = c_person_string_field_bs
       c_person_bs
-      @field_id = '8'
       @string_field.gist_store(@o, {'gist' => 'Foo'})
     end
     it { expect(@string_field.parents_find_by_gist 'Foo').to eql [@o.id] }

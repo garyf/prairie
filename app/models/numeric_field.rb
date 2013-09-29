@@ -36,7 +36,7 @@ class NumericField < CustomField
   end
 
   def index_on_gist_update(parent_id)
-    postgres_index_on_gist_update(numeric_gists.where_parent_id parent_id)
+    postgres_index_on_gist_update(numeric_gists.where_parent_id(parent_id), gist)
   end
 
   def type_human(downcase_p = false)

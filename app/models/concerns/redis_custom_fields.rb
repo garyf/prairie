@@ -13,15 +13,15 @@ module RedisCustomFields
   end
 
   def index_on_gist_update(parent_id)
-    true # a redis index is awaiting removal
+    false # no prior postgres index
   end
 
   def gist_store(parent, params_white)
     self.gist = params_white['gist']
     return false unless self.valid?
-    index_to_remove_p = index_on_gist_update(parent.id)
-    parent.gist_store(id, gist, index_to_remove_p)
-    index_on_gist_add(parent)
+    postgres_index_p = index_on_gist_update(parent.id)
+    parent.gist_store(id, gist, postgres_index_p)
+    index_on_gist_add(parent) unless postgres_index_p
     parents << parent.id
   end
 

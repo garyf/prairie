@@ -36,7 +36,7 @@ describe NumericField do
     describe 'w numeric_gist' do
       subject { @o.index_on_gist_update 1 }
       it 'updates .gist' do
-        expect(subject).to be false
+        expect(subject).to be true
         expect(@o.numeric_gists.where_parent_id(1)[0].gist).to eql 5.0
       end
     end

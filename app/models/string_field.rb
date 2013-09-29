@@ -36,7 +36,7 @@ class StringField < CustomField
   end
 
   def index_on_gist_update(parent_id)
-    postgres_index_on_gist_update(string_gists.where_parent_id parent_id)
+    postgres_index_on_gist_update(string_gists.where_parent_id(parent_id), gist.downcase)
   end
 
   def type_human(downcase_p = false)
