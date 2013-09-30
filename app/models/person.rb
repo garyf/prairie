@@ -37,7 +37,7 @@ class Person < ActiveRecord::Base
   def numeric_gist_cr(custom_field_id, gist)
     PersonNumericGist.create(
       custom_field_id: custom_field_id,
-      gist: gist.downcase,
+      gist: gist,
       parent_id: id)
   end
 
