@@ -58,18 +58,18 @@ class CustomField < ActiveRecord::Base
     field_set.custom_fields.position_above_count(row) + 1
   end
 
-  def postgres_index_on_gist_update(relation, gist_for_index)
-    raise GistDuplicate if relation.count > 1
-    o = relation[0]
-    return unless o
-    o.update gist: gist_for_index
-  end
-
 private
 
   def gist_required_present
     return if setup_p
     errors.add(:gist, "of a required field can't be blank") if required_p && gist.blank?
+  end
+
+  def postgres_index_on_gist_update(relation, gist_for_index)
+    raise GistDuplicate if relation.count > 1
+    o = relation[0]
+    return unless o
+    o.update gist: gist_for_index
   end
 
   def validate_min_lte_max(attribute, max, min, str)
