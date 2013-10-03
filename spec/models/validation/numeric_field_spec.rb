@@ -37,17 +37,17 @@ describe NumericField do
 
     it '#gist_only_integer w/o integer #gist' do
       @o.gist = '3.14'
-      expect(@o.error_on :gist).to include 'value must be an integer'
+      expect(@o.error_on :gist).to include 'must be an integer'
     end
 
     it '#gist_within_range w #gist > value_max' do
       @o.gist = '145'
-      expect(@o.error_on :gist).to include 'value must be less than or equal to 144.7'
+      expect(@o.error_on :gist).to include 'must be less than or equal to 144.7'
     end
 
     it '#gist_within_range w #gist < value_min' do
       @o.gist = '-14'
-      expect(@o.error_on :gist).to include 'value must be greater than or equal to -13.5'
+      expect(@o.error_on :gist).to include 'must be greater than or equal to -13.5'
     end
   end
 

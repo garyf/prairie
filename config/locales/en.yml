@@ -23,7 +23,7 @@ en:
   activerecord:
     attributes:
       custom_field:
-        gist: 'The'
+        gist: "The value"
   controllers:
     flash:
       create:
