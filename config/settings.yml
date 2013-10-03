@@ -1,4 +1,6 @@
 defaults: &defaults
+  custom_field:
+    paginates_per: 8
   location:
     paginates_per: 8
   person:

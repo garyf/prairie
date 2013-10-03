@@ -12,7 +12,7 @@ class CustomField < ActiveRecord::Base
 
   ranks :row, class_name: 'CustomField', with_same: :field_set_id # https://github.com/mixonic/ranked-model/pull/28
 
-  paginates_per 8
+  paginates_per Settings.custom_field.paginates_per
 
   validates :enabled_p, :required_p, inclusion: {in: [true, false], message: 'must be true or false'}
   validates :field_set, :type, presence: true
