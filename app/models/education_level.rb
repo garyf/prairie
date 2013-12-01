@@ -4,9 +4,9 @@ class EducationLevel < ActiveRecord::Base
 
   has_many :people
 
-  validates :name, presence: true, uniqueness: true
-
   ranks :row
+
+  validates :name, presence: true, uniqueness: true
 
   def self.by_row
     order('row')

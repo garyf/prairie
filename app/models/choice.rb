@@ -4,10 +4,10 @@ class Choice < ActiveRecord::Base
 
   belongs_to :custom_field
 
+  ranks :row, with_same: :custom_field_id
+
   validates :custom_field, presence: true
   validates :name, presence: true, uniqueness: {scope: :custom_field}
-
-  ranks :row, with_same: :custom_field_id
 
   def self.name_by_row
     select(:name).order('row')

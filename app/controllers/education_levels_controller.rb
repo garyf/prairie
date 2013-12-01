@@ -1,6 +1,6 @@
 class EducationLevelsController < ApplicationController
 
-  before_action :education_level_assign, only: [:show, :edit, :update, :destroy]
+  before_action :education_level_assign, only: [:edit, :update, :destroy]
   respond_to :html
 
   def index
